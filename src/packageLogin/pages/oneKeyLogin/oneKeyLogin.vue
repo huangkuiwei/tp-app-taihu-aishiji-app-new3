@@ -4,14 +4,15 @@
       <text></text>
 
       <view class="back" @click="$toBack">
-        <uni-icons class="back" color="#1A1A1A" type="arrow-left" size="22"></uni-icons>
+        <uni-icons class="back" color="#1A1A1A" type="left" size="22"></uni-icons>
       </view>
     </view>
 
-    <view class="banner"> </view>
+    <view class="banner"></view>
 
     <view class="container">
-      <view class="title">
+      <view class="logo">
+        <!-- TODO logo修改 -->
         <image mode="widthFix" src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/logo3.jpg" />
       </view>
 
@@ -21,26 +22,20 @@
 
       <view class="login" @click="login">一键登录</view>
       <view class="other-login" @click="$toBack">其他手机号码登录</view>
-
-      <view class="agreement">
-        <checkbox-group @change="agree = $event.detail.value">
-          <label>
-            <checkbox value="1" :checked="agree.includes('1')" />
-          </label>
-        </checkbox-group>
-        <view>
-          我已阅读并同意
-          <text @click="$toRouter('/packageProtocol/pages/protocol/protocol')">《用户协议》</text>
-          和
-          <text @click="$toRouter('/packageProtocol/pages/privacy/privacy')">《隐私政策》</text>
-        </view>
-      </view>
     </view>
 
-    <view class="kefu">
-      <text @click="callPhone">联系客服</text>
-      <text class="line">｜</text>
-      <text>客服电话：4009989618</text>
+    <view class="agreement">
+      <checkbox-group @change="agree = $event.detail.value">
+        <label>
+          <checkbox value="1" :checked="agree.includes('1')" />
+        </label>
+      </checkbox-group>
+      <view>
+        我已阅读并同意
+        <text @click="$toRouter('/packageLogin/pages/protocol/protocol')">《用户协议》</text>
+        和
+        <text @click="$toRouter('/packageLogin/pages/privacy/privacy')">《隐私政策》</text>
+      </view>
     </view>
   </view>
 </template>
@@ -68,7 +63,7 @@ export default {
   onShareAppMessage() {
     return {
       title: 'AI饮食记录小程序',
-      imageUrl: 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/share-img.jpg',
+      imageUrl: 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app/share-img.jpg',
       path: '/pages/index/index',
     };
   },
@@ -123,12 +118,6 @@ export default {
         });
       });
     },
-
-    callPhone() {
-      uni.makePhoneCall({
-        phoneNumber: '4009989618',
-      });
-    },
   },
 };
 </script>
@@ -136,15 +125,14 @@ export default {
 <style lang="scss">
 page {
   height: 100%;
+  background: #ffffff;
 }
 </style>
 
 <style scoped lang="scss">
 .login-page {
   height: 100%;
-  background: url('https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app/login/login-bg.png') top left/100% 100%
-    no-repeat;
-  padding-bottom: 60rpx;
+  padding-bottom: 67rpx;
   display: flex;
   flex-direction: column;
 
@@ -158,18 +146,16 @@ page {
 
   .container {
     flex-grow: 1;
-    padding-bottom: 180rpx;
+    padding-top: 150rpx;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
 
-    .title {
-      margin-bottom: 79rpx;
+    .logo {
+      margin-bottom: 184rpx;
 
       image {
         width: 120rpx;
-        height: 120rpx;
         border-radius: 23rpx;
       }
     }
@@ -183,16 +169,16 @@ page {
 
     .login {
       width: 560rpx;
-      height: 90rpx;
-      background: linear-gradient(90deg, #4f69e6 0%, #6b56e3 100%);
-      border-radius: 45rpx;
+      height: 100rpx;
+      background: #65d285;
+      border-radius: 50rpx;
       font-weight: 500;
       font-size: 32rpx;
       color: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 29rpx;
+      margin-bottom: 30rpx;
     }
 
     .other-login {
@@ -201,29 +187,20 @@ page {
       color: #666666;
       margin-bottom: 37rpx;
     }
-
-    .agreement {
-      display: flex;
-      align-items: center;
-
-      checkbox {
-        transform: scale(0.6);
-      }
-
-      view {
-        font-size: 22rpx;
-        color: #999999;
-      }
-    }
   }
 
-  .kefu {
-    font-size: 22rpx;
-    color: #999999;
+  .agreement {
     align-self: center;
+    display: flex;
+    align-items: center;
 
-    .line {
-      padding: 0 12rpx;
+    checkbox {
+      transform: scale(0.6);
+    }
+
+    view {
+      font-size: 22rpx;
+      color: #999999;
     }
   }
 }

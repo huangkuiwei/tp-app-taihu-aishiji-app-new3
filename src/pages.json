@@ -16,11 +16,11 @@
       }
     },
     {
-      "path": "pages/discover/discover",
+      "path": "pages/statistics/statistics",
       "style": {
         "navigationStyle": "custom",
         // #ifndef H5
-        "navigationBarTitleText": "发现",
+        "navigationBarTitleText": "统计",
         // #endif
         "h5": {
           "titleNView": false
@@ -31,11 +31,11 @@
       }
     },
     {
-      "path": "pages/goldenBeans/goldenBeans",
+      "path": "pages/box/box",
       "style": {
         "navigationStyle": "custom",
         // #ifndef H5
-        "navigationBarTitleText": "攒金豆",
+        "navigationBarTitleText": "盒子",
         // #endif
         "h5": {
           "titleNView": false
@@ -522,8 +522,8 @@
     }
   ],
   "tabBar": {
-    "color": "#1A1A1A",
-    "selectedColor": "#1A1A1A",
+    "color": "#A5ADBA",
+    "selectedColor": "#000000",
     "list": [
       {
         "pagePath": "pages/index/index",
@@ -532,16 +532,16 @@
         "selectedIconPath": "static/tabBar/index1.png"
       },
       {
-        "pagePath": "pages/discover/discover",
+        "pagePath": "pages/statistics/statistics",
         "text": "发现",
-        "iconPath": "static/tabBar/discover.png",
-        "selectedIconPath": "static/tabBar/discover1.png"
+        "iconPath": "static/tabBar/statistics.png",
+        "selectedIconPath": "static/tabBar/statistics1.png"
       },
       {
-        "pagePath": "pages/goldenBeans/goldenBeans",
-        "text": "福袋",
-        "iconPath": "static/tabBar/blessingBag.png",
-        "selectedIconPath": "static/tabBar/blessingBag1.png"
+        "pagePath": "pages/box/box",
+        "text": "盒子",
+        "iconPath": "static/tabBar/box.png",
+        "selectedIconPath": "static/tabBar/box.png"
       },
       {
         "pagePath": "pages/my/my",

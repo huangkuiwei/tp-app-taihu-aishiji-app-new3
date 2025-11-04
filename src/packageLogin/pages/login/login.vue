@@ -4,14 +4,15 @@
       <text></text>
 
       <view class="back" @click="$toBack">
-        <uni-icons class="back" color="#1A1A1A" type="arrow-left" size="22"></uni-icons>
+        <uni-icons class="back" color="#1A1A1A" type="left" size="22"></uni-icons>
       </view>
     </view>
 
-    <view class="banner"> </view>
+    <view class="banner"></view>
 
     <view class="container">
-      <view class="title">
+      <view class="logo">
+        <!-- TODO logo修改 -->
         <image mode="widthFix" src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/logo3.jpg" />
       </view>
 
@@ -19,52 +20,40 @@
         <view class="phone">
           <input
             type="text"
-            placeholder="请输入手机号"
+            placeholder="请输入你的手机号"
             :value="formState.mobile"
             @input="formState.mobile = $event.detail.value"
           />
-
-          <text class="line"></text>
-          <text class="get-code" @click="sendCode">{{ codeTip }}</text>
         </view>
 
-        <view class="sms-code">
-          <view class="code-input-container">
-            <view v-for="(code, index) in 3" :key="index" class="code-input" @click="onInputClick">
-              {{ formState.sms_code[index] || '' }}
-            </view>
-            <text class="line"></text>
-            <view v-for="(code, index) in 3" :key="index" class="code-input" @click="onInputClick">
-              {{ formState.sms_code[index + 3] || '' }}
-            </view>
-
-            <input type="number" maxlength="6" :focus="inputFocus" :value="formState.sms_code" @input="handleInput" />
-          </view>
+        <view class="password">
+          <input
+            type="number"
+            :maxlength="6"
+            placeholder="请输入验证码"
+            :value="formState.sms_code"
+            @input="formState.sms_code = $event.detail.value"
+          />
+          <text class="get-code" @click="sendCode">{{ codeTip }}</text>
         </view>
       </view>
 
       <view class="login" @click="login">登录</view>
       <button open-type="getPhoneNumber" class="login" @getphonenumber="oneKeyLogin">本机号码一键登录</button>
-
-      <view class="agreement">
-        <checkbox-group @change="agree = $event.detail.value">
-          <label>
-            <checkbox value="1" :checked="agree.includes('1')" />
-          </label>
-        </checkbox-group>
-        <view>
-          我已阅读并同意
-          <text @click="$toRouter('/packageProtocol/pages/protocol/protocol')">《用户协议》</text>
-          和
-          <text @click="$toRouter('/packageProtocol/pages/privacy/privacy')">《隐私政策》</text>
-        </view>
-      </view>
     </view>
 
-    <view class="kefu">
-      <text @click="callPhone">联系客服</text>
-      <text class="line">｜</text>
-      <text>客服电话：4009989618</text>
+    <view class="agreement">
+      <checkbox-group @change="agree = $event.detail.value">
+        <label>
+          <checkbox value="1" :checked="agree.includes('1')" />
+        </label>
+      </checkbox-group>
+      <view>
+        我已阅读并同意
+        <text @click="$toRouter('/packageLogin/pages/protocol/protocol')">《用户协议》</text>
+        和
+        <text @click="$toRouter('/packageLogin/pages/privacy/privacy')">《隐私政策》</text>
+      </view>
     </view>
   </view>
 </template>
@@ -85,7 +74,6 @@ export default {
       },
       countdown: '',
       agree: [],
-      inputFocus: false,
     };
   },
 
@@ -122,7 +110,7 @@ export default {
   onShareAppMessage() {
     return {
       title: 'AI饮食记录小程序',
-      imageUrl: 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/share-img.jpg',
+      imageUrl: 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app/share-img.jpg',
       path: '/pages/index/index',
     };
   },
@@ -169,26 +157,6 @@ export default {
           this.formState.sms_sign = res.data.sign;
           this.countdown = 60;
         });
-    },
-
-    handleInput($event) {
-      this.formState.sms_code = $event.detail.value;
-
-      if (this.formState.sms_code.length > 6) {
-        this.formState.sms_code = this.formState.sms_code.slice(0, 6);
-      }
-
-      if (this.formState.sms_code.length === 6) {
-        this.inputFocus = false;
-      }
-    },
-
-    onInputClick() {
-      this.inputFocus = false;
-
-      setTimeout(() => {
-        this.inputFocus = true;
-      }, 0);
     },
 
     /**
@@ -294,12 +262,6 @@ export default {
         });
       }
     },
-
-    callPhone() {
-      uni.makePhoneCall({
-        phoneNumber: '4009989618',
-      });
-    },
   },
 };
 </script>
@@ -307,15 +269,14 @@ export default {
 <style lang="scss">
 page {
   height: 100%;
+  background: #ffffff;
 }
 </style>
 
 <style scoped lang="scss">
 .login-page {
   height: 100%;
-  background: url('https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/login/bg.png') top left/100% 100%
-    no-repeat;
-  padding-bottom: 60rpx;
+  padding-bottom: 67rpx;
   display: flex;
   flex-direction: column;
 
@@ -329,106 +290,75 @@ page {
 
   .container {
     flex-grow: 1;
-    padding-bottom: 180rpx;
+    padding-top: 150rpx;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
 
-    .title {
-      margin-bottom: 79rpx;
+    .logo {
+      margin-bottom: 184rpx;
 
       image {
         width: 120rpx;
-        height: 120rpx;
         border-radius: 23rpx;
       }
     }
 
     .input-box {
-      margin-bottom: 50rpx;
+      margin-bottom: 29rpx;
 
       .phone {
-        width: 590rpx;
-        height: 90rpx;
-        background: #f6f7fb;
-        border-radius: 45rpx;
-        font-size: 28rpx;
-        padding-right: 38rpx;
-        display: flex;
-        align-items: center;
+        width: 560rpx;
+        height: 100rpx;
+        background: #f6f6f6;
+        border-radius: 50rpx;
+        font-size: 32rpx;
         margin-bottom: 30rpx;
 
         input {
-          padding: 0 36rpx;
+          padding: 0 45rpx;
           width: 100%;
           height: 100%;
         }
+      }
 
-        .line {
-          flex-shrink: 0;
-          width: 2rpx;
-          height: 50rpx;
-          background: #5664e5;
-          margin-right: 14rpx;
+      .password {
+        width: 560rpx;
+        height: 100rpx;
+        background: #f6f6f6;
+        border-radius: 50rpx;
+        font-size: 28rpx;
+        padding-right: 50rpx;
+        display: flex;
+        align-items: center;
+
+        input {
+          padding: 0 0 0 55rpx;
+          flex-grow: 1;
+          height: 100%;
         }
 
         .get-code {
           flex-shrink: 0;
           white-space: nowrap;
-          font-size: 24rpx;
-          color: #5068e6;
-        }
-      }
-
-      .sms-code {
-        .code-input-container {
-          display: flex;
-          align-items: center;
-          justify-content: space-around;
-          position: relative;
-
-          .line {
-            font-size: 28rpx;
-            width: 8rpx;
-            height: 2rpx;
-            background: #111111;
-          }
-
-          .code-input {
-            width: 60rpx;
-            height: 90rpx;
-            background: #f2f5ff;
-            border-radius: 15rpx;
-            border: 2rpx solid #5664e5;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-          }
-
-          input {
-            z-index: -99;
-            position: absolute;
-            left: -9999px;
-            top: -9999px;
-          }
+          font-size: 28rpx;
+          color: #65d285;
         }
       }
     }
 
     .login {
       width: 560rpx;
-      height: 90rpx;
-      background: linear-gradient(90deg, #4f69e6 0%, #6b56e3 100%);
-      border-radius: 45rpx;
+      height: 100rpx;
+      background: #65d285;
+      border-radius: 50rpx;
       font-weight: 500;
       font-size: 32rpx;
       color: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 44rpx;
+      margin-bottom: 30rpx;
     }
 
     button {
@@ -440,29 +370,20 @@ page {
         border: none;
       }
     }
-
-    .agreement {
-      display: flex;
-      align-items: center;
-
-      checkbox {
-        transform: scale(0.6);
-      }
-
-      view {
-        font-size: 22rpx;
-        color: #999999;
-      }
-    }
   }
 
-  .kefu {
-    font-size: 22rpx;
-    color: #999999;
+  .agreement {
     align-self: center;
+    display: flex;
+    align-items: center;
 
-    .line {
-      padding: 0 12rpx;
+    checkbox {
+      transform: scale(0.6);
+    }
+
+    view {
+      font-size: 22rpx;
+      color: #999999;
     }
   }
 }

@@ -1,249 +1,138 @@
 <template>
   <view class="index-page">
-    <view class="page-title">首页</view>
+    <view class="page-title">欢迎回来</view>
     <view class="banner"></view>
 
-    <view class="card-container">
-      <view class="weight-card">
-        <view class="options">
-          <template v-if="!isLogin">
-            <view class="btn" @click="$toRouter('/packageLogin/pages/login/login')">请登录</view>
-          </template>
-
-          <template v-else-if="homeWeightPlanData && homeWeightPlanData.state === 1">
-            <view class="btn" style="background: #ffffff; color: #5664e5" @click="showRecodeWeight">体重记录</view>
-            <view
-              class="btn"
-              @click="
-                $toRouter(
-                  '/pages/resetPlan/resetPlan',
-                  `plan_id=${homeWeightPlanData.plan_id}&plan_initial_weight=${homeWeightPlanData.plan_initial_weight}&plan_target_weight=${homeWeightPlanData.plan_target_weight}&start_date=${homeWeightPlanData.start_date}&end_date=${homeWeightPlanData.end_date}`,
-                )
-              "
-            >
-              修改计划
+    <view class="plan-data-container">
+      <view class="circle">
+        <view class="circle-center">
+          <view class="plan-data" v-if="homeWeightPlanData && homeWeightPlanData.state === 1">
+            <view class="top">
+              <text class="tip">{{ isWeightLoss ? '减重' : '增重' }}</text>
+              <view class="number">
+                <text>{{ Math.floor(Math.abs(homeWeightPlanData.weight_loss)) }}</text>
+                <text
+                  >.{{
+                    (
+                      (Math.abs(homeWeightPlanData.weight_loss) -
+                        Math.floor(Math.abs(homeWeightPlanData.weight_loss))) *
+                      10
+                    ).toFixed(0)
+                  }}</text
+                >
+              </view>
+              <text class="unit">斤</text>
             </view>
-          </template>
 
-          <template v-else>
-            <view class="btn" @click="addPlan">
-              {{ userDetailInfo ? '新建计划' : '完善个人信息' }}
-            </view>
-          </template>
-        </view>
-
-        <view class="data1">
-          <view class="left">
-            <text style="font-size: 100rpx">{{ (homeWeightPlanData && homeWeightPlanData.current_weight) || 0 }}</text>
-            <text>{{ updateTime }}</text>
+            <view class="bottom" @click="showRecodeWeight">点击记录体重</view>
           </view>
 
-          <view class="right">
-            <text v-if="isWeightLoss" style="font-size: 60rpx">{{
-              (homeWeightPlanData && homeWeightPlanData.weight_loss) || 0
-            }}</text>
-            <text v-else style="font-size: 60rpx">{{
-              (homeWeightPlanData && -homeWeightPlanData.weight_loss) || 0
-            }}</text>
-            <text>{{ isWeightLoss ? '下降' : '增加' }}</text>
-          </view>
-        </view>
-
-        <view class="data2">
-          <view class="item">
-            <view>BMI</view>
-            <view v-if="userDetailInfo">
-              {{
-                Number(
-                  (userDetailInfo.current_weight / ((userDetailInfo.height * userDetailInfo.height) / 10000)).toFixed(
-                    1,
-                  ),
-                )
-              }}
-            </view>
-            <view v-else>-/-</view>
-          </view>
-
-          <view class="item">
-            <view>目标日期</view>
-            <view v-if="homeWeightPlanData && homeWeightPlanData.end_date">
-              <text style="font-size: 22rpx">剩余</text>
-              <text style="margin: 0 5rpx">{{ countdownDays }}</text>
-              <text style="font-size: 22rpx">天</text>
-            </view>
-            <view v-else>-/-</view>
-          </view>
-
-          <view class="item">
-            <view>目标体重</view>
-            <view v-if="homeWeightPlanData && homeWeightPlanData.plan_target_weight">
-              <text style="margin-right: 5rpx">{{ homeWeightPlanData.plan_target_weight }}</text>
-              <text style="font-size: 22rpx">公斤</text>
-            </view>
-            <view v-else>-/-</view>
-          </view>
+          <view class="add-plan" v-else @click="addPlan">添加计划</view>
         </view>
       </view>
 
-      <view class="calorie-card">
-        <view class="title">热量统计</view>
+      <view class="btn">
+        <!-- TODO 查看计划图标修改 -->
+        <image
+          v-if="homeWeightPlanData && homeWeightPlanData.state === 1"
+          mode="widthFix"
+          src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/vip/icon3.png"
+          @click="goWeightManagementPlan"
+        />
 
-        <view class="calorie-container">
-          <view class="chart">
-            <view class="left">
-              <view class="data-item data-item1">
-                <view class="line"></view>
-
-                <view class="data">
-                  <view class="chart-title">饮食摄入</view>
-                  <view class="number">
-                    <image
-                      mode="widthFix"
-                      src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/home/icon1.png"
-                    />
-
-                    <view>
-                      <text>{{ dailyCalorie.calorie_intake || 0 }}</text>
-                      <text>千卡</text>
-                    </view>
-                  </view>
-                </view>
-              </view>
-
-              <view class="data-item data-item2">
-                <view class="line"></view>
-
-                <view class="data">
-                  <view class="chart-title">运动消耗</view>
-                  <view class="number">
-                    <image
-                      mode="widthFix"
-                      src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/home/icon2.png"
-                    />
-
-                    <view>
-                      <text>{{ dailyCalorie.calorie_burn || 0 }}</text>
-                      <text>千卡</text>
-                    </view>
-                  </view>
-                </view>
-              </view>
-            </view>
-
-            <view class="right">
-              <l-echart ref="chart1Ref" @finished="init1" />
-
-              <view class="tip">
-                <text>{{ dailyCalorie.remaining || '-/-' }}</text>
-                <text>剩余千卡</text>
-              </view>
-            </view>
-          </view>
-
-          <view class="calorie-type">
-            <view class="calorie-item">
-              <view class="name">碳水</view>
-              <view class="progress" style="background: #e5e8ff">
-                <text style="background: #5664e5" :style="{ width: dailyCalorie.remainingARatio + '%' }"></text>
-              </view>
-              <view class="value" v-if="dailyCalorie.carbohydrate_requirement">
-                还剩{{ dailyCalorie.remainingA }}千卡
-              </view>
-              <view class="value" v-else>暂无</view>
-            </view>
-
-            <view class="calorie-item">
-              <view class="name">蛋白质</view>
-              <view class="progress" style="background: #ffeaf0">
-                <text style="background: #fd6896" :style="{ width: dailyCalorie.remainingBRatio + '%' }"></text>
-              </view>
-              <view class="value" v-if="dailyCalorie.protein_requirement"> 还剩{{ dailyCalorie.remainingB }}千卡 </view>
-              <view class="value" v-else>暂无</view>
-            </view>
-
-            <view class="calorie-item">
-              <view class="name">脂肪</view>
-              <view class="progress" style="background: #fcf5e4">
-                <text style="background: #fdcd00" :style="{ width: dailyCalorie.remainingCRatio + '%' }"></text>
-              </view>
-              <view class="value" v-if="dailyCalorie.fat_requirement"> 还剩{{ dailyCalorie.remainingC }}千卡 </view>
-              <view class="value" v-else>暂无</view>
-            </view>
-          </view>
-        </view>
-      </view>
-
-      <view class="food-card">
-        <view class="title">
-          <view class="left">饮食记录</view>
-
-          <view class="right">
-            <text @click="goWeightManagementPlan">去定制</text>
-            <uni-icons type="arrow-right" size="12" color="#666666" />
-          </view>
-        </view>
-
-        <view class="food-type">
-          <view class="food-item" v-for="item of foodRecodeList" :key="item.type">
-            <image mode="widthFix" :src="item.icon" />
-            <view
-              class="name"
-              @click="item.foodList.length && $toRouter('/pages/foodAnalysis/foodAnalysis', `type=${item.type}`)"
-            >
-              <text>{{ item.text }}</text>
-              <view class="recode" v-if="item.foodList">{{ item.foodList }}</view>
-            </view>
-            <view class="calorie" v-if="isLogin">建议{{ suggestCalorie(item.type) }}千卡</view>
-            <view class="add" @click.stop="openFoodRecodeDialog(item.type)">
-              <text>+</text>
-            </view>
-          </view>
-        </view>
-      </view>
-
-      <view class="motion-card">
-        <view class="title">
-          <view class="left">运动记录</view>
-
-          <view class="right">
-            <text @click="goWeightManagementPlan">去定制</text>
-            <uni-icons type="arrow-right" size="12" color="#666666" />
-          </view>
-        </view>
-
-        <view class="motion-detail">
-          <view class="motion-data">
-            <view class="left" v-if="!motionRecodeList.length">运动<text>0</text>千卡</view>
-            <view class="left" v-else>
-              你完成了{{ motionRecodeList.length }}次运动共消耗<text>{{ totalMotion }}</text
-              >千卡
-            </view>
-            <view class="right" v-if="dailyCalorie.exercise_calorie_requirement">
-              建议消耗{{ dailyCalorie.exercise_calorie_requirement }}千卡
-            </view>
-          </view>
-
-          <view class="motion-list" v-if="motionRecodeList.length">
-            <view class="motion-item" v-for="(item, index) of motionRecodeList" :key="index">
-              <text>·{{ item.name }}</text>
-              <text>{{ item.quantity }}分钟</text>
-              <text>-{{ item.calorie }}千卡</text>
-            </view>
-          </view>
-
-          <view v-else style="margin-bottom: 137rpx"></view>
-        </view>
-
-        <view class="add-motion" @click="openMotionRecodeDialog">+添加运动</view>
+        <!-- TODO 新建计划图标修改 -->
+        <image
+          v-else
+          mode="widthFix"
+          src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/vip/icon3.png"
+          @click="addPlan"
+        />
       </view>
     </view>
 
-    <view class="adv1">
-      <image
-        @click="goWeightManagementPlan"
-        mode="widthFix"
-        src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/home/adv1.png"
-      />
+    <view class="weight-data-wrapper">
+      <view class="weight-data">
+        <view class="weight-number">
+          <text>{{ (homeWeightPlanData && homeWeightPlanData.plan_initial_weight) || '-' }}</text>
+          <text>初始体重</text>
+        </view>
+
+        <view class="weight-number">
+          <text>{{ (homeWeightPlanData && homeWeightPlanData.plan_target_weight) || '-' }}</text>
+          <text>目标体重</text>
+        </view>
+      </view>
+
+      <view class="calorie-type">
+        <view class="calorie-item">
+          <view class="name">脂肪</view>
+          <view class="progress" style="background: #e6e6e6">
+            <text style="background: #fdcd00" :style="{ width: dailyCalorie.remainingCRatio + '%' }"></text>
+          </view>
+          <!-- TODO 脂肪数据需要克数 -->
+          <view class="value" v-if="dailyCalorie.fat_requirement">
+            <text>{{ dailyCalorie.fat_intake }}/</text>
+            <text>{{ dailyCalorie.fat_requirement }}克</text>
+          </view>
+          <view class="value" v-else>暂无</view>
+        </view>
+
+        <view class="calorie-item">
+          <view class="name">碳水</view>
+          <view class="progress" style="background: #e6e6e6">
+            <text style="background: #5664e5" :style="{ width: dailyCalorie.remainingARatio + '%' }"></text>
+          </view>
+          <!-- TODO 碳水数据需要克数 -->
+          <view class="value" v-if="dailyCalorie.carbohydrate_requirement">
+            <text>{{ dailyCalorie.carbohydrate_intake }}/</text>
+            <text>{{ dailyCalorie.carbohydrate_requirement }}克</text>
+          </view>
+          <view class="value" v-else>暂无</view>
+        </view>
+
+        <view class="calorie-item">
+          <view class="name">蛋白质</view>
+          <view class="progress" style="background: #e6e6e6">
+            <text style="background: #fd6896" :style="{ width: dailyCalorie.remainingBRatio + '%' }"></text>
+          </view>
+          <!-- TODO 蛋白质数据需要克数 -->
+          <view class="value" v-if="dailyCalorie.protein_requirement">
+            <text>{{ dailyCalorie.protein_intake }}/</text>
+            <text>{{ dailyCalorie.protein_requirement }}克</text>
+          </view>
+          <view class="value" v-else>暂无</view>
+        </view>
+      </view>
+
+      <view class="banners">
+        <!-- TODO banner图片切图有问题 -->
+        <image
+          mode="widthFix"
+          src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/index/banner1.png"
+          @click="openFoodRecodeDialog"
+        />
+
+        <!-- TODO banner图片切图有问题 -->
+        <image
+          mode="widthFix"
+          src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/index/banner2.png"
+          @click="openMotionRecodeDialog"
+        />
+      </view>
+
+      <view class="food-wrapper">
+        <view class="food-tip">
+          <text>会员减重方案</text>
+          <text>为您定制专属的饮食方案</text>
+        </view>
+
+        <!-- TODO 饮食记录 -->
+        <view class="food-list">
+          <view class="food-item" v-for="item of foodRecodeList" :key="item.type">
+            <view class="food-item-text">早餐<text>500</text>千卡</view>
+          </view>
+        </view>
+      </view>
     </view>
 
     <add-food-recode-dialog ref="addFoodRecodeDialog" :type="selectFoodType" @addRecode="addRecode" />
@@ -356,6 +245,24 @@ export default {
           type: 5,
           icon: 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/home/food-type3.png',
           text: '晚餐',
+          foodList: [],
+        },
+        {
+          type: 2,
+          icon: 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app/recode/food-type1.png',
+          text: '早加餐',
+          foodList: [],
+        },
+        {
+          type: 4,
+          icon: 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app/recode/food-type2.png',
+          text: '午加餐',
+          foodList: [],
+        },
+        {
+          type: 6,
+          icon: 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app/recode/food-type3.png',
+          text: '晚加餐',
           foodList: [],
         },
       ],
@@ -752,8 +659,8 @@ export default {
 
 <style>
 page {
-  background: #f6f7fb url('https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/home/banner-bg.png') left
-    top/100% auto no-repeat;
+  background: #f6f7fb url('https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/index/bg1.png') left top/100%
+    560rpx no-repeat;
 }
 </style>
 
@@ -763,464 +670,261 @@ page {
   }
 
   .banner {
-    padding: calc(var(--page-title-height) + 39rpx) 0 0;
+    padding: calc(var(--page-title-height) + 29rpx) 0 0;
   }
 
-  .card-container {
-    padding: 0 30rpx 200rpx;
+  .plan-data-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: relative;
 
-    .weight-card {
-      background: #5664e5;
-      border-radius: 20rpx;
-      padding: 48rpx 20rpx 20rpx;
+    .circle {
       position: relative;
-      margin-bottom: 23rpx;
+      width: 326rpx;
+      height: 326rpx;
+      background: conic-gradient(from 0deg at 50% 50%, #71e8ca, #a2f4ba);
+      border-radius: 50%;
 
-      .options {
+      .circle-center {
         position: absolute;
-        top: 30rpx;
-        right: 20rpx;
+        left: 18rpx;
+        right: 18rpx;
+        top: 18rpx;
+        bottom: 18rpx;
+        border-radius: 50%;
+        background: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
 
-        .btn {
-          padding: 0 20rpx;
-          height: 45rpx;
-          margin-bottom: 20rpx;
+        .plan-data {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 44rpx;
 
-          border-radius: 23rpx;
-          font-weight: 500;
+          .top {
+            display: flex;
+            align-items: center;
+
+            .tip {
+              font-weight: 500;
+              font-size: 24rpx;
+              color: #111111;
+              position: relative;
+              top: 18rpx;
+              margin-right: 18rpx;
+            }
+
+            .number {
+              color: #000000;
+              font-weight: 600;
+
+              text {
+                &:nth-child(1) {
+                  font-size: 85rpx;
+                }
+
+                &:nth-child(2) {
+                  font-size: 40rpx;
+                }
+              }
+            }
+
+            .unit {
+              font-weight: 500;
+              font-size: 25rpx;
+              color: #111111;
+              position: relative;
+              top: -20rpx;
+              left: -12rpx;
+            }
+          }
+
+          .bottom {
+            width: 177rpx;
+            height: 40rpx;
+            background: #65d285;
+            border-radius: 20rpx;
+            font-size: 24rpx;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+        }
+
+        .add-plan {
+          width: 171rpx;
+          height: 56rpx;
+          background: #66d286;
+          border-radius: 28rpx;
           font-size: 24rpx;
-          background: #fd6896;
           color: #ffffff;
           display: flex;
           align-items: center;
           justify-content: center;
         }
       }
+    }
 
-      .data1 {
-        color: #ffffff;
-        display: flex;
-        align-items: flex-end;
-        margin-bottom: 58rpx;
+    .btn {
+      position: absolute;
+      right: 0;
+      top: 12rpx;
 
-        .left,
-        .right {
-          width: 50%;
-          display: flex;
-          flex-direction: column;
-
-          text {
-            &:nth-child(1) {
-              font-weight: bold;
-              margin-bottom: 47rpx;
-            }
-
-            &:nth-child(2) {
-              font-weight: 500;
-              font-size: 24rpx;
-            }
-          }
-        }
+      image {
+        width: 135rpx;
       }
+    }
+  }
 
-      .data2 {
-        width: 100%;
-        height: 105rpx;
-        background: #737edd;
-        border-radius: 20rpx;
-        padding: 0 90rpx;
+  .weight-data-wrapper {
+    position: relative;
+    top: -85rpx;
+    background: url('https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/index/bg2.png') left top/100% auto
+      no-repeat;
+    padding: 47rpx 33rpx;
+
+    .weight-data {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .weight-number {
         display: flex;
+        flex-direction: column;
         align-items: center;
-        justify-content: space-between;
+        justify-content: center;
+        gap: 21rpx;
+        margin-bottom: 87rpx;
 
-        .item {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          gap: 20rpx;
-
-          > view {
+        text {
+          &:nth-child(1) {
             font-weight: 500;
-            color: #fcfcfc;
+            font-size: 50rpx;
+            color: #000000;
+          }
 
-            &:nth-child(1) {
-              font-size: 24rpx;
-            }
-
-            &:nth-child(2) {
-              font-size: 30rpx;
-            }
+          &:nth-child(2) {
+            font-size: 24rpx;
+            color: #999999;
           }
         }
       }
     }
 
-    .calorie-card {
-      background: #ffffff;
-      box-shadow: 0 3rpx 21rpx 0 rgba(215, 218, 242, 0.29);
-      border-radius: 20rpx;
-      padding: 28rpx 50rpx 30rpx 18rpx;
-      margin-bottom: 21rpx;
+    .calorie-type {
+      padding: 0 27rpx;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 45rpx;
 
-      .title {
-        font-weight: 500;
-        font-size: 30rpx;
-        color: #111111;
-        margin-bottom: 43rpx;
-      }
-
-      .calorie-container {
-        padding: 0 36rpx;
-
-        .chart {
-          display: flex;
-          align-items: center;
-          border-bottom: 4rpx solid #eeeeee;
-          padding-bottom: 31rpx;
-          margin-bottom: 30rpx;
-
-          .left {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 32rpx;
-
-            .data-item {
-              display: flex;
-              align-items: center;
-
-              &.data-item1 {
-                .line {
-                  background: #e5e8ff;
-                }
-              }
-
-              &.data-item2 {
-                .line {
-                  background: #ffeaf0;
-                }
-              }
-
-              .line {
-                width: 4rpx;
-                height: 70rpx;
-                border-radius: 2rpx;
-                margin-right: 15rpx;
-              }
-
-              .data {
-                display: flex;
-                flex-direction: column;
-                gap: 21rpx;
-
-                .chart-title {
-                  font-size: 24rpx;
-                  color: #666666;
-                }
-
-                .number {
-                  display: flex;
-                  align-items: center;
-
-                  image {
-                    width: 29rpx;
-                    margin-right: 12rpx;
-                  }
-
-                  view {
-                    text {
-                      &:nth-child(1) {
-                        color: #111111;
-                        font-size: 28rpx;
-                        margin-right: 10rpx;
-                      }
-
-                      &:nth-child(2) {
-                        color: #999999;
-                        font-size: 22rpx;
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-
-          .right {
-            flex-shrink: 0;
-            width: 190rpx;
-            height: 190rpx;
-            position: relative;
-
-            .tip {
-              position: absolute;
-              left: 0;
-              right: 0;
-              top: 0;
-              bottom: 0;
-              display: flex;
-              flex-direction: column;
-              align-items: center;
-              justify-content: center;
-              gap: 10rpx;
-
-              text {
-                &:nth-child(1) {
-                  color: #5664e5;
-                  font-size: 32rpx;
-                }
-
-                &:nth-child(2) {
-                  color: #999999;
-                  font-size: 22rpx;
-                }
-              }
-            }
-          }
-        }
-
-        .calorie-type {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-
-          .calorie-item {
-            display: flex;
-            flex-direction: column;
-            gap: 11rpx;
-
-            .name {
-              font-size: 24rpx;
-              color: #444444;
-            }
-
-            .progress {
-              width: 147rpx;
-              height: 10rpx;
-              border-radius: 5rpx;
-              position: relative;
-
-              text {
-                position: absolute;
-                left: 0;
-                top: 0;
-                height: 100%;
-                border-radius: 5rpx;
-              }
-            }
-
-            .value {
-              font-size: 22rpx;
-              color: #999999;
-            }
-          }
-        }
-      }
-    }
-
-    .food-card {
-      background: #ffffff;
-      box-shadow: 0 3rpx 21rpx 0 rgba(215, 218, 242, 0.29);
-      border-radius: 20rpx;
-      padding: 29rpx 21rpx 34rpx 17rpx;
-      margin-bottom: 21rpx;
-
-      .title {
-        margin-bottom: 41rpx;
+      .calorie-item {
         display: flex;
-        align-items: center;
-        justify-content: space-between;
+        flex-direction: column;
+        gap: 20rpx;
 
-        .left {
+        .name {
           font-weight: 500;
-          font-size: 30rpx;
+          font-size: 24rpx;
           color: #111111;
         }
 
-        .right {
-          color: #afb6f6;
+        .progress {
+          width: 180rpx;
+          height: 6rpx;
+          border-radius: 3rpx;
+          position: relative;
+
+          text {
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            border-radius: 3rpx;
+          }
+        }
+
+        .value {
           font-size: 24rpx;
+          color: #999999;
+
+          text {
+            &:nth-child(1) {
+              color: #111111;
+            }
+          }
+        }
+      }
+    }
+
+    .banners {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 21rpx;
+
+      image {
+        width: 335rpx;
+      }
+    }
+
+    .food-wrapper {
+      .food-tip {
+        height: 69rpx;
+        background: #fcf3e4;
+        border-radius: 29rpx 29rpx 0 0;
+        padding: 0 29rpx;
+        display: flex;
+        align-items: center;
+
+        text {
+          position: relative;
+          top: -4rpx;
+
+          &:nth-child(1) {
+            color: #867659;
+            font-size: 24rpx;
+          }
+
+          &:nth-child(2) {
+            color: #cdae7a;
+            font-size: 22rpx;
+          }
         }
       }
 
-      .food-type {
+      .food-list {
+        position: relative;
+        top: -10rpx;
         display: flex;
         flex-direction: column;
         gap: 20rpx;
 
         .food-item {
+          padding: 45rpx 31rpx;
           background: #ffffff;
-          box-shadow: 0 3rpx 21rpx 0 rgba(215, 218, 242, 0.29);
-          border-radius: 20rpx;
-          padding: 23rpx 15rpx;
-          display: flex;
-          align-items: center;
+          border-radius: 30rpx;
 
-          image {
-            flex-shrink: 0;
-            width: 85rpx;
-            margin-right: 29rpx;
-          }
-
-          .name {
-            flex-grow: 1;
-            overflow: hidden;
+          .food-item-text {
+            height: 100%;
             font-weight: 500;
             font-size: 28rpx;
-            color: #222222;
-
-            .recode {
-              font-size: 22rpx;
-              color: #999999;
-              margin-top: 19rpx;
-              white-space: nowrap;
-              overflow: hidden;
-              text-overflow: ellipsis;
-            }
-          }
-
-          .calorie {
-            flex-shrink: 0;
-            font-weight: 500;
-            font-size: 28rpx;
-            color: #333333;
-            margin: 0 21rpx 0 10rpx;
-          }
-
-          .add {
-            flex-shrink: 0;
-            width: 48rpx;
-            height: 48rpx;
-            background: #5664e5;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 34rpx;
-            font-weight: bold;
-            color: #ffffff;
-
-            text {
-              position: relative;
-              top: -4rpx;
-            }
-          }
-        }
-      }
-    }
-
-    .motion-card {
-      background: #ffffff;
-      box-shadow: 0 3rpx 21rpx 0 rgba(215, 218, 242, 0.29);
-      border-radius: 20rpx;
-      padding: 31rpx 19rpx 16rpx 22rpx;
-
-      .title {
-        margin-bottom: 37rpx;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        .left {
-          font-weight: 500;
-          font-size: 30rpx;
-          color: #111111;
-        }
-
-        .right {
-          color: #afb6f6;
-          font-size: 24rpx;
-        }
-      }
-
-      .motion-detail {
-        padding: 0 17rpx;
-
-        .motion-data {
-          padding: 0 0 30rpx;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          border-bottom: 2rpx dashed #eeeeee;
-
-          .left {
-            color: #333333;
-            font-size: 28rpx;
-
-            text {
-              color: #5664e5;
-              font-size: 36rpx;
-            }
-          }
-
-          .right {
-            font-weight: 500;
-            font-size: 22rpx;
-            color: #999999;
-          }
-        }
-
-        .motion-list {
-          padding: 30rpx 0;
-          display: flex;
-          flex-direction: column;
-          gap: 29rpx;
-
-          .motion-item {
+            color: #111111;
             display: flex;
             align-items: center;
 
             text {
-              &:nth-child(1) {
-                color: #333333;
-                font-size: 26rpx;
-                font-weight: 500;
-                margin-right: 10rpx;
-              }
-
-              &:nth-child(2) {
-                color: #666666;
-                font-weight: 500;
-                font-size: 24rpx;
-                flex-grow: 1;
-              }
-
-              &:nth-child(3) {
-                font-size: 22rpx;
-                color: #666666;
-              }
+              color: #66d286;
+              font-size: 30rpx;
             }
           }
         }
       }
-
-      .add-motion {
-        width: 158rpx;
-        height: 54rpx;
-        margin: 0 auto;
-        background: #ebedff;
-        border-radius: 27rpx;
-        border: 1px solid #5664e5;
-        font-weight: 500;
-        font-size: 26rpx;
-        color: #5664e5;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-    }
-  }
-
-  .adv1 {
-    position: fixed;
-    left: 30rpx;
-    right: 30rpx;
-    bottom: 10rpx;
-
-    image {
-      width: 100%;
     }
   }
 }
