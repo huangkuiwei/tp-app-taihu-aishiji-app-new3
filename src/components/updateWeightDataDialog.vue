@@ -1,5 +1,5 @@
 <template>
-  <uni-popup ref="updateWeightDataDialog">
+  <uni-popup ref="updateWeightDataDialog" type="bottom" :safe-area="false">
     <view class="update-weight-data-dialog">
       <view class="title">选择当前体重</view>
 
@@ -104,16 +104,17 @@ export default {
 
 <style scoped lang="scss">
 .update-weight-data-dialog {
-  width: 690rpx;
+  width: 100%;
   background: #ffffff;
-  border-radius: 30rpx;
-  padding: 31rpx 30rpx 42rpx;
+  border-radius: 30rpx 30rpx 0 0;
+  padding: 30rpx 80rpx 50rpx;
 
   .title {
     font-weight: 500;
-    font-size: 30rpx;
+    font-size: 28rpx;
     color: #111111;
-    margin-bottom: 69rpx;
+    text-align: center;
+    margin-bottom: 54rpx;
   }
 
   .weight-list {
@@ -132,14 +133,14 @@ export default {
             .value {
               font-weight: bold;
               font-size: 50rpx;
-              color: #5664e5;
+              color: #65d285;
               margin-right: 17rpx;
             }
 
             .unit {
               font-weight: 500;
               font-size: 24rpx;
-              color: #5664e5;
+              color: #65d285;
             }
           }
 
@@ -167,13 +168,13 @@ export default {
   }
 
   .btn {
-    width: 420rpx;
-    height: 90rpx;
+    width: 550rpx;
+    height: 100rpx;
+    background: #65d285;
+    border-radius: 50rpx;
     margin: 0 auto;
-    background: linear-gradient(90deg, #4f69e6 0%, #6b56e3 100%);
-    border-radius: 45rpx;
     font-weight: bold;
-    font-size: 28rpx;
+    font-size: 30rpx;
     color: #ffffff;
     display: flex;
     align-items: center;

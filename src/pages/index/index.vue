@@ -1,6 +1,6 @@
 <template>
   <view class="index-page">
-    <view class="page-title">欢迎回来</view>
+    <view class="page-title">{{ isLogin ? '欢迎回来' : '记录' }}</view>
     <view class="banner"></view>
 
     <view class="plan-data-container">
@@ -10,7 +10,13 @@
             <view class="top">
               <text class="tip">{{ isWeightLoss ? '减重' : '增重' }}</text>
               <view class="number">
-                <text>{{ Math.floor(Math.abs(homeWeightPlanData.weight_loss)) }}</text>
+                <text
+                  >{{
+                    ((isWeightLoss && homeWeightPlanData.weight_loss < 0) ||
+                      (!isWeightLoss && homeWeightPlanData.weight_loss > 0)) &&
+                    '-'
+                  }}{{ Math.floor(Math.abs(homeWeightPlanData.weight_loss)) }}</text
+                >
                 <text
                   >.{{
                     (
@@ -21,7 +27,7 @@
                   }}</text
                 >
               </view>
-              <text class="unit">斤</text>
+              <text class="unit">公斤</text>
             </view>
 
             <view class="bottom" @click="showRecodeWeight">点击记录体重</view>
@@ -69,7 +75,6 @@
           <view class="progress" style="background: #e6e6e6">
             <text style="background: #fdcd00" :style="{ width: dailyCalorie.remainingCRatio + '%' }"></text>
           </view>
-          <!-- TODO 脂肪数据需要克数 -->
           <view class="value" v-if="dailyCalorie.fat_requirement">
             <text>{{ dailyCalorie.fat_intake }}/</text>
             <text>{{ dailyCalorie.fat_requirement }}克</text>
@@ -82,7 +87,6 @@
           <view class="progress" style="background: #e6e6e6">
             <text style="background: #5664e5" :style="{ width: dailyCalorie.remainingARatio + '%' }"></text>
           </view>
-          <!-- TODO 碳水数据需要克数 -->
           <view class="value" v-if="dailyCalorie.carbohydrate_requirement">
             <text>{{ dailyCalorie.carbohydrate_intake }}/</text>
             <text>{{ dailyCalorie.carbohydrate_requirement }}克</text>
@@ -95,7 +99,6 @@
           <view class="progress" style="background: #e6e6e6">
             <text style="background: #fd6896" :style="{ width: dailyCalorie.remainingBRatio + '%' }"></text>
           </view>
-          <!-- TODO 蛋白质数据需要克数 -->
           <view class="value" v-if="dailyCalorie.protein_requirement">
             <text>{{ dailyCalorie.protein_intake }}/</text>
             <text>{{ dailyCalorie.protein_requirement }}克</text>
@@ -109,7 +112,7 @@
         <image
           mode="widthFix"
           src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/index/banner1.png"
-          @click="openFoodRecodeDialog"
+          @click="openSelectFoodTypeDialog"
         />
 
         <!-- TODO banner图片切图有问题 -->
@@ -121,40 +124,88 @@
       </view>
 
       <view class="food-wrapper">
-        <view class="food-tip">
+        <view class="food-tip" @click="goWeightManagementPlan">
           <text>会员减重方案</text>
           <text>为您定制专属的饮食方案</text>
+          <text>></text>
         </view>
 
-        <!-- TODO 饮食记录 -->
         <view class="food-list">
           <view class="food-item" v-for="item of foodRecodeList" :key="item.type">
-            <view class="food-item-text">早餐<text>500</text>千卡</view>
+            <view class="food-item-text" @click="onSelectTypeChange(item)">
+              {{ item.text }}<text>{{ currentCalorie(item.foodList) }}</text
+              >千卡
+            </view>
+
+            <view class="food-item-detail" v-show="item.active">
+              <view class="current-food" v-if="item.foodList.length">
+                <view class="current-food-item-wrap">
+                  <view class="current-food-item" v-for="(item1, index) of item.foodList" :key="index">
+                    <text>{{ item1.name }}</text>
+                    <!-- TODO 单位是重量还是千卡？ -->
+                    <text>{{ item1.calorie }}千卡</text>
+                  </view>
+                </view>
+
+                <view
+                  class="current-food-item1"
+                  @click="$toRouter('/pages/foodAnalysis/foodAnalysis', `type=${item.type}`)"
+                >
+                  <text>...</text>
+                </view>
+              </view>
+
+              <view
+                class="progress"
+                @click="item.foodList.length && $toRouter('/pages/foodAnalysis/foodAnalysis', `type=${item.type}`)"
+              >
+                <text class="tip">还可以吃</text>
+                <!-- TODO 进度 -->
+                <view class="progress-line">
+                  <text></text>
+                </view>
+                <!-- TODO 每餐建议热量 -->
+                <text class="number">1200千卡</text>
+                <text class="icon">▶</text>
+              </view>
+            </view>
           </view>
         </view>
       </view>
     </view>
 
+    <view class="ai-icon">
+      <image
+        mode="widthFix"
+        src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/index/ai-icon.png"
+        @click="jumpAi(jkzsChat)"
+      />
+    </view>
+
     <add-food-recode-dialog ref="addFoodRecodeDialog" :type="selectFoodType" @addRecode="addRecode" />
     <add-motion-recode-dialog ref="addMotionRecodeDialog" @addRecode="addMotionRecode" />
     <update-weight-data-dialog ref="updateWeightDataDialog" @updateSuccess="initData" />
+    <select-food-type-dialog
+      ref="selectFoodTypeDialog"
+      :foodRecodeList="foodRecodeList"
+      @selectFoodTypeSubmit="openFoodRecodeDialog"
+    />
   </view>
 </template>
 
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex';
-import * as echarts from '@/uni_modules/lime-echart/static/echarts.min';
 import $http from '@/utils/http';
 import AddFoodRecodeDialog from '@/components/addFoodRecodeDialog.vue';
 import AddMotionRecodeDialog from '@/components/addMotionRecodeDialog.vue';
 import UpdateWeightDataDialog from '@/components/updateWeightDataDialog.vue';
-
-let chart1 = null;
+import SelectFoodTypeDialog from '@/components/selectFoodTypeDialog.vue';
 
 export default {
   name: 'indexPage',
 
   components: {
+    SelectFoodTypeDialog,
     UpdateWeightDataDialog,
     AddMotionRecodeDialog,
     AddFoodRecodeDialog,
@@ -163,70 +214,6 @@ export default {
   data() {
     return {
       homeWeightPlanData: null,
-      option1: {
-        series: [
-          {
-            type: 'gauge',
-            startAngle: 90,
-            endAngle: -270,
-            min: 0,
-            max: 100,
-            splitNumber: 12,
-            itemStyle: {
-              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                {
-                  offset: 0,
-                  color: '#5168E6', // 起始颜色
-                },
-                {
-                  offset: 1,
-                  color: '#6B57E3', // 结束颜色
-                },
-              ]),
-              shadowColor: 'transparent',
-              shadowBlur: 10,
-              shadowOffsetX: 2,
-              shadowOffsetY: 2,
-            },
-            progress: {
-              show: true,
-              roundCap: true,
-              width: 7,
-            },
-            pointer: {
-              show: false,
-            },
-            axisLine: {
-              roundCap: true,
-              lineStyle: {
-                width: 2,
-                color: [[1, '#DBDCEC']],
-              },
-            },
-            radius: '100%',
-            axisTick: {
-              show: false,
-            },
-            splitLine: {
-              show: false,
-            },
-            axisLabel: {
-              show: false,
-            },
-            title: {
-              show: false,
-            },
-            detail: {
-              show: false,
-            },
-            data: [
-              {
-                value: 0,
-              },
-            ],
-          },
-        ],
-      },
       dailyCalorie: {},
       foodRecodeList: [
         {
@@ -234,40 +221,48 @@ export default {
           icon: 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/home/food-type1.png',
           text: '早餐',
           foodList: [],
+          active: false,
         },
         {
           type: 3,
           icon: 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/home/food-type2.png',
           text: '午餐',
           foodList: [],
+          active: false,
         },
         {
           type: 5,
           icon: 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/home/food-type3.png',
           text: '晚餐',
           foodList: [],
+          active: false,
         },
         {
           type: 2,
           icon: 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app/recode/food-type1.png',
           text: '早加餐',
           foodList: [],
+          active: false,
         },
         {
           type: 4,
           icon: 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app/recode/food-type2.png',
           text: '午加餐',
           foodList: [],
+          active: false,
         },
         {
           type: 6,
           icon: 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app/recode/food-type3.png',
           text: '晚加餐',
           foodList: [],
+          active: false,
         },
       ],
       motionRecodeList: [],
       selectFoodType: undefined,
+      aiChartList: [],
+      jkzsChat: {},
     };
   },
 
@@ -287,73 +282,16 @@ export default {
       return this.homeWeightPlanData.plan_initial_weight - this.homeWeightPlanData.plan_target_weight > 0;
     },
 
-    countdownDays() {
-      if (this.homeWeightPlanData && this.homeWeightPlanData.end_date) {
-        let time = new Date(this.homeWeightPlanData.end_date.replace(/-/g, '/')) - new Date();
-        let days = Math.ceil(time / (60 * 60 * 24 * 1000));
+    currentCalorie() {
+      return (foodList) => {
+        let currentCalorie = 0;
 
-        if (days < 0) {
-          days = 0;
-        }
+        foodList.forEach((item) => {
+          currentCalorie += item.calorie;
+        });
 
-        return days;
-      }
-
-      return 0;
-    },
-
-    suggestCalorie() {
-      return (type) => {
-        if (!this.dailyCalorie.calorie_requirement) {
-          return 0;
-        }
-
-        let ratio = 0;
-
-        if (type === 1 || type === 5) {
-          ratio = 0.3;
-        } else {
-          ratio = 0.4;
-        }
-
-        return Math.round(this.dailyCalorie.calorie_requirement * ratio);
+        return currentCalorie;
       };
-    },
-
-    totalMotion() {
-      let totalMotion = 0;
-      this.motionRecodeList.forEach((item) => {
-        totalMotion += item.calorie;
-      });
-
-      return Math.round(totalMotion);
-    },
-
-    updateTime() {
-      if (this.userDetailInfo) {
-        if (this.userDetailInfo.begin_date === this.userDetailInfo.weight_recode_date) {
-          return '暂无数据';
-        }
-
-        let date = new Date().format().slice(0, 10);
-        let day =
-          new Date(date + ' 23:59:59').getTime() -
-          new Date(this.userDetailInfo.weight_recode_date.replace(/-/g, '/')).getTime();
-        let days = Math.ceil(day / (24 * 60 * 60 * 1000));
-
-        if (days === 1) {
-          return `今天 ${this.userDetailInfo.weight_recode_date.slice(11, 16)}`;
-        } else if (days === 2) {
-          return `昨天 ${this.userDetailInfo.weight_recode_date.slice(11, 16)}`;
-        } else {
-          return `${this.userDetailInfo.weight_recode_date.slice(5, 10)} ${this.userDetailInfo.weight_recode_date.slice(
-            11,
-            16,
-          )}`;
-        }
-      }
-
-      return '暂无数据';
     },
   },
 
@@ -368,11 +306,6 @@ export default {
   methods: {
     ...mapActions('app', ['_getUserDetailInfo']),
 
-    async init1() {
-      chart1 = await this.$refs.chart1Ref.init(echarts);
-      chart1.setOption(this.option1);
-    },
-
     /**
      * 初始化数据
      */
@@ -384,6 +317,7 @@ export default {
 
       this.getDailyCalorie();
       this.getDailyFoods();
+      this.getAiChartList();
       await this.getHomeWeightPlan().catch(() => {});
       await this._getUserDetailInfo().catch(() => {});
 
@@ -443,8 +377,8 @@ export default {
           }
 
           res.data.remainingARatio = (res.data.carbohydrate_intake / res.data.carbohydrate_requirement) * 100;
-          res.data.remainingBRatio = (res.data.protein_intake / res.data.carbohydrate_requirement) * 100;
-          res.data.remainingCRatio = (res.data.fat_intake / res.data.carbohydrate_requirement) * 100;
+          res.data.remainingBRatio = (res.data.protein_intake / res.data.protein_requirement) * 100;
+          res.data.remainingCRatio = (res.data.fat_intake / res.data.fat_requirement) * 100;
 
           if (res.data.remainingARatio > 100) {
             res.data.remainingARatio = 100;
@@ -459,16 +393,6 @@ export default {
           }
 
           this.dailyCalorie = res.data;
-
-          // 图表数据修改和渲染
-          this.option1.series[0].data[0].value = ratio;
-
-          let timer = setInterval(() => {
-            if (chart1) {
-              chart1.setOption(this.option1);
-              clearInterval(timer);
-            }
-          }, 50);
         })
         .catch((err) => {
           if (err.Msg === '未找到健康档案，请先完成健康评估') {
@@ -494,13 +418,45 @@ export default {
           this.foodRecodeList.forEach((item) => {
             let current = res.data.find((item1) => item1.type === item.type);
             item.foodList = (current && current.die_list) || [];
-            item.foodList = item.foodList.map((x) => x.name).join(' ');
           });
 
           let motionItem = res.data.find((item1) => item1.type === 7);
 
           this.motionRecodeList = (motionItem && motionItem.die_list) || [];
         });
+    },
+
+    /**
+     * 获取 ai 搭子列表
+     */
+    getAiChartList() {
+      $http
+        .get('api/baseai/agent-list')
+        .then((res) => {
+          let jkzsChatIndex = res.data.findIndex((item) => item.id === 10000);
+
+          if (jkzsChatIndex !== -1) {
+            this.jkzsChat = res.data[jkzsChatIndex];
+          }
+
+          res.data.splice(jkzsChatIndex, 1);
+          this.aiChartList = res.data;
+        })
+        .catch(() => {
+          this.aiChartList = [];
+        });
+    },
+
+    /**
+     * 跳转 AI 搭子聊天界面
+     */
+    jumpAi(item) {
+      if (item.id === 10000) {
+        this.$toRouter('/pages/healthAssistant/healthAssistant', `agent_id=${item.id}&name=${item.name}`);
+        return;
+      }
+
+      this.$toRouter('/pages/aiChat/aiChat', `agent_id=${item.id}&name=${item.name}`);
     },
 
     showRecodeWeight() {
@@ -537,6 +493,7 @@ export default {
     },
 
     openFoodRecodeDialog(type) {
+      console.log('type', type);
       if (!this.isLogin) {
         this.$toRouter('/packageLogin/pages/login/login');
         return;
@@ -563,6 +520,15 @@ export default {
           event.input_type
         }&date_time=${new Date().format()}`,
       );
+    },
+
+    openSelectFoodTypeDialog() {
+      if (!this.isLogin) {
+        this.$toRouter('/packageLogin/pages/login/login');
+        return;
+      }
+
+      this.$refs.selectFoodTypeDialog.open();
     },
 
     openMotionRecodeDialog() {
@@ -653,6 +619,15 @@ export default {
       // 创建计划
       this.$toRouter('/pages/addPlan/addPlan');
     },
+
+    onSelectTypeChange(item) {
+      if (!this.isLogin) {
+        this.$toRouter('/packageLogin/pages/login/login');
+        return;
+      }
+
+      item.active = !item.active;
+    },
   },
 };
 </script>
@@ -667,6 +642,7 @@ page {
 <style scoped lang="scss">
 .index-page {
   .page-title {
+    z-index: 999;
   }
 
   .banner {
@@ -894,6 +870,12 @@ page {
           &:nth-child(2) {
             color: #cdae7a;
             font-size: 22rpx;
+            flex-grow: 1;
+          }
+
+          &:nth-child(3) {
+            color: #cdae7a;
+            font-size: 22rpx;
           }
         }
       }
@@ -909,6 +891,7 @@ page {
           padding: 45rpx 31rpx;
           background: #ffffff;
           border-radius: 30rpx;
+          transition: all 0.3s;
 
           .food-item-text {
             height: 100%;
@@ -921,10 +904,130 @@ page {
             text {
               color: #66d286;
               font-size: 30rpx;
+              font-weight: 800;
+              margin: 0 6rpx;
+            }
+          }
+
+          .food-item-detail {
+            margin-top: 43rpx;
+
+            .current-food {
+              display: flex;
+              align-items: center;
+              overflow: auto;
+              margin-bottom: 37rpx;
+
+              .current-food-item-wrap {
+                flex-grow: 1;
+                display: flex;
+                align-items: center;
+                gap: 14rpx;
+                overflow: auto;
+                margin-right: 14rpx;
+
+                .current-food-item {
+                  flex-shrink: 0;
+                  height: 100rpx;
+                  padding: 0 14rpx;
+                  background: #f8f8f8;
+                  border-radius: 20rpx;
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  justify-content: center;
+                  gap: 15rpx;
+
+                  text {
+                    &:nth-child(1) {
+                      font-weight: 500;
+                      font-size: 24rpx;
+                      color: #111111;
+                    }
+
+                    &:nth-child(2) {
+                      font-size: 26rpx;
+                      color: #666666;
+                    }
+                  }
+                }
+              }
+
+              .current-food-item1 {
+                width: 116rpx;
+                height: 100rpx;
+                background: #f8f8f8;
+                border-radius: 20rpx;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+
+                text {
+                  font-weight: 500;
+                  font-size: 26rpx;
+                  color: #111111;
+                  position: relative;
+                  top: -6rpx;
+                }
+              }
+            }
+
+            .progress {
+              display: flex;
+              align-items: center;
+
+              .tip {
+                font-size: 24rpx;
+                color: #666666;
+                margin-right: 12rpx;
+              }
+
+              .progress-line {
+                flex-grow: 1;
+                height: 10rpx;
+                background: #ededf5;
+                border-radius: 5rpx;
+                margin-right: 10rpx;
+                position: relative;
+
+                text {
+                  position: absolute;
+                  left: -6rpx;
+                  top: -6rpx;
+                  bottom: 0;
+                  min-width: 20rpx;
+                  height: 20rpx;
+                  background: #65d285;
+                  border-radius: 10rpx;
+                  border: 2rpx solid #ffffff;
+                }
+              }
+
+              .number {
+                font-size: 24rpx;
+                color: #666666;
+                margin-right: 18rpx;
+              }
+
+              .icon {
+                color: #696b75;
+                font-size: 24rpx;
+              }
             }
           }
         }
       }
+    }
+  }
+
+  .ai-icon {
+    position: fixed;
+    right: 13rpx;
+    bottom: 6rpx;
+
+    image {
+      width: 112rpx;
     }
   }
 }

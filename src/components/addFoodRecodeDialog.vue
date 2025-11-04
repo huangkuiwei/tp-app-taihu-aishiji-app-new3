@@ -17,24 +17,6 @@
           :maxlength="-1"
           placeholder="快来说说你吃了什么吧！比如200ml豆浆、一个鸡蛋"
         />
-
-        <view class="tools">
-          <view class="recording">
-            <image
-              mode="widthFix"
-              src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/icon1.png"
-              :style="{ width: recording ? '100rpx' : '90rpx' }"
-              @touchstart="handleTouchStart"
-              @touchend="handleTouchEnd"
-            />
-
-            <view
-              v-if="progress"
-              class="progress-ring"
-              :style="{ background: `conic-gradient(#5664E5 calc(${progress} * 0.6deg), #5664e520 0)` }"
-            />
-          </view>
-        </view>
       </view>
 
       <view class="submit" @click="submit">确定</view>
@@ -77,13 +59,6 @@ export default {
           icon: 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app/recode/food-icon3.png',
           text: '晚餐',
         },
-        {
-          type: 2,
-          icon: 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app/recode/food-icon1.png',
-          text: '加餐',
-        },
-      ],
-      addMealList: [
         {
           type: 2,
           icon: 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app/recode/food-icon1.png',
@@ -130,6 +105,7 @@ export default {
     },
 
     close() {
+      this.foodText = '';
       this.$refs.addRecodePopup.close();
     },
 
@@ -300,65 +276,13 @@ export default {
       font-size: 26rpx;
       line-height: 40rpx;
     }
-
-    .tools {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20rpx 10rpx;
-
-      .recording {
-        width: 120rpx;
-        height: 120rpx;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-
-        .tip {
-          font-size: 22rpx;
-          color: #bfbfbf;
-          position: absolute;
-          top: -34rpx;
-          left: 18rpx;
-        }
-
-        .progress-ring {
-          position: absolute;
-          left: 0;
-          right: 0;
-          top: 0;
-          bottom: 0;
-          width: 100%;
-          height: 100%;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
-          &::after {
-            content: '';
-            position: absolute;
-            width: 116rpx;
-            height: 116rpx;
-            background: #f8f8f8;
-            border-radius: 50%;
-          }
-        }
-
-        image {
-          position: relative;
-          z-index: 9;
-        }
-      }
-    }
   }
 
   .submit {
     margin: 0 auto;
     width: 420rpx;
     height: 90rpx;
-    background: linear-gradient(90deg, #4f69e6 0%, #6b56e3 100%);
+    background: #65d285;
     border-radius: 45rpx;
     font-weight: bold;
     font-size: 28rpx;
