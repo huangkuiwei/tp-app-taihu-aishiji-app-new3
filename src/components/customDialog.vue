@@ -48,22 +48,22 @@ export default {
 
 <style scoped lang="scss">
 .custom-dialog {
-  width: 690rpx;
-  background: #ffffff;
-  border-radius: 50rpx;
-  padding: 38rpx 44rpx;
+  width: 550rpx;
+  background: linear-gradient(90deg, #e8fdf4 0%, #f6fcf5 100%);
+  border-radius: 30rpx;
+  padding: 41rpx 25rpx;
 
   .title {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-bottom: 53rpx;
+    margin-bottom: 48rpx;
 
     text {
       font-weight: 500;
-      font-size: 30rpx;
-      color: #1a1a1a;
+      font-size: 36rpx;
+      color: #65d285;
     }
   }
 

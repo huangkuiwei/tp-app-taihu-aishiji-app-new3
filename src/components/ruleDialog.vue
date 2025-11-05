@@ -1,21 +1,14 @@
 <template>
   <custom-dialog ref="ruleDialog" title="活动规则" :shop-close="false">
     <view class="content">
-      <view class="item">
-        <view class="item-title">活动一：开福袋领金豆</view>
-        <view class="item-tip">每日可免费开启一次福袋，完成所有任务可额外开启一次，金豆数量随机</view>
-      </view>
-
-      <view class="item">
-        <view class="item-title">活动二：金币转转乐</view>
-        <view class="item-tip">金币转转了可抽金豆和多日会员（每次消耗10金豆，具体金豆数量见转盘）</view>
-      </view>
-
-      <view class="item">
-        <view class="item-tip">
-          累计金豆可以换取会员，不同数量金豆换取不同期限会员，金豆越多换取会员期限越长（集体具体兑换内容见兑换详情页）
-        </view>
-      </view>
+      <view class="item">·做任务，开盲盒；</view>
+      <view class="item"
+        >·每次开启盲盒消耗需10金币，奖池包含期限会员和不等额金币，开通会员或续费会员均可额外获得3次抽奖机会；</view
+      >
+      <view class="item">·金币可兑换会员，最高可得永久会员，数量有限，先到先得！</view>
+      <view class="item">·如有疑问，可联系客服或拨打客服热线；</view>
+      <!-- TODO 客服电话 -->
+      <view class="item">·客服电话：400-0000-0000</view>
     </view>
 
     <template #footer>
@@ -50,23 +43,14 @@ export default {
 
 <style scoped lang="scss">
 .content {
-  line-height: 32rpx;
-  font-size: 24rpx;
+  font-size: 26rpx;
+  color: #000000;
+  line-height: 48rpx;
   text-align: justify;
+  margin-bottom: 68rpx;
 
   .item {
-    margin-bottom: 30rpx;
-
-    .item-title {
-      color: #5664e5;
-      margin-bottom: 20rpx;
-    }
-
-    .item-tip {
-      text-indent: 48rpx;
-      color: #1a1a1a;
-      line-height: 40rpx;
-    }
+    line-height: 48rpx;
   }
 }
 
@@ -76,11 +60,10 @@ export default {
   justify-content: center;
 
   text {
-    width: 312rpx;
-    height: 85rpx;
-    background: linear-gradient(90deg, #4f69e6 0%, #6b56e3 100%);
-    border-radius: 43rpx;
-    font-weight: 500;
+    width: 343rpx;
+    height: 70rpx;
+    background: #65d285;
+    border-radius: 35rpx;
     font-size: 32rpx;
     color: #ffffff;
     display: flex;

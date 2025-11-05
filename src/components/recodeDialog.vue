@@ -1,15 +1,15 @@
 <template>
-  <custom-dialog ref="recodeDialog" title="金豆明细" :shop-close="false">
+  <custom-dialog ref="recodeDialog" title="中奖记录" :shop-close="false">
     <view class="content">
       <view class="recode-list">
         <template v-if="recodeList.length">
           <view class="recode-item" v-for="(item, index) of recodeList" :key="index">
-            <text>{{ item.change_reason }}{{ item.change_points }}</text>
             <text>{{ item.change_time.slice(0, 10) }}</text>
+            <text>{{ item.change_points > 0 && '+' }}{{ item.change_points }}金币</text>
           </view>
         </template>
 
-        <view class="empty-recode" v-else> 暂无记录 </view>
+        <view class="empty-recode" v-else>暂无记录</view>
       </view>
     </view>
 
@@ -45,6 +45,7 @@ export default {
         mask: true,
       });
 
+      // TODO 中奖记录接口修改
       $http
         .post('api/lucky-bag/points-record', {
           pageIndex: 1,
@@ -88,11 +89,11 @@ export default {
     .recode-item {
       display: flex;
       align-items: center;
-      margin-bottom: 30rpx;
+      margin-bottom: 49rpx;
 
       text {
-        font-size: 24rpx;
-        color: #1a1a1a;
+        font-size: 26rpx;
+        color: #000000;
 
         &:nth-child(1) {
           flex-grow: 1;
@@ -108,11 +109,10 @@ export default {
   justify-content: center;
 
   text {
-    width: 312rpx;
-    height: 85rpx;
-    background: linear-gradient(90deg, #4f69e6 0%, #6b56e3 100%);
-    border-radius: 43rpx;
-    font-weight: 500;
+    width: 343rpx;
+    height: 70rpx;
+    background: #65d285;
+    border-radius: 35rpx;
     font-size: 32rpx;
     color: #ffffff;
     display: flex;
