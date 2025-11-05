@@ -533,7 +533,7 @@
       },
       {
         "pagePath": "pages/statistics/statistics",
-        "text": "发现",
+        "text": "统计",
         "iconPath": "static/tabBar/statistics.png",
         "selectedIconPath": "static/tabBar/statistics1.png"
       },

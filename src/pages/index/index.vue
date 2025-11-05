@@ -10,13 +10,7 @@
             <view class="top">
               <text class="tip">{{ isWeightLoss ? '减重' : '增重' }}</text>
               <view class="number">
-                <text
-                  >{{
-                    ((isWeightLoss && homeWeightPlanData.weight_loss < 0) ||
-                      (!isWeightLoss && homeWeightPlanData.weight_loss > 0)) &&
-                    '-'
-                  }}{{ Math.floor(Math.abs(homeWeightPlanData.weight_loss)) }}</text
-                >
+                <text>{{ isMinusSign && '-' }}{{ Math.floor(Math.abs(homeWeightPlanData.weight_loss)) }}</text>
                 <text
                   >.{{
                     (
@@ -33,7 +27,14 @@
             <view class="bottom" @click="showRecodeWeight">点击记录体重</view>
           </view>
 
-          <view class="add-plan" v-else @click="addPlan">添加计划</view>
+          <view class="add-plan" v-else @click="addPlan">
+            <template v-if="isLogin">
+              <text v-if="!userDetailInfo">完善个人信息</text>
+              <text v-else>添加计划</text>
+            </template>
+
+            <text v-else>请登录</text>
+          </view>
         </view>
       </view>
 
@@ -190,6 +191,7 @@
       :foodRecodeList="foodRecodeList"
       @selectFoodTypeSubmit="openFoodRecodeDialog"
     />
+    <complete-plan-dialog ref="completePlanDialog" @addPlan="addPlan" />
   </view>
 </template>
 
@@ -200,11 +202,13 @@ import AddFoodRecodeDialog from '@/components/addFoodRecodeDialog.vue';
 import AddMotionRecodeDialog from '@/components/addMotionRecodeDialog.vue';
 import UpdateWeightDataDialog from '@/components/updateWeightDataDialog.vue';
 import SelectFoodTypeDialog from '@/components/selectFoodTypeDialog.vue';
+import CompletePlanDialog from '@/components/completePlanDialog.vue';
 
 export default {
   name: 'indexPage',
 
   components: {
+    CompletePlanDialog,
     SelectFoodTypeDialog,
     UpdateWeightDataDialog,
     AddMotionRecodeDialog,
@@ -293,6 +297,17 @@ export default {
         return currentCalorie;
       };
     },
+
+    isMinusSign() {
+      if (!this.homeWeightPlanData) {
+        return false;
+      }
+
+      return (
+        (this.isWeightLoss && this.homeWeightPlanData.weight_loss < 0) ||
+        (!this.isWeightLoss && this.homeWeightPlanData.weight_loss > 0)
+      );
+    },
   },
 
   onShareAppMessage() {
@@ -329,6 +344,11 @@ export default {
      */
     getHomeWeightPlan() {
       return $http.get('api/diet-info/weight-plan/home').then((res) => {
+        // 对比数据，是否完成目标
+        if (this.homeWeightPlanData && this.homeWeightPlanData.state === 1 && res.data.state !== 1) {
+          this.$refs.completePlanDialog.open();
+        }
+
         this.homeWeightPlanData = res.data;
       });
     },
