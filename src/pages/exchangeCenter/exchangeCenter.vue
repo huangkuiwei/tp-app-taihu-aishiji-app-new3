@@ -12,45 +12,43 @@
 
     <view class="points-container">
       <view class="points">
+        <image
+          class="header-img"
+          mode="aspectFill"
+          :src="
+            userInfo.avatar_url || 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app/my/default_head.png'
+          "
+        />
+
         <view class="points-title">
-          <text>我的金豆</text>
-          <text>{{ signInfo.points || 0 }}</text>
+          <text>{{ userInfo.uname || '微信用户' }}</text>
+          <text>金币：{{ signInfo.points || 0 }}</text>
         </view>
 
-        <view class="point-detail" @click="$refs.recodeDialog.open()">金豆明细 ></view>
+        <view class="point-detail" @click="$refs.exchangeDialog.open()">兑换记录</view>
       </view>
     </view>
 
     <view class="exchange-container">
-      <view class="title">
-        <text>会员兑换</text>
-        <text @click="$refs.exchangeDialog.open()">兑换记录</text>
-      </view>
-
       <view class="exchange-list">
         <view class="exchange-item" v-for="item of exchangeList" :key="item.id">
-          <image
-            class="vip-icon"
-            mode="widthFix"
-            src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/exchangeCenter/icon1.png"
-          />
-
           <view class="left">
-            <text>{{ item.name }}</text>
-            <text>可享受{{ item.vip_days }}天会员权益</text>
-          </view>
-
-          <view class="right" @click="exchange(item)">
-            <view class="icon">
+            <view class="top">
               <image
                 class="vip-icon"
                 mode="widthFix"
-                src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/exchangeCenter/icno2.png"
+                src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/box/icon1.png"
               />
-
-              <text>{{ item.flowers_required }}</text>
+              <text>{{ item.name }}</text>
             </view>
-            <text class="btn">去兑换</text>
+
+            <view class="bottom">
+              <text>需消耗：{{ item.flowers_required }}金币</text>
+            </view>
+          </view>
+
+          <view class="right" @click="exchange(item)">
+            <text class="btn">兑换</text>
           </view>
         </view>
       </view>
@@ -65,6 +63,7 @@
 import $http from '@/utils/http';
 import ExchangeDialog from '@/pages/exchangeCenter/exchangeDialog.vue';
 import RecodeDialog from '@/components/recodeDialog.vue';
+import { mapState } from 'vuex';
 
 export default {
   name: 'exchangeCenter',
@@ -92,6 +91,10 @@ export default {
       imageUrl: 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/share-img.jpg',
       path: '/pages/index/index',
     };
+  },
+
+  computed: {
+    ...mapState('app', ['userInfo']),
   },
 
   methods: {
@@ -152,7 +155,7 @@ export default {
 <style>
 page {
   height: 100%;
-  background: #ffffff url('https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/exchangeCenter/bg.png') left
+  background: #f6f7fb url('https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/exchangeCenter/bg1.png') left
     top/100% auto no-repeat;
 }
 </style>
@@ -163,71 +166,63 @@ page {
   }
 
   .banner {
-    padding: calc(var(--page-title-height) + 20rpx) 0 0;
+    padding: calc(var(--page-title-height) + 46rpx) 0 0;
   }
 
   .points-container {
-    padding: 0 30rpx;
-    margin-bottom: 30rpx;
+    padding: 0 37rpx;
+    margin-bottom: 82rpx;
 
     .points {
-      padding: 42rpx 19rpx 34rpx;
-      background: url('https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/exchangeCenter/bg2.png') left top/
-        100% 100% no-repeat;
+      display: flex;
+      align-items: center;
+
+      .header-img {
+        width: 130rpx;
+        height: 130rpx;
+        border-radius: 50%;
+        margin-right: 27rpx;
+      }
 
       .points-title {
-        margin-bottom: 37rpx;
+        display: flex;
+        flex-direction: column;
+        gap: 23rpx;
+        flex-grow: 1;
 
         text {
           &:nth-child(1) {
             font-weight: 500;
-            font-size: 26rpx;
-            color: #111111;
-            margin-right: 14rpx;
+            font-size: 36rpx;
+            color: #000000;
           }
 
           &:nth-child(2) {
             font-weight: 500;
-            font-size: 49rpx;
-            color: #111111;
+            font-size: 26rpx;
+            color: #000000;
           }
         }
       }
 
       .point-detail {
-        font-size: 24rpx;
-        color: #999999;
+        width: 148rpx;
+        height: 46rpx;
+        border-radius: 23rpx;
+        border: 1px solid #111111;
+        font-weight: 500;
+        font-size: 26rpx;
+        color: #000000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
     }
   }
 
   .exchange-container {
-    background: #ffffff;
-    border-radius: 30rpx 30rpx 0 0;
-    padding: 29rpx 28rpx;
+    padding: 0 30rpx;
     position: relative;
-
-    .title {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 28rpx;
-      margin-bottom: 32rpx;
-
-      text {
-        font-weight: 500;
-
-        &:nth-child(1) {
-          font-size: 30rpx;
-          color: #111111;
-        }
-
-        &:nth-child(2) {
-          font-size: 26rpx;
-          color: #999999;
-        }
-      }
-    }
 
     .exchange-list {
       display: flex;
@@ -235,67 +230,50 @@ page {
       gap: 20rpx;
 
       .exchange-item {
-        background: #f6f7fb;
-        border-radius: 20rpx;
-        padding: 30rpx 28rpx 13rpx;
+        background: #ffffff;
+        border-radius: 30rpx;
+        padding: 45rpx 27rpx;
         display: flex;
         align-items: center;
         justify-content: space-between;
 
-        .vip-icon {
-          width: 93rpx;
-          margin-right: 32rpx;
-        }
-
         .left {
-          flex-grow: 1;
           display: flex;
           flex-direction: column;
-          gap: 15rpx;
+          gap: 29rpx;
 
-          text {
-            &:nth-child(1) {
-              font-weight: 500;
-              font-size: 28rpx;
-              color: #111111;
-            }
+          .top {
+            display: flex;
+            align-items: center;
 
-            &:nth-child(2) {
-              font-size: 24rpx;
-              color: #999999;
-            }
-          }
-        }
-
-        .right {
-          .icon {
-            margin-bottom: 19rpx;
-
-            image {
-              width: 33rpx;
-              margin-right: 13rpx;
+            .vip-icon {
+              width: 50rpx;
+              margin-right: 21rpx;
             }
 
             text {
               font-weight: 500;
-              font-size: 30rpx;
-              color: #5765e6;
+              font-size: 36rpx;
+              color: #222222;
             }
           }
 
-          .btn {
-            &.disabled {
-              background: #e6e6e6;
-              color: #999999;
-            }
+          .bottom {
+            font-weight: 500;
+            font-size: 26rpx;
+            color: #999999;
+          }
+        }
 
-            background: linear-gradient(90deg, #4f69e6 0%, #6b56e3 100%);
-            border-radius: 15rpx;
-            width: 126rpx;
+        .right {
+          .btn {
+            width: 120rpx;
             height: 55rpx;
             font-weight: 500;
-            font-size: 24rpx;
+            font-size: 26rpx;
             color: #ffffff;
+            background: linear-gradient(90deg, #ff3121 0%, #ff9102 100%);
+            border-radius: 28rpx;
             display: flex;
             align-items: center;
             justify-content: center;

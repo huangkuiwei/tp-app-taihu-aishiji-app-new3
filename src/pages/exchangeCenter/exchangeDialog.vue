@@ -3,12 +3,12 @@
     <view class="content">
       <view class="recode-list" v-if="exchangeList.length">
         <view class="recode-item" v-for="item of exchangeList" :key="item.id">
+          <text>{{ item.exchange_time.slice(0, 10) }}</text>
           <text>{{ item.name }}</text>
-          <text>{{ item.exchange_time.slice(6, 10) }}</text>
         </view>
       </view>
 
-      <view class="empty-recode">暂无记录</view>
+      <view class="empty-recode" v-else>暂无记录</view>
     </view>
 
     <template #footer>
@@ -84,11 +84,11 @@ export default {
     .recode-item {
       display: flex;
       align-items: center;
-      margin-bottom: 30rpx;
+      margin-bottom: 49rpx;
 
       text {
-        font-size: 24rpx;
-        color: #1a1a1a;
+        font-size: 26rpx;
+        color: #000000;
 
         &:nth-child(1) {
           flex-grow: 1;
@@ -113,11 +113,10 @@ export default {
   justify-content: center;
 
   text {
-    width: 312rpx;
-    height: 85rpx;
-    background: linear-gradient(90deg, #4f69e6 0%, #6b56e3 100%);
-    border-radius: 43rpx;
-    font-weight: 500;
+    width: 343rpx;
+    height: 70rpx;
+    background: #65d285;
+    border-radius: 35rpx;
     font-size: 32rpx;
     color: #ffffff;
     display: flex;
