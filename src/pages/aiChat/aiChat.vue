@@ -10,16 +10,6 @@
 
     <view class="banner"></view>
 
-    <view class="tabs">
-      <text :class="{ active: tabValue === 1 }" @click="changeTab(1)">对话</text>
-      <text :class="{ active: tabValue === 2 }" @click="changeTab(2)">发现</text>
-    </view>
-
-    <view class="introduce">
-      <view class="title">{{ aiTitle }}</view>
-      <view class="sub-title">各种饮食运动问题都可以来问我哦</view>
-    </view>
-
     <scroll-view
       class="chat-box"
       :scroll-y="true"
@@ -32,31 +22,31 @@
         paddingTop: tabValue === 2 && '80rpx',
       }"
     >
+      <view style="height: 45rpx"></view>
+
       <view class="question-card" v-show="tabValue === 1">
-        <view class="card-title">
-          <view class="word">你可能感兴趣</view>
-          <image
-            mode="widthFix"
-            src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/discover/icon1.png"
-          />
+        <image
+          class="logo"
+          mode="widthFix"
+          src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/healthAssistant/logo.png"
+        />
+
+        <view class="introduce">
+          <text>你好，</text>
+          <text>我是你的专属{{ aiName }}</text>
         </view>
 
-        <view class="question-list">
-          <view class="question-detail">
-            <!-- 弹幕显示区域 -->
-            <view class="danmu-container" id="danmuContainer">
-              <view
-                v-for="(item, index) in activeDanmus"
-                :key="index"
-                class="danmu-item"
-                :style="{
-                  top: item.top + 'px',
-                  animationDuration: item.duration + 's',
-                }"
-                @click="selectQuestion(item)"
-              >
-                {{ item.text }}
-              </view>
+        <view class="tip">
+          <text>我可以帮你安排规划饮食运动，回答各类问题健康问题。</text>
+          <text>你想问点什么呢？</text>
+        </view>
+
+        <view class="ai-tools">
+          <view class="title">智能工具</view>
+
+          <view class="ai-tools-list">
+            <view class="ai-item" v-for="item of aiChartList" :key="item.id" @click="jumpAi(item)">
+              {{ item.name }}
             </view>
           </view>
         </view>
@@ -75,11 +65,11 @@
       </view>
     </scroll-view>
 
-    <view class="message-box" v-show="tabValue === 1">
+    <view class="message-box">
       <view class="input-box">
         <input
           type="text"
-          :placeholder="tabValue === 1 ? '有什么饮食运动问题需要问我吗？' : '说点什么...'"
+          placeholder="有什么饮食运动问题需要问我吗？"
           :value="questionText"
           @input="questionText = $event.detail.value"
         />
@@ -136,15 +126,8 @@ export default {
       danmuIndex: 0, // 用于循环取弹幕数据的索引
       sendTimeout: null, // 定时器ID
       sendInterval: null, // 定时器ID
+      aiChartList: [],
     };
-  },
-
-  onShow() {
-    this.startDanmu();
-  },
-
-  onHide() {
-    this.initDanmu();
   },
 
   onLoad(options) {
@@ -167,6 +150,7 @@ export default {
     }
 
     this.aiName = decodeURIComponent(options.name);
+    this.getAiChartList();
   },
 
   watch: {
@@ -296,66 +280,37 @@ export default {
   },
 
   methods: {
-    initDanmu() {
-      if (typeof this.sendInterval === 'number') {
-        clearTimeout(this.sendTimeout);
-        clearInterval(this.sendInterval);
-        this.sendTimeout = null;
-        this.sendInterval = null;
-      }
+    /**
+     * 获取 ai 搭子列表
+     */
+    getAiChartList() {
+      $http
+        .get('api/baseai/agent-list')
+        .then((res) => {
+          let jkzsChatIndex = res.data.findIndex((item) => item.id === 10000);
 
-      this.activeDanmus = [];
-      this.danmuIndex = 0;
+          if (jkzsChatIndex !== -1) {
+            this.jkzsChat = res.data[jkzsChatIndex];
+          }
+
+          res.data.splice(jkzsChatIndex, 1);
+          this.aiChartList = res.data;
+        })
+        .catch(() => {
+          this.aiChartList = [];
+        });
     },
 
-    startDanmu() {
-      this.initDanmu();
-      this.sendSingleDanmu();
-
-      this.sendTimeout = setTimeout(() => {
-        this.sendSingleDanmu();
-      }, 1000);
-
-      // 每隔一定时间发送一条弹幕
-      this.sendInterval = setInterval(() => {
-        this.sendSingleDanmu();
-      }, 2000);
-    },
-
-    sendSingleDanmu() {
-      // 循环获取弹幕数据
-      const danmuData = this.allDanmuData[this.danmuIndex % this.allDanmuData.length];
-      this.danmuIndex++;
-
-      const newDanmu = {
-        text: danmuData.text,
-        top: this.topList[this.danmuIndex % this.topList.length],
-        // duration: 10 + Math.random() * 8, // 随机持续时间 10s - 16s
-        duration: 15,
-      };
-
-      this.activeDanmus.push(newDanmu);
-
-      // 可选：限制屏幕上同时存在的弹幕数量，避免过多卡顿
-      // if (this.activeDanmus.length > 50) {
-      // 移除最早的一条
-      // this.activeDanmus.shift();
-      // }
-    },
-
-    changeTab(value) {
-      if (this.tabValue === value) {
+    /**
+     * 跳转 AI 搭子聊天界面
+     */
+    jumpAi(item) {
+      if (item.id === 10000) {
+        this.$toRouter('/pages/healthAssistant/healthAssistant', `agent_id=${item.id}&name=${item.name}`);
         return;
       }
 
-      this.tabValue = value;
-
-      if (value === 1) {
-        this.agent_id = '10000';
-        this.startDanmu();
-      } else {
-        this.agent_id = this.org_agent_id;
-      }
+      this.$toRouter('/pages/aiChat/aiChat', `agent_id=${item.id}&name=${item.name}`);
     },
 
     getHistoryChat() {
@@ -389,11 +344,6 @@ export default {
             this.scrollTop += 1;
           });
         });
-    },
-
-    selectQuestion(item) {
-      this.questionText = item.text;
-      this.sendMessage();
     },
 
     sleep(time) {
@@ -558,57 +508,15 @@ page {
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: url('https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/aichat/bg.png') left top/100% auto
-    no-repeat;
+  background: url('https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/healthAssistant/bg1.png') left top/100%
+    100% no-repeat;
 
   .page-title {
   }
 
   .banner {
     flex-shrink: 0;
-    padding: calc(var(--page-title-height)) 0 60rpx;
-  }
-
-  .tabs {
-    flex-shrink: 0;
-    margin-bottom: 47rpx;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 71rpx;
-
-    text {
-      font-weight: 500;
-      font-size: 28rpx;
-      color: #555555;
-
-      &.active {
-        font-weight: bold;
-        font-size: 32rpx;
-        color: #5664e5;
-      }
-    }
-  }
-
-  .introduce {
-    flex-shrink: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 30rpx;
-
-    .title {
-      font-weight: bold;
-      font-size: 32rpx;
-      color: #5664e5;
-      margin-bottom: 19rpx;
-    }
-
-    .sub-title {
-      font-size: 24rpx;
-      color: #969bad;
-    }
+    padding: calc(var(--page-title-height) + 50rpx) 0 0;
   }
 
   .chat-box {
@@ -617,71 +525,67 @@ page {
     overflow: auto;
 
     .question-card {
-      padding-top: 30rpx;
-      margin-bottom: 30rpx;
+      flex-shrink: 0;
+      background: url('https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/healthAssistant/bg2.png') left
+        top/100% 100% no-repeat;
+      display: flex;
+      flex-direction: column;
+      padding: 34rpx 30rpx;
+      margin-bottom: 75rpx;
+      position: relative;
 
-      .card-title {
-        padding: 38rpx 31rpx 55rpx;
-        background: #5664e5;
-        border-top-left-radius: 20rpx;
-        border-top-right-radius: 20rpx;
-
-        .word {
-          font-weight: 500;
-          font-size: 32rpx;
-          color: #ffffff;
-        }
-
-        image {
-          position: absolute;
-          width: 172rpx;
-          right: 27rpx;
-          top: 0;
-        }
+      .logo {
+        position: absolute;
+        top: -45rpx;
+        right: 0;
+        width: 177rpx;
       }
 
-      .question-list {
-        height: 160px;
-        background: #ffffff;
-        box-shadow: 0 3rpx 21rpx 0 rgba(215, 218, 242, 0.29);
-        border-radius: 20rpx;
-        position: relative;
-        top: -24rpx;
+      .introduce {
+        display: flex;
+        flex-direction: column;
+        gap: 20rpx;
+        font-weight: bold;
+        font-size: 32rpx;
+        color: #7e63ea;
+        line-height: 50rpx;
+        margin-bottom: 49rpx;
+      }
 
-        .question-detail {
-          width: 100%;
-          height: 160px;
-          margin-bottom: 29rpx;
+      .tip {
+        display: flex;
+        flex-direction: column;
+        gap: 10rpx;
+        font-size: 24rpx;
+        color: #333333;
+        margin-bottom: 58rpx;
+      }
+
+      .ai-tools {
+        .title {
+          font-weight: bold;
+          font-size: 28rpx;
+          color: #333333;
+          margin-bottom: 24rpx;
+        }
+
+        .ai-tools-list {
           display: flex;
-          flex-direction: column;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: space-between;
+          gap: 27rpx;
 
-          .danmu-container {
-            height: 100%;
-            width: 100%;
-            position: relative;
-            overflow: hidden;
-
-            .danmu-item {
-              position: absolute;
-              left: 100%;
-              white-space: nowrap;
-              font-size: 24rpx;
-              color: #333333;
-              background: #f2f5ff80;
-              border-radius: 35rpx;
-              height: 35px;
-              padding: 0 44rpx;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-              animation: slideIn linear forwards;
-            }
-
-            @keyframes slideIn {
-              to {
-                transform: translateX(-1440rpx); /* 移动到屏幕左侧外 */
-              }
-            }
+          .ai-item {
+            width: 30%;
+            height: 60rpx;
+            background: #f9f8fe;
+            border-radius: 28rpx;
+            font-size: 24rpx;
+            color: #646369;
+            display: flex;
+            align-items: center;
+            justify-content: center;
           }
         }
       }
@@ -700,9 +604,9 @@ page {
         font-size: 26rpx;
 
         &.question {
-          padding: 18rpx 24rpx;
+          padding: 12rpx 24rpx;
           background: #5664e5;
-          border-radius: 35rpx 35rpx 0rpx 35rpx;
+          border-radius: 35rpx 35rpx 10rpx 35rpx;
           color: #ffffff;
           align-self: flex-end;
         }
@@ -711,7 +615,7 @@ page {
           padding: 0 24rpx;
           min-width: 50%;
           background: #ffffff;
-          border-radius: 5rpx 25rpx 25rpx 25rpx;
+          border-radius: 10rpx 50rpx 50rpx 50rpx;
           color: #111111;
           align-self: flex-start;
         }
@@ -732,24 +636,25 @@ page {
       flex-grow: 1;
       height: 80rpx;
       background: #ffffff;
-      box-shadow: 5rpx 9rpx 20rpx 0rpx rgba(185, 189, 203, 0.3);
-      border-radius: 20rpx;
+      border-radius: 40rpx;
+      border: 1px solid #7e63ea;
       display: flex;
       align-items: center;
-      margin-right: 15rpx;
 
       input {
-        padding: 0 38rpx;
+        padding: 0 100rpx 0 35rpx;
         flex-grow: 1;
         font-size: 26rpx;
       }
     }
 
     .send {
-      flex-shrink: 0;
+      position: absolute;
+      right: 20rpx;
+      top: 20rpx;
       font-weight: 500;
       font-size: 32rpx;
-      color: #5664e5;
+      color: #7e63ea;
 
       &.disabled {
         color: #aaaaaa;
