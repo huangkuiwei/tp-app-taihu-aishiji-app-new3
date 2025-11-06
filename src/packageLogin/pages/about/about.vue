@@ -13,14 +13,15 @@
     <view class="about-container">
       <view class="icon-box">
         <view class="icon1">
+          <!-- TODO 公司logo -->
           <view class="img">
             <image mode="widthFix" src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/logo3.jpg" />
           </view>
-          <view class="name">减肥记录</view>
           <view class="version" v-if="version">当前版本{{ version }}</view>
         </view>
       </view>
 
+      <!-- TODO 公司名称 -->
       <view class="company">长沙数织科技有限公司</view>
     </view>
   </view>
@@ -87,31 +88,22 @@ page {
 
     .icon-box {
       display: flex;
-      align-items: flex-start;
+      justify-content: center;
       flex-grow: 1;
 
       .icon1 {
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
 
         .img {
-          width: 120rpx;
-          height: 120rpx;
-          margin-bottom: 39rpx;
+          width: 144rpx;
+          margin-bottom: 44rpx;
 
           image {
             width: 100%;
             border-radius: 23rpx;
           }
-        }
-
-        .name {
-          font-weight: bold;
-          font-size: 28rpx;
-          color: #111111;
-          margin-bottom: 19rpx;
         }
 
         .version {
