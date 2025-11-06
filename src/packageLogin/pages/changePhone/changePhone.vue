@@ -56,7 +56,7 @@
       </view>
     </view>
 
-    <view class="next" @click="next">{{ step === 1 ? '下一步' : '确认' }}</view>
+    <view class="next" @click="next">{{ step === 1 ? '下一步' : '绑定' }}</view>
   </view>
 </template>
 
@@ -230,7 +230,7 @@ export default {
   }
 
   .container {
-    padding: 0 30rpx;
+    padding: 0 48rpx;
 
     .step {
       display: flex;
@@ -273,7 +273,7 @@ export default {
         .get-code {
           flex-shrink: 0;
           font-size: 26rpx;
-          color: #5664e5;
+          color: #65d285;
         }
       }
     }
@@ -284,9 +284,9 @@ export default {
     left: 30rpx;
     right: 30rpx;
     bottom: 100rpx;
-    height: 103rpx;
-    background: linear-gradient(90deg, #4f69e6 0%, #6b56e3 100%);
-    border-radius: 20rpx;
+    height: 100rpx;
+    background: #65d285;
+    border-radius: 50rpx;
     font-weight: 500;
     font-size: 32rpx;
     color: #ffffff;

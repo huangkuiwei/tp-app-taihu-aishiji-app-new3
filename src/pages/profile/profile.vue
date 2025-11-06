@@ -312,7 +312,7 @@ page {
       .btn1 {
         width: 100%;
         height: 90rpx;
-        background: linear-gradient(90deg, #4f69e6 0%, #6b56e3 100%);
+        background: #65d285;
         border-radius: 45rpx;
         font-weight: 500;
         font-size: 30rpx;
@@ -326,11 +326,11 @@ page {
       .btn2 {
         width: 100%;
         height: 90rpx;
-        background: #f2f5ff;
+        background: #f6f7fb;
         border-radius: 45rpx;
         font-weight: 500;
         font-size: 30rpx;
-        color: #5664e5;
+        color: #666666;
         display: flex;
         align-items: center;
         justify-content: center;
