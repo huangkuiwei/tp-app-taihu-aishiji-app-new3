@@ -4,7 +4,7 @@
       <text>兑换</text>
 
       <view class="back" @click="$toBack">
-        <uni-icons class="back" color="#1A1A1A" type="arrow-left" size="22"></uni-icons>
+        <uni-icons class="back" color="#ffffff" type="arrow-left" size="22"></uni-icons>
       </view>
     </view>
 
@@ -28,6 +28,8 @@
         <text @click="showRedemptionDialog">我的兑换记录</text>
       </view>
 
+      <view class="line"></view>
+
       <view class="tip">
         <view class="tip-title">温馨提示</view>
 
@@ -36,7 +38,8 @@
           <view>1、兑换码在有效期内使用，超过有效期将无法兑换；</view>
           <view>2、一个兑换码只能兑换一次，不可重复兑换；</view>
           <view>3、兑换后立即生效，不退不换。</view>
-          <view>如有疑问可联系客服：4009989618。</view>
+          <!-- TODO 客服电话 -->
+          <view>如有疑问可联系客服：400-0000-0000。</view>
         </view>
       </view>
     </view>
@@ -103,7 +106,7 @@ export default {
 <style>
 page {
   height: 100%;
-  background: #f6f7fb;
+  background: linear-gradient(180deg, #686df4 0%, #869ef8 100%);
 }
 </style>
 
@@ -112,59 +115,59 @@ page {
   height: 100%;
   display: flex;
   flex-direction: column;
+  padding: 0 50rpx;
 
   .page-title {
-    background: #ffffff;
     flex-shrink: 0;
+    color: #ffffff;
   }
 
   .banner {
-    padding: calc(var(--page-title-height)) 0 0;
-    background: #ffffff;
+    padding: calc(var(--page-title-height) + 29rpx) 0 0;
     flex-shrink: 0;
-    margin-bottom: 10rpx;
   }
 
   .container {
-    flex-grow: 1;
     overflow: auto;
-    padding: 60rpx 50rpx;
-    background: #ffffff;
+    padding: 60rpx 35rpx 116rpx;
+    background: url('https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/redemption/bg.png') left top/100% 100%
+      no-repeat;
 
     .title {
       text-align: center;
       font-weight: 500;
       font-size: 28rpx;
       color: #111111;
-      margin-bottom: 78rpx;
+      margin-bottom: 68rpx;
     }
 
     .input-box {
-      padding: 0 36rpx;
+      width: 100%;
       margin-bottom: 21rpx;
 
       input {
         width: 100%;
         height: 100rpx;
-        background: #f6f7fb;
+        background: #f6f6f6;
         border-radius: 20rpx;
         border: 2px solid #f2f5ff;
         padding: 0 40rpx;
+        font-size: 26rpx;
       }
     }
 
     .submit {
-      width: calc(100% - 72rpx);
-      margin: 0 auto 97rpx;
+      width: 580rpx;
       height: 100rpx;
-      background: linear-gradient(90deg, #4f69e6 0%, #6b56e3 100%);
-      border-radius: 20rpx;
+      background: #8297f8;
+      border-radius: 50rpx;
       font-weight: bold;
       font-size: 30rpx;
       color: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
+      margin-bottom: 44rpx;
     }
 
     .recode {
@@ -172,10 +175,11 @@ page {
       align-items: center;
       justify-content: center;
       gap: 10rpx;
-      margin-bottom: 140rpx;
+      margin-bottom: 60rpx;
 
       image {
         width: 35rpx;
+        margin-right: 10rpx;
       }
 
       text {
@@ -185,8 +189,14 @@ page {
       }
     }
 
+    .line {
+      margin-bottom: 72rpx;
+      border-top: 1px dashed #ebebeb;
+    }
+
     .tip {
       .tip-title {
+        text-align: center;
         font-weight: 500;
         font-size: 26rpx;
         color: #111111;
