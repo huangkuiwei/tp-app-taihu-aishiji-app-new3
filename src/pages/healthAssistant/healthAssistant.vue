@@ -10,18 +10,7 @@
 
     <view class="banner"></view>
 
-    <scroll-view
-      class="chat-box"
-      :scroll-y="true"
-      :show-scrollbar="false"
-      :scroll-top="scrollTop"
-      :style="{
-        background:
-          tabValue === 2 &&
-          'url(https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/aichat/bg2.png) left top/100% 100% no-repeat',
-        paddingTop: tabValue === 2 && '80rpx',
-      }"
-    >
+    <scroll-view class="chat-box" :scroll-y="true" :show-scrollbar="false" :scroll-top="scrollTop">
       <view style="height: 45rpx"></view>
 
       <view class="question-card" v-show="tabValue === 1">
