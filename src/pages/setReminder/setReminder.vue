@@ -26,7 +26,7 @@
 
         <view @click="toggleSwitch">
           <switch
-            color="#5664E5"
+            color="#65D285"
             :disabled="!reminderData.is_wx_subscribed"
             :checked="reminderData.is_diet_remind_enabled"
             @change="onChange1"
@@ -41,7 +41,7 @@
 
         <view @click="toggleSwitch">
           <switch
-            color="#5664E5"
+            color="#65D285"
             :disabled="!reminderData.is_wx_subscribed"
             :checked="reminderData.is_exercise_remind_enabled"
             @change="onChange2"
@@ -56,7 +56,7 @@
 
         <view @click="toggleSwitch">
           <switch
-            color="#5664E5"
+            color="#65D285"
             :disabled="!reminderData.is_wx_subscribed"
             :checked="reminderData.is_weight_remind_enabled"
             @change="onChange3"
@@ -224,9 +224,9 @@ page {
       }
 
       .right {
-        width: 137rpx;
+        width: 107rpx;
         height: 50rpx;
-        background: #5664e5;
+        background: #65d285;
         border-radius: 25rpx;
         font-weight: 500;
         font-size: 24rpx;
@@ -254,7 +254,7 @@ page {
     text {
       width: 580rpx;
       height: 100rpx;
-      background: linear-gradient(90deg, #4f69e6 0%, #6b56e3 100%);
+      background: #65d285;
       border-radius: 50rpx;
       font-weight: bold;
       font-size: 30rpx;
