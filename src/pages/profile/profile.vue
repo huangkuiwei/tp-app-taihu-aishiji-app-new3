@@ -11,8 +11,6 @@
     <view class="banner"></view>
 
     <view class="userinfo">
-      <view class="box-title">基本信息</view>
-
       <view class="box">
         <view class="item" @click="editHeaderImg">
           <text class="label">头像</text>
@@ -40,13 +38,9 @@
             </view>
           </view>
         </view>
-      </view>
 
-      <view class="box-title">账户</view>
-
-      <view class="box">
         <view class="item" @click="$toRouter('/packageLogin/pages/changePhone/changePhone')">
-          <text class="label">更换手机号</text>
+          <text class="label">绑定手机号</text>
 
           <view class="picker">
             <view class="value">
@@ -54,11 +48,7 @@
             </view>
           </view>
         </view>
-      </view>
 
-      <view class="box-title">其他</view>
-
-      <view class="box">
         <view class="item" @click="$toRouter('/packageProtocol/pages/protocol/protocol')">
           <text class="label">用户协议</text>
 
@@ -229,30 +219,22 @@ page {
 
   .userinfo {
     flex-grow: 1;
-    padding: 40rpx 30rpx 0;
-
-    .box-title {
-      padding-left: 21rpx;
-      font-size: 24rpx;
-      color: #999999;
-      margin-bottom: 19rpx;
-    }
+    padding: 19rpx 30rpx 0;
   }
 
   .box {
     background: #ffffff;
     border-radius: 20rpx;
-    padding: 30rpx 24rpx;
-    margin-bottom: 41rpx;
+    padding: 35rpx 32rpx;
 
     .item {
       display: flex;
       align-items: center;
 
       &:not(:last-child) {
-        padding-bottom: 30rpx;
-        margin-bottom: 30rpx;
-        border-bottom: 1px solid #f6f7fb;
+        padding-bottom: 35rpx;
+        margin-bottom: 35rpx;
+        border-bottom: 1px solid #e6e6e6;
       }
 
       .label {
@@ -271,13 +253,13 @@ page {
 
           .filed {
             font-size: 24rpx;
-            color: #555555;
+            color: #999999;
             margin-right: 15rpx;
           }
 
           .header-img {
-            width: 50rpx;
-            height: 50rpx;
+            width: 65rpx;
+            height: 65rpx;
             border-radius: 50%;
           }
         }
