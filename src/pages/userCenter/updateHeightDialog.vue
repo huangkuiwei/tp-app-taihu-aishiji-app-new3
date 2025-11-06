@@ -1,12 +1,12 @@
 <template>
-  <uni-popup ref="updateHeightDialog">
+  <uni-popup ref="updateHeightDialog" type="bottom" :safe-area="false">
     <view class="update-height-dialog">
-      <view class="title">选择你的身高（cm）</view>
+      <view class="title">选择身高</view>
 
       <view class="list">
         <picker-view
           indicator-style="height: 40px;"
-          style="width: 100%; height: 120px"
+          style="width: 100%; height: 200px"
           :value="value"
           @change="value = $event.detail.value"
         >
@@ -20,13 +20,13 @@
               :key="index"
             >
               <text class="value">{{ item }}</text>
+              <text class="unit" v-if="value[0] === index">CM</text>
             </view>
           </picker-view-column>
         </picker-view>
       </view>
 
       <view class="options">
-        <text @click="close">取消</text>
         <text @click="submit">确定</text>
       </view>
     </view>
@@ -82,22 +82,22 @@ export default {
 
 <style scoped lang="scss">
 .update-height-dialog {
-  width: 690rpx;
+  width: 100%;
   background: #ffffff;
-  border-radius: 30rpx;
+  border-radius: 30rpx 30rpx 0 0;
+  padding: 30rpx 30rpx 50rpx;
 
   .title {
-    padding: 39rpx 0 53rpx;
-    text-align: center;
     font-weight: 500;
-    font-size: 30rpx;
-    color: #000000;
+    font-size: 28rpx;
+    color: #111111;
+    margin-bottom: 63rpx;
   }
 
   .list {
-    picker-view {
-      margin-bottom: 52rpx;
+    margin-bottom: 44rpx;
 
+    picker-view {
       picker-view-column {
         .item {
           height: 100%;
@@ -108,7 +108,13 @@ export default {
 
           &.active {
             .value {
-              color: #111111;
+              font-weight: bold;
+              font-size: 38rpx;
+              color: #65d285;
+            }
+
+            .unit {
+              color: #65d285;
             }
           }
 
@@ -116,6 +122,15 @@ export default {
             font-weight: 500;
             font-size: 28rpx;
             color: #999999;
+          }
+
+          .unit {
+            font-weight: 500;
+            font-size: 24rpx;
+            color: #999999;
+            margin-left: 15rpx;
+            position: relative;
+            top: 4rpx;
           }
         }
       }
@@ -125,25 +140,19 @@ export default {
   .options {
     display: flex;
     align-items: center;
-    border-top: 2rpx solid #e6e6e6;
+    justify-content: center;
 
     text {
-      width: 50%;
+      width: 550rpx;
+      height: 100rpx;
+      background: #65d285;
+      border-radius: 50rpx;
+      font-weight: bold;
+      font-size: 30rpx;
+      color: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 36rpx;
-      font-weight: 500;
-      font-size: 28rpx;
-
-      &:nth-child(1) {
-        border-right: 2rpx solid #e6e6e6;
-        color: #999999;
-      }
-
-      &:nth-child(2) {
-        color: #111111;
-      }
     }
   }
 }

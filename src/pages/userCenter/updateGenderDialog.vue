@@ -1,5 +1,5 @@
 <template>
-  <uni-popup ref="updateGenderDialog">
+  <uni-popup ref="updateGenderDialog" type="bottom" :safe-area="false">
     <view class="update-gender-dialog">
       <view class="title">选择你的性别</view>
 
@@ -15,7 +15,6 @@
       </view>
 
       <view class="options">
-        <text @click="close">取消</text>
         <text @click="submit">确定</text>
       </view>
     </view>
@@ -64,41 +63,43 @@ export default {
 
 <style scoped lang="scss">
 .update-gender-dialog {
-  width: 690rpx;
+  width: 100%;
   background: #ffffff;
-  border-radius: 30rpx;
+  border-radius: 30rpx 30rpx 0 0;
+  padding: 30rpx 30rpx 50rpx;
 
   .title {
-    padding: 39rpx 0 70rpx;
-    text-align: center;
     font-weight: 500;
-    font-size: 30rpx;
-    color: #000000;
+    font-size: 28rpx;
+    color: #111111;
+    margin-bottom: 63rpx;
   }
 
   .gender-list {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 75rpx;
-    margin-bottom: 77rpx;
+    gap: 29rpx;
+    margin-bottom: 69rpx;
 
     text {
-      width: 180rpx;
-      height: 65rpx;
+      width: 561rpx;
+      height: 100rpx;
       background: #ffffff;
-      border-radius: 33rpx;
-      border: 1px solid #e0e0e0;
+      border-radius: 28rpx;
+      border: 2px solid #e0e0e0;
       font-weight: 500;
       font-size: 28rpx;
-      color: #111111;
+      color: #bfbfbf;
       display: flex;
       align-items: center;
       justify-content: center;
 
       &.active {
-        background: #5664e5;
-        color: #ffffff;
+        background: #effffb;
+        border-radius: 28rpx;
+        border: 3px solid #65d285;
       }
     }
   }
@@ -106,25 +107,19 @@ export default {
   .options {
     display: flex;
     align-items: center;
-    border-top: 2rpx solid #e6e6e6;
+    justify-content: center;
 
     text {
-      width: 50%;
+      width: 550rpx;
+      height: 100rpx;
+      background: #65d285;
+      border-radius: 50rpx;
+      font-weight: bold;
+      font-size: 30rpx;
+      color: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 36rpx;
-      font-weight: 500;
-      font-size: 28rpx;
-
-      &:nth-child(1) {
-        border-right: 2rpx solid #e6e6e6;
-        color: #999999;
-      }
-
-      &:nth-child(2) {
-        color: #111111;
-      }
     }
   }
 }

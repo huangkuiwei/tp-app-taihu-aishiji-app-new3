@@ -83,19 +83,6 @@
             </view>
           </view>
         </view>
-
-        <!--<view class="item" @click="$refs.updateEndDateDialog.open()">-->
-        <!--  <text class="label">目标日期</text>-->
-
-        <!--  <view class="picker">-->
-        <!--    <view class="value">-->
-        <!--      <text class="filed">{{-->
-        <!--        userDetailInfo.end_date && userDetailInfo.end_date.slice(0, 10).replace(/\//g, '-')-->
-        <!--      }}</text>-->
-        <!--      <uni-icons class="back" color="#999999" type="right" size="16"></uni-icons>-->
-        <!--    </view>-->
-        <!--  </view>-->
-        <!--</view>-->
       </view>
 
       <view class="box">
@@ -211,11 +198,11 @@ export default {
       genderList: [
         {
           value: 1,
-          text: '男生',
+          text: '男',
         },
         {
           value: 2,
-          text: '女生',
+          text: '女',
         },
       ],
       rulerLineList1: rulerLineList1,
