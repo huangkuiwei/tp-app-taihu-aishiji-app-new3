@@ -22,8 +22,9 @@
         </view>
       </view>
 
+      <!-- TODO 客服电话 -->
       <view class="tip">
-        您的反馈和意见我们会尽快解决，但无法保证每一条都能及时反馈，如有紧急咨询可直接拨打客服热线：4009989618
+        您的反馈和意见我们会尽快解决，但无法保证每一条都能及时反馈，如有紧急咨询可直接拨打客服热线：400-0000-0000
       </view>
 
       <view class="submit" @click="submit">提交</view>
@@ -161,7 +162,7 @@ page {
       width: 580rpx;
       height: 100rpx;
       margin: 0 auto 100rpx;
-      background: linear-gradient(90deg, #4f69e6 0%, #6b56e3 100%);
+      background: #65d285;
       border-radius: 50rpx;
       font-weight: bold;
       font-size: 30rpx;

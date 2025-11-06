@@ -98,80 +98,80 @@
 
 <script>
 import { mapActions, mapGetters, mapState } from 'vuex';
-import * as echarts from '@/uni_modules/lime-echart/static/echarts.min';
+// import * as echarts from '@/uni_modules/lime-echart/static/echarts.min';
 import { verifyIsLogin } from '@/utils';
 
-let chart1 = null;
+// let chart1 = null;
 
 export default {
   name: 'myPage',
 
   data() {
     return {
-      option1: {
-        series: [
-          {
-            type: 'gauge',
-            startAngle: 90,
-            endAngle: -270,
-            min: 0,
-            max: 100,
-            splitNumber: 12,
-            itemStyle: {
-              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
-                {
-                  offset: 0,
-                  color: '#5168E6', // 起始颜色
-                },
-                {
-                  offset: 1,
-                  color: '#6B57E3', // 结束颜色
-                },
-              ]),
-              shadowColor: 'transparent',
-              shadowBlur: 10,
-              shadowOffsetX: 2,
-              shadowOffsetY: 2,
-            },
-            progress: {
-              show: true,
-              roundCap: true,
-              width: 4,
-            },
-            pointer: {
-              show: false,
-            },
-            axisLine: {
-              roundCap: true,
-              lineStyle: {
-                width: 4,
-                color: [[1, '#DBDCEC']],
-              },
-            },
-            radius: '100%',
-            axisTick: {
-              show: false,
-            },
-            splitLine: {
-              show: false,
-            },
-            axisLabel: {
-              show: false,
-            },
-            title: {
-              show: false,
-            },
-            detail: {
-              show: false,
-            },
-            data: [
-              {
-                value: 0,
-              },
-            ],
-          },
-        ],
-      },
+      // option1: {
+      //   series: [
+      //     {
+      //       type: 'gauge',
+      //       startAngle: 90,
+      //       endAngle: -270,
+      //       min: 0,
+      //       max: 100,
+      //       splitNumber: 12,
+      //       itemStyle: {
+      //         color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [
+      //           {
+      //             offset: 0,
+      //             color: '#5168E6', // 起始颜色
+      //           },
+      //           {
+      //             offset: 1,
+      //             color: '#6B57E3', // 结束颜色
+      //           },
+      //         ]),
+      //         shadowColor: 'transparent',
+      //         shadowBlur: 10,
+      //         shadowOffsetX: 2,
+      //         shadowOffsetY: 2,
+      //       },
+      //       progress: {
+      //         show: true,
+      //         roundCap: true,
+      //         width: 4,
+      //       },
+      //       pointer: {
+      //         show: false,
+      //       },
+      //       axisLine: {
+      //         roundCap: true,
+      //         lineStyle: {
+      //           width: 4,
+      //           color: [[1, '#DBDCEC']],
+      //         },
+      //       },
+      //       radius: '100%',
+      //       axisTick: {
+      //         show: false,
+      //       },
+      //       splitLine: {
+      //         show: false,
+      //       },
+      //       axisLabel: {
+      //         show: false,
+      //       },
+      //       title: {
+      //         show: false,
+      //       },
+      //       detail: {
+      //         show: false,
+      //       },
+      //       data: [
+      //         {
+      //           value: 0,
+      //         },
+      //       ],
+      //     },
+      //   ],
+      // },
     };
   },
 
@@ -224,19 +224,17 @@ export default {
   onShow() {
     this._getUserInfo();
     this._getUserDetailInfo().then(() => {
-      let ratio = this.lossWeightData.a / (this.lossWeightData.a + this.lossWeightData.b);
-
-      if (ratio < 0) {
-        ratio = 0;
-      } else if (ratio > 1) {
-        ratio = 1;
-      }
-
-      this.option1.series[0].data[0].value = ratio * 100;
-
-      setTimeout(() => {
-        chart1.setOption(this.option1);
-      }, 500);
+      // let ratio = this.lossWeightData.a / (this.lossWeightData.a + this.lossWeightData.b);
+      // if (ratio < 0) {
+      //   ratio = 0;
+      // } else if (ratio > 1) {
+      //   ratio = 1;
+      // }
+      // this.option1.series[0].data[0].value = ratio * 100;
+      //
+      // setTimeout(() => {
+      //   chart1.setOption(this.option1);
+      // }, 500);
     });
   },
 
@@ -251,10 +249,10 @@ export default {
   methods: {
     ...mapActions('app', ['_getUserDetailInfo', '_getUserInfo']),
 
-    async init1() {
-      chart1 = await this.$refs.chart1Ref.init(echarts);
-      chart1.setOption(this.option1);
-    },
+    // async init1() {
+    //   chart1 = await this.$refs.chart1Ref.init(echarts);
+    //   chart1.setOption(this.option1);
+    // },
 
     previewDataPage(url) {
       verifyIsLogin();
