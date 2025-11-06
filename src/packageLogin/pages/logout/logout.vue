@@ -173,7 +173,7 @@ export default {
   }
 
   .container {
-    padding: 0 32rpx;
+    padding: 0 48rpx;
 
     .title {
       font-weight: 500;
@@ -210,7 +210,7 @@ export default {
       .get-code {
         flex-shrink: 0;
         font-size: 24rpx;
-        color: #5664e5;
+        color: #65d285;
       }
     }
   }
@@ -225,8 +225,8 @@ export default {
     gap: 20rpx;
 
     view {
-      height: 103rpx;
-      border-radius: 20rpx;
+      height: 100rpx;
+      border-radius: 50rpx;
       font-weight: 500;
       font-size: 32rpx;
       display: flex;
@@ -235,15 +235,15 @@ export default {
 
       &.btn1 {
         width: 100%;
-        background: #5664e5;
+        background: #65d285;
         color: #ffffff;
       }
 
       &.btn2 {
         width: 100%;
         background: #ffffff;
-        color: #5664e5;
-        border: 2rpx solid #5664e5;
+        color: #65d285;
+        border: 2rpx solid #65d285;
       }
     }
   }
