@@ -1,6 +1,6 @@
 <template>
   <view class="my-page">
-    <view class="page-title">个人中心</view>
+    <view class="page-title">我的</view>
 
     <view class="banner"></view>
 
@@ -18,23 +18,21 @@
         <view class="right">
           <view class="username" v-if="isLogin">
             <text class="name">{{ userInfo.uname }}</text>
+            <!-- TODO ID -->
+            <text class="tip">ID: 123456</text>
           </view>
 
           <view class="no-login" v-else @click="$toRouter('/packageLogin/pages/login/login')">
-            <text class="name">登录/注册</text>
-            <text class="tip">游客模式</text>
+            <text class="name">还未登录</text>
+            <text class="tip">登录/注册</text>
           </view>
-
-          <template v-if="isLogin">
-            <view class="time">{{ vipName }}</view>
-          </template>
         </view>
 
         <view class="setting">
           <image
             mode="widthFix"
             @click="goProfile"
-            src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/my/setting.png"
+            src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/my/setting.png"
           />
         </view>
       </view>
@@ -43,128 +41,52 @@
         <image
           class="bg"
           mode="widthFix"
-          src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/my/vip-icon1.png"
+          src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/my/bg2.png"
         />
 
         <view class="content-box">
-          <text>权益中心</text>
-          <text>{{
-            isVip ? `会员到期日期：${userInfo.vip_info.vip_end_time.slice(0, 10)}` : '加入会员畅享更多权益'
-          }}</text>
+          <text>{{ isVip ? '喵互娱会员' : '会员专享' }}</text>
+          <text>{{ isVip ? `会员到期：${userInfo.vip_info.vip_end_time.slice(0, 10)}` : '加入会员享受全部权益' }}</text>
         </view>
 
-        <!--<view class="btn" v-if="isVip" @click.stop="$toRouter('/pages/renewalManage/renewalManage')">管理续费</view>-->
-        <view class="btn" v-if="!isVip">立即开通</view>
-      </view>
-
-      <view class="data">
-        <view class="title">
-          <text>数据报告</text>
-          <text v-if="userDetailInfo" @click="previewDataPage('/pages/dataReport/dataReport')">查看更多</text>
-        </view>
-
-        <view class="data-box" v-if="userDetailInfo">
-          <view class="left">
-            <view class="left-title">
-              {{ isWeightLoss ? '本次减重（公斤）' : '本次增肌（公斤）' }}
-            </view>
-            <view class="chart">
-              <l-echart ref="chart1Ref" @finished="init1" />
-
-              <view class="chart-data">
-                <view>{{ lossWeightData.a }}</view>
-                <view>
-                  <text v-if="lossWeightData.b > 0">还差{{ lossWeightData.b }}</text>
-                  <text v-else>已完成</text>
-                </view>
-              </view>
-            </view>
-            <view class="data-detail">
-              <view class="item1">
-                <text>{{ userDetailInfo.initial_weight }}</text>
-                <text>初始</text>
-              </view>
-
-              <view class="item2">
-                <image
-                  mode="widthFix"
-                  src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/my/icon1.png"
-                />
-              </view>
-
-              <view class="item3">
-                <text>{{ userDetailInfo.target_weight }}</text>
-                <text>目标</text>
-              </view>
-            </view>
-          </view>
-
-          <view class="right">
-            <view class="right-data right-data1">
-              <view class="data-title">BMI</view>
-              <view class="data-value">
-                {{
-                  Number(
-                    (userDetailInfo.current_weight / ((userDetailInfo.height * userDetailInfo.height) / 10000)).toFixed(
-                      1,
-                    ),
-                  )
-                }}
-              </view>
-            </view>
-
-            <view class="right-data right-data2">
-              <view class="data-title">剩余天数</view>
-              <view class="data-value">{{ countdownDays }}</view>
-            </view>
-          </view>
-        </view>
-
-        <view class="add-info-tip" v-else>
-          <view>
-            请先
-            <text class="highlight" v-if="isLogin" @click="$toRouter('/pages/evaluation/evaluation')">
-              完善个人基本信息
-            </text>
-            <text class="highlight" v-else @click="$toRouter('/packageLogin/pages/login/login')">登录</text>
-          </view>
-        </view>
+        <view class="btn" v-if="isVip">续费会员</view>
+        <view class="btn" v-else>立即开通</view>
       </view>
 
       <view class="nav-container">
         <view class="nav">
           <view class="nav-item" @click="goUserCenter">
-            <image mode="widthFix" src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/my/menu1.png" />
+            <image mode="widthFix" src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/my/icon1.png" />
             <text class="nav-title">我的数据</text>
             <uni-icons color="#999999" type="right" size="14"></uni-icons>
           </view>
 
-          <!--<view class="nav-item" @click="jumpAuthPage('/pages/setReminder/setReminder')">-->
-          <!--  <image mode="widthFix" src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/my/menu2.png" />-->
-          <!--  <text class="nav-title">提醒设置</text>-->
-          <!--  <uni-icons color="#999999" type="right" size="14"></uni-icons>-->
-          <!--</view>-->
+          <view class="nav-item" @click="jumpAuthPage('/pages/setReminder/setReminder')">
+            <image mode="widthFix" src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/my/icon2.png" />
+            <text class="nav-title">提醒设置</text>
+            <uni-icons color="#999999" type="right" size="14"></uni-icons>
+          </view>
 
           <view class="nav-item" @click="jumpAuthPage('/pages/redemption/redemption')">
-            <image mode="widthFix" src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/my/menu3.png" />
+            <image mode="widthFix" src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/my/icon3.png" />
             <text class="nav-title">兑换码</text>
             <uni-icons color="#999999" type="right" size="14"></uni-icons>
           </view>
 
           <view class="nav-item" @click="jumpAuthPage('/packageLogin/pages/feedback/feedback')">
-            <image mode="widthFix" src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/my/menu4.png" />
+            <image mode="widthFix" src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/my/icon4.png" />
             <text class="nav-title">意见和反馈</text>
             <uni-icons color="#999999" type="right" size="14"></uni-icons>
           </view>
 
           <view class="nav-item">
-            <image mode="widthFix" src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/my/menu5.png" />
+            <image mode="widthFix" src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/my/icon5.png" />
             <button class="nav-title" @click="openContact">联系客服</button>
             <uni-icons color="#999999" type="right" size="14"></uni-icons>
           </view>
 
           <view class="nav-item" @click="$toRouter('/packageLogin/pages/about/about')">
-            <image mode="widthFix" src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/my/menu6.png" />
+            <image mode="widthFix" src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/my/icon6.png" />
             <text class="nav-title">关于我们</text>
             <uni-icons color="#999999" type="right" size="14"></uni-icons>
           </view>
@@ -380,8 +302,7 @@ export default {
 
 <style>
 page {
-  background: #f6f7fb url('https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/home/banner-bg.png') left
-    top/100% auto no-repeat;
+  background: #f6f7fb linear-gradient(90deg, #e8fdf4 0%, #f6fcf5 100%) left top/100% 420rpx no-repeat;
 }
 </style>
 
@@ -393,19 +314,20 @@ page {
   }
 
   .banner {
-    padding: calc(var(--page-title-height) + 23rpx) 0 0;
+    padding: calc(var(--page-title-height) + 46rpx) 0 0;
   }
 
   .page-container {
     padding: 0 30rpx;
 
     .info {
+      padding: 0 7rpx;
       display: flex;
       align-items: center;
-      margin-bottom: 33rpx;
+      margin-bottom: 49rpx;
 
       .left {
-        margin-right: 18rpx;
+        margin-right: 26rpx;
 
         image {
           width: 130rpx;
@@ -421,55 +343,36 @@ page {
         gap: 21rpx;
         flex-grow: 1;
 
-        .username {
-          display: flex;
-          align-items: center;
-
-          .name {
-            font-weight: bold;
-            font-size: 26rpx;
-            color: #222222;
-          }
-        }
-
+        .username,
         .no-login {
           display: flex;
           flex-direction: column;
-          gap: 21rpx;
+          gap: 27rpx;
 
           .name {
-            font-weight: bold;
-            font-size: 26rpx;
+            font-weight: 500;
+            font-size: 36rpx;
             color: #222222;
           }
 
           .tip {
             font-weight: 500;
-            font-size: 22rpx;
-            color: #333333;
+            font-size: 26rpx;
+            color: #999999;
           }
-        }
-
-        .time {
-          font-weight: 500;
-          font-size: 22rpx;
-          color: #333333;
-          display: flex;
-          align-items: center;
-          gap: 20rpx;
         }
       }
 
       .setting {
         image {
-          width: 41rpx;
+          width: 40rpx;
         }
       }
     }
 
     .vip-icon {
       width: 100%;
-      margin-bottom: 23rpx;
+      margin-bottom: 52rpx;
       position: relative;
 
       .bg {
@@ -478,25 +381,24 @@ page {
 
       .content-box {
         position: absolute;
-        left: 114rpx;
+        left: 69rpx;
         right: 0;
-        top: 0;
+        top: 24rpx;
         bottom: 0;
         display: flex;
         flex-direction: column;
-        justify-content: center;
         gap: 17rpx;
 
         text {
           &:nth-child(1) {
-            font-weight: 500;
-            font-size: 26rpx;
-            color: #f5c08c;
+            font-weight: bold;
+            font-size: 29rpx;
+            color: #333333;
           }
 
           &:nth-child(2) {
-            font-size: 22rpx;
-            color: #9e764f;
+            font-size: 24rpx;
+            color: #333333;
           }
         }
       }
@@ -505,11 +407,11 @@ page {
         position: absolute;
         top: 33rpx;
         right: 43rpx;
-        width: 160rpx;
-        height: 54rpx;
-        background: linear-gradient(180deg, #ffab37 0%, #fe7b35 100%);
-        border-radius: 27rpx;
-        font-weight: bold;
+        width: 151rpx;
+        height: 55rpx;
+        background: linear-gradient(90deg, #ff3121 0%, #ff9102 100%);
+        border-radius: 28rpx;
+        font-weight: 500;
         font-size: 26rpx;
         color: #ffffff;
         display: flex;
@@ -518,177 +420,11 @@ page {
       }
     }
 
-    .data {
-      background: #ffffff;
-      box-shadow: 0 3rpx 21rpx 0 rgba(215, 218, 242, 0.29);
-      border-radius: 20rpx;
-      padding: 30rpx;
-      margin-bottom: 21rpx;
-
-      .title {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 30rpx;
-
-        text {
-          &:nth-child(1) {
-            color: #111111;
-            font-size: 30rpx;
-            font-weight: 500;
-          }
-
-          &:nth-child(2) {
-            color: #999999;
-            font-size: 24rpx;
-          }
-        }
-      }
-
-      .data-box {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-
-        .left,
-        .right {
-          width: calc(50% - 5rpx);
-
-          &.left {
-            background: #f6f7fb;
-            border-radius: 14rpx;
-            padding: 22rpx;
-
-            .left-title {
-              font-weight: 500;
-              font-size: 26rpx;
-              color: #222222;
-              margin-bottom: 40rpx;
-            }
-
-            .chart {
-              width: 200rpx;
-              height: 200rpx;
-              margin: 0 auto 23rpx;
-              position: relative;
-
-              .chart-data {
-                position: absolute;
-                left: 0;
-                right: 0;
-                top: 0;
-                bottom: 0;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                gap: 19rpx;
-
-                view {
-                  &:nth-child(1) {
-                    font-weight: 500;
-                    font-size: 40rpx;
-                    color: #222222;
-                  }
-
-                  &:nth-child(2) {
-                    background: #ecedff;
-                    border-radius: 19rpx;
-                    font-size: 24rpx;
-                    color: #5664e5;
-                    padding: 6rpx 16rpx;
-                  }
-                }
-              }
-            }
-
-            .data-detail {
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-
-              .item1,
-              .item3 {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                gap: 10rpx;
-
-                text {
-                  &:nth-child(1) {
-                    color: #333333;
-                    font-size: 32rpx;
-                  }
-
-                  &:nth-child(2) {
-                    color: #666666;
-                    font-size: 26rpx;
-                  }
-                }
-              }
-
-              .item2 {
-                image {
-                  width: 19rpx;
-                }
-              }
-            }
-          }
-
-          &.right {
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-
-            .right-data {
-              padding: 20rpx 31rpx 67rpx;
-
-              &.right-data1 {
-                background: url('https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/my/bg1.png') left top/100%
-                  100% no-repeat;
-              }
-
-              &.right-data2 {
-                background: url('https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/my/bg2.png') left top/100%
-                  100% no-repeat;
-                position: relative;
-                top: 10rpx;
-              }
-
-              .data-title {
-                font-weight: 500;
-                font-size: 26rpx;
-                color: #222222;
-                margin-bottom: 56rpx;
-              }
-
-              .data-value {
-                font-weight: 500;
-                font-size: 34rpx;
-                color: #222222;
-              }
-            }
-          }
-        }
-      }
-
-      .add-info-tip {
-        font-size: 26rpx;
-        text-align: center;
-        padding: 40rpx 0 20rpx;
-
-        .highlight {
-          color: #5664e5;
-        }
-      }
-    }
-
     .nav-container {
       .nav {
         background: #ffffff;
-        border-radius: 20rpx;
-        padding: 40rpx 30rpx;
+        border-radius: 30rpx;
+        padding: 61rpx 20rpx;
         display: flex;
         flex-direction: column;
 
@@ -697,14 +433,14 @@ page {
           align-items: center;
 
           &:not(:last-child) {
-            padding-bottom: 30rpx;
-            margin-bottom: 30rpx;
-            border-bottom: 2rpx solid #f6f6f6;
+            padding-bottom: 34rpx;
+            margin-bottom: 34rpx;
+            border-bottom: 2rpx solid #ebebeb;
           }
 
           image {
-            width: 60rpx;
-            margin-right: 20rpx;
+            width: 40rpx;
+            margin-right: 27rpx;
           }
 
           .nav-title {
