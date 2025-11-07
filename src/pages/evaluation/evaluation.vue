@@ -10,6 +10,14 @@
 
     <view class="banner"></view>
 
+    <view class="welcome">
+      <view class="progress">
+        <text :style="{ left: (stepIndex / 7) * 100 + '%', width: 100 / 7 + '%' }"></text>
+      </view>
+
+      <view class="tip">欢迎来到{{ appInfo.appName }}</view>
+    </view>
+
     <view class="evaluation-container">
       <view class="evaluation-box">
         <view class="evaluation-title">
@@ -18,22 +26,15 @@
         </view>
 
         <view class="evaluation evaluation1" v-if="stepIndex === 0">
-          <view class="gender">
-            <view class="gender-item" :class="{ active: gender === 1 }" @click="gender = 1">
-              <image
-                mode="widthFix"
-                src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/evaluation/gender1.png"
-              />
-              <text>男生</text>
-            </view>
-
-            <view class="gender-item" :class="{ active: gender === 2 }" @click="gender = 2">
-              <image
-                mode="widthFix"
-                src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/evaluation/gender2.png"
-              />
-              <text>女生</text>
-            </view>
+          <view class="gender-list">
+            <text
+              :class="{ active: item.value === gender }"
+              v-for="item of genderList"
+              :key="item.value"
+              @click="gender = item.value"
+            >
+              {{ item.text }}
+            </text>
           </view>
         </view>
 
@@ -45,16 +46,26 @@
             @change="birth = $event.detail.value"
           >
             <picker-view-column>
-              <view class="column-item" v-for="(item, index) in years" :key="index">
+              <view
+                class="column-item"
+                :class="{ active: birth[0] === index }"
+                v-for="(item, index) in years"
+                :key="index"
+              >
                 <text>{{ item }}</text>
-                <text>年</text>
+                <text v-if="birth[0] === index">年</text>
               </view>
             </picker-view-column>
 
             <picker-view-column>
-              <view class="column-item" v-for="(item, index) in months" :key="index">
+              <view
+                class="column-item"
+                :class="{ active: birth[1] === index }"
+                v-for="(item, index) in months"
+                :key="index"
+              >
                 <text>{{ item }}</text>
-                <text>月</text>
+                <text v-if="birth[1] === index">月</text>
               </view>
             </picker-view-column>
           </picker-view>
@@ -68,9 +79,14 @@
             @change="height = $event.detail.value"
           >
             <picker-view-column>
-              <view class="column-item" v-for="(item, index) in rulerLineList1" :key="index">
+              <view
+                class="column-item"
+                :class="{ active: height[0] === index }"
+                v-for="(item, index) in rulerLineList1"
+                :key="index"
+              >
                 <text>{{ item }}</text>
-                <text>CM</text>
+                <text v-if="height[0] === index">CM</text>
               </view>
             </picker-view-column>
           </picker-view>
@@ -84,9 +100,14 @@
             @change="initialWeight = $event.detail.value"
           >
             <picker-view-column>
-              <view class="column-item" v-for="(item, index) in rulerLineList2" :key="index">
+              <view
+                class="column-item"
+                :class="{ active: initialWeight[0] === index }"
+                v-for="(item, index) in rulerLineList2"
+                :key="index"
+              >
                 <text>{{ item }}</text>
-                <text>KG</text>
+                <text v-if="initialWeight[0] === index">KG</text>
               </view>
             </picker-view-column>
           </picker-view>
@@ -100,9 +121,14 @@
             @change="targetWeight = $event.detail.value"
           >
             <picker-view-column>
-              <view class="column-item" v-for="(item, index) in rulerLineList3" :key="index">
+              <view
+                class="column-item"
+                :class="{ active: targetWeight[0] === index }"
+                v-for="(item, index) in rulerLineList3"
+                :key="index"
+              >
                 <text>{{ item }}</text>
-                <text>KG</text>
+                <text v-if="targetWeight[0] === index">KG</text>
               </view>
             </picker-view-column>
           </picker-view>
@@ -117,25 +143,40 @@
           >
             <!-- 年 -->
             <picker-view-column>
-              <view class="column-item" v-for="year in years1" :key="year">
+              <view
+                class="column-item"
+                :class="{ active: end_date[0] === index }"
+                v-for="(year, index) in years1"
+                :key="year"
+              >
                 <text>{{ year }}</text>
-                <text>年</text>
+                <text v-if="end_date[0] === index">年</text>
               </view>
             </picker-view-column>
 
             <!-- 月 -->
             <picker-view-column>
-              <view class="column-item" v-for="month in months1" :key="month">
+              <view
+                class="column-item"
+                :class="{ active: end_date[1] === index }"
+                v-for="(month, index) in months1"
+                :key="month"
+              >
                 <text>{{ month }}</text>
-                <text>月</text>
+                <text v-if="end_date[1] === index">月</text>
               </view>
             </picker-view-column>
 
             <!-- 日 -->
             <picker-view-column>
-              <view class="column-item" v-for="day in days1" :key="day">
+              <view
+                class="column-item"
+                :class="{ active: end_date[2] === index }"
+                v-for="(day, index) in days1"
+                :key="day"
+              >
                 <text>{{ day }}</text>
-                <text>日</text>
+                <text v-if="end_date[2] === index">日</text>
               </view>
             </picker-view-column>
           </picker-view>
@@ -160,16 +201,6 @@
           <text>{{ evaluationList[stepIndex].subTitle2 }}</text>
         </view>
 
-        <view class="dot">
-          <text :class="{ active: stepIndex === 0 }"></text>
-          <text :class="{ active: stepIndex === 1 }"></text>
-          <text :class="{ active: stepIndex === 2 }"></text>
-          <text :class="{ active: stepIndex === 3 }"></text>
-          <text :class="{ active: stepIndex === 4 }"></text>
-          <text :class="{ active: stepIndex === 5 }"></text>
-          <text :class="{ active: stepIndex === 6 }"></text>
-        </view>
-
         <view class="next" @click="next">{{ stepIndex > 5 ? '提交' : '下一步' }}</view>
       </view>
     </view>
@@ -178,6 +209,7 @@
 
 <script>
 import $http from '@/utils/http';
+import { mapState } from 'vuex';
 
 export default {
   name: 'evaluation',
@@ -211,17 +243,17 @@ export default {
       evaluationList: [
         {
           title: '你的性别',
-          subTitle: '完成数据，为你提供个性化专属方案\n选择后不可修改',
+          subTitle: '完成数据，为你提供个性化专属方案',
           subTitle2: '选择你的性别，用来准确计算你的BMI值',
         },
         {
           title: '你的出生年月',
-          subTitle: '完成数据，为你提供个性化专属方案\n选择后不可修改',
+          subTitle: '完成数据，为你提供个性化专属方案',
           subTitle2: '选择你的年龄，用来准确计算你的BMI值',
         },
         {
           title: '你的身高',
-          subTitle: '完成数据，为你提供个性化专属方案\n选择后不可修改',
+          subTitle: '完成数据，为你提供个性化专属方案',
           subTitle2: '选择你的身高，用来准确计算你的BMI值',
         },
         {
@@ -247,6 +279,16 @@ export default {
       ],
       stepIndex: 0,
       gender: null,
+      genderList: [
+        {
+          value: 1,
+          text: '男',
+        },
+        {
+          value: 2,
+          text: '女',
+        },
+      ],
       years,
       months,
       birth: [80, 0],
@@ -299,6 +341,10 @@ export default {
       minDateStr: '',
       selectedDate: '',
     };
+  },
+
+  computed: {
+    ...mapState('app', ['appInfo']),
   },
 
   onShareAppMessage() {
@@ -541,6 +587,7 @@ page {
 <style scoped lang="scss">
 .evaluation-page {
   height: 100%;
+  background: #f6f7fb linear-gradient(180deg, #e9f4ee 0%, #f2f6f7 73%) left top/100% 500rpx no-repeat;
   padding-bottom: 80rpx;
   display: flex;
   flex-direction: column;
@@ -550,18 +597,51 @@ page {
   }
 
   .banner {
-    padding: calc(var(--page-title-height)) 0 0;
+    padding: calc(var(--page-title-height) + 54rpx) 0 0;
     flex-shrink: 0;
   }
 
+  .welcome {
+    padding: 0 85rpx;
+    margin-bottom: 53rpx;
+
+    .progress {
+      flex-shrink: 0;
+      width: 100%;
+      height: 11rpx;
+      background: #ffffff;
+      border-radius: 6rpx;
+      position: relative;
+      margin-bottom: 51rpx;
+
+      text {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        background: #65d285;
+        border-radius: 6rpx;
+      }
+    }
+
+    .tip {
+      font-weight: 500;
+      font-size: 28rpx;
+      color: #65d285;
+      text-align: center;
+    }
+  }
+
   .evaluation-container {
-    padding: 130rpx 100rpx 0;
+    padding: 0 30rpx;
     flex-grow: 1;
     overflow: hidden;
 
     .evaluation-box {
       height: 100%;
+      padding: 104rpx 64rpx 0;
       background: #ffffff;
+      border-radius: 30rpx;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -598,56 +678,30 @@ page {
       .evaluation1 {
         margin-top: 150rpx;
 
-        .gender {
-          padding: 0 15rpx;
+        .gender-list {
           display: flex;
+          flex-direction: column;
           align-items: center;
           justify-content: center;
-          gap: 110rpx;
+          gap: 29rpx;
 
-          .gender-item {
+          text {
+            width: 561rpx;
+            height: 100rpx;
+            background: #ffffff;
+            border-radius: 28rpx;
+            border: 2px solid #e0e0e0;
+            font-weight: 500;
+            font-size: 28rpx;
+            color: #bfbfbf;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            width: 198rpx;
-            height: 198rpx;
-            background: #fafafa;
-            border-radius: 50%;
-            position: relative;
-            border: 10rpx solid transparent;
 
             &.active {
-              border: 10rpx solid #5664e5;
-
-              text {
-                background: #5664e5;
-                border: 1px solid #5664e5;
-                color: #ffffff;
-              }
-            }
-
-            image {
-              position: absolute;
-              bottom: 0rpx;
-              width: 145rpx;
-              border-radius: 50%;
-            }
-
-            text {
-              position: absolute;
-              top: calc(198rpx + 56rpx);
-              width: 140rpx;
-              height: 56rpx;
-              background: #ffffff;
+              background: #effffb;
               border-radius: 28rpx;
-              border: 1px solid #e0e0e0;
-              font-weight: 500;
-              font-size: 28rpx;
-              color: #111111;
-              display: flex;
-              align-items: center;
-              justify-content: center;
+              border: 3px solid #65d285;
             }
           }
         }
@@ -680,6 +734,13 @@ page {
             align-items: center;
             justify-content: center;
 
+            &.active {
+              text {
+                font-weight: bold;
+                color: #65d285 !important;
+              }
+            }
+
             text {
               &:nth-child(1) {
                 font-size: 40rpx;
@@ -700,33 +761,14 @@ page {
       .evaluation-title2 {
         font-size: 24rpx;
         color: #999999;
-        margin-bottom: 100rpx;
-      }
-
-      .dot {
-        margin-bottom: 38rpx;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 41rpx;
-
-        text {
-          width: 15rpx;
-          height: 15rpx;
-          background: #d9d9d9;
-          border-radius: 50%;
-
-          &.active {
-            background: #5664e5;
-          }
-        }
+        margin-bottom: 42rpx;
       }
 
       .next {
         flex-shrink: 0;
         width: 550rpx;
         height: 100rpx;
-        background: linear-gradient(90deg, #4f69e6 0%, #6b56e3 100%);
+        background: #65d285;
         border-radius: 50rpx;
         font-weight: bold;
         font-size: 30rpx;
