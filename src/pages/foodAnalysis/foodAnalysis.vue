@@ -337,17 +337,16 @@ page {
 <style scoped lang="scss">
 .food-analysis-page {
   height: 100%;
+  background: linear-gradient(180deg, #e9f4ee 0%, #f2f6f7 73%) left top/100% 424rpx no-repeat;
   display: flex;
   flex-direction: column;
 
   .page-title {
-    background: #ffffff;
   }
 
   .banner {
     flex-shrink: 0;
     padding: calc(var(--page-title-height)) 0 0;
-    background: #ffffff;
   }
 
   .container {
@@ -636,7 +635,7 @@ page {
             align-items: center;
             justify-content: center;
             font-size: 22rpx;
-            color: #5664e5;
+            color: #65d285;
           }
         }
       }
@@ -656,7 +655,7 @@ page {
 
           &:nth-child(1) {
             .title {
-              color: #5664e5;
+              color: #65d285;
             }
           }
 
@@ -680,7 +679,7 @@ page {
     flex-shrink: 0;
     width: 592rpx;
     height: 103rpx;
-    background: #5664e5;
+    background: #65d285;
     border-radius: 52rpx;
     display: flex;
     align-items: center;

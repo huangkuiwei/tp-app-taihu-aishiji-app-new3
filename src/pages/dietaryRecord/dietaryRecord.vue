@@ -408,7 +408,7 @@ page {
 <style scoped lang="scss">
 .dietary-record-page {
   height: 100%;
-  background: linear-gradient(180deg, #e9f4ee 0%, #f2f6f7 73%) left top/100% 424rpx;
+  background: linear-gradient(180deg, #e9f4ee 0%, #f2f6f7 73%) left top/100% 424rpx no-repeat;
   display: flex;
   flex-direction: column;
 
