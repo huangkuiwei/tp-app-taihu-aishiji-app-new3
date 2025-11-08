@@ -402,7 +402,7 @@ export default {
     width: 590rpx;
     margin: 0 auto 60rpx;
     height: 100rpx;
-    background: #5664e5;
+    background: #65d285;
     border-radius: 50rpx;
     font-weight: 500;
     font-size: 32rpx;

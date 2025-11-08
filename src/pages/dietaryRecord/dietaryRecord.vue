@@ -102,7 +102,7 @@
         </view>
 
         <view class="add-food" @click="$refs.addFoodRecodeDialog.open()">
-          <uni-icons color="#5664e5" type="plus-filled" size="22"></uni-icons>
+          <uni-icons color="#65D285" type="plus-filled" size="22"></uni-icons>
           <text>继续添加食物</text>
         </view>
       </view>
@@ -408,17 +408,16 @@ page {
 <style scoped lang="scss">
 .dietary-record-page {
   height: 100%;
+  background: linear-gradient(180deg, #e9f4ee 0%, #f2f6f7 73%) left top/100% 424rpx;
   display: flex;
   flex-direction: column;
 
   .page-title {
-    background: #ffffff;
   }
 
   .banner {
     flex-shrink: 0;
     padding: calc(var(--page-title-height)) 0 0;
-    background: #ffffff;
   }
 
   .container {
@@ -449,7 +448,7 @@ page {
           line-height: 40rpx;
 
           &:not(:last-child) {
-            background: #5664e5;
+            background: #65d285;
             border-radius: 25rpx 5rpx 25rpx 25rpx;
             color: #ffffff;
             align-self: flex-end;
@@ -666,7 +665,7 @@ page {
                 color: #999999;
 
                 text {
-                  color: #5664e5;
+                  color: #65d285;
                 }
               }
 
@@ -688,7 +687,7 @@ page {
       .add-food {
         font-weight: 500;
         font-size: 28rpx;
-        color: #5664e5;
+        color: #65d285;
         text-align: center;
         display: flex;
         align-items: center;
@@ -702,7 +701,7 @@ page {
     width: 590rpx;
     margin: 40rpx auto 60rpx;
     height: 100rpx;
-    background: #5664e5;
+    background: #65d285;
     border-radius: 50rpx;
     font-weight: 500;
     font-size: 32rpx;
