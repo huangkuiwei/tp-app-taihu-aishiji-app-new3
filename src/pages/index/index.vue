@@ -156,10 +156,7 @@
                 </view>
               </view>
 
-              <view
-                class="progress"
-                @click="item.foodList.length && $toRouter('/pages/foodAnalysis/foodAnalysis', `type=${item.type}`)"
-              >
+              <view class="progress" @click="jumpFoodRecode">
                 <text class="tip">还可以吃</text>
                 <!-- TODO 进度 -->
                 <view class="progress-line">
@@ -647,6 +644,20 @@ export default {
       }
 
       item.active = !item.active;
+    },
+
+    jumpFoodRecode() {
+      if (!this.isLogin) {
+        this.$toRouter('/packageLogin/pages/login/login');
+        return;
+      }
+
+      if (!this.userDetailInfo) {
+        this.$toRouter('/pages/evaluation/evaluation');
+        return;
+      }
+
+      this.$toRouter('/pages/foodRecode/foodRecode');
     },
   },
 };
