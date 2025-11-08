@@ -1,25 +1,21 @@
 <template>
   <view class="calendar-com">
-    <!-- 年月标题与切换按钮 -->
-    <view class="calendar-header">
-      <view class="toggle">
-        <uni-icons @click="prevMonth" color="#000000" type="left" size="16"></uni-icons>
-        <text class="time">{{ currentMonth }}</text>
-        <uni-icons @click="nextMonth" color="#000000" type="right" size="16"></uni-icons>
-      </view>
+    <view class="page-title">
+      <text>{{ formatSelectedDate }}</text>
 
-      <image
-        @click="showCalendar = !showCalendar"
-        class="toggle-calendar"
-        mode="widthFix"
-        src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app3/recode/calendar-icon.png"
-      />
+      <view class="back" @click="$toBack">
+        <uni-icons class="back" color="#1A1A1A" type="arrow-left" size="22"></uni-icons>
+      </view>
     </view>
+
+    <view class="banner"></view>
 
     <view class="calendar-wrapper" v-show="showCalendar">
       <!-- 星期行 -->
       <view class="calendar-weekdays">
-        <view v-for="day in weekDays" :key="day" class="weekday">{{ day }}</view>
+        <view v-for="day in weekDays" :class="{ active: activeWeekDay(day) }" :key="day" class="weekday">
+          {{ day }}
+        </view>
       </view>
 
       <!-- 日期展示 -->
@@ -37,7 +33,6 @@
         >
           <view>
             <text>{{ day.value }}</text>
-            <text>{{ day.value && lunarByDate(day.dateStr) }}</text>
           </view>
         </view>
       </view>
@@ -46,7 +41,6 @@
 </template>
 
 <script>
-import solarlunar from 'solarlunar';
 import { verifyIsLogin } from '@/utils';
 
 export default {
@@ -82,18 +76,6 @@ export default {
   },
 
   computed: {
-    lunarByDate() {
-      return (dateStr) => {
-        let date = new Date(dateStr);
-        return solarlunar.solar2lunar(date.getFullYear(), date.getMonth() + 1, date.getDate()).dayCn;
-      };
-    },
-
-    currentMonth() {
-      const date = new Date(this.currentDate);
-      return `${date.getFullYear()}年${date.getMonth() + 1}月`;
-    },
-
     calendarDays() {
       const date = new Date(this.currentDate);
       const year = date.getFullYear();
@@ -141,6 +123,27 @@ export default {
 
       return days;
     },
+
+    activeWeekDay() {
+      return (day) => {
+        let currentDay = new Date(this.selectedDate).getDay();
+
+        if (currentDay === 0 && day === this.weekDays[6]) {
+          return true;
+        } else {
+          return currentDay === this.weekDays.findIndex((weekDay) => weekDay === day) + 1;
+        }
+      };
+    },
+
+    formatSelectedDate() {
+      if (this.selectedDate) {
+        let data = this.selectedDate.split('/');
+        return `${data[1]}月${data[2]}日`;
+      }
+
+      return '';
+    },
   },
 
   watch: {
@@ -156,18 +159,6 @@ export default {
   },
 
   methods: {
-    prevMonth() {
-      const date = new Date(this.currentDate);
-      date.setMonth(date.getMonth() - 1);
-      this.currentDate = date.getTime();
-    },
-
-    nextMonth() {
-      const date = new Date(this.currentDate);
-      date.setMonth(date.getMonth() + 1);
-      this.currentDate = date.getTime();
-    },
-
     selectDay(day) {
       if (!day || day.disabled || !day.value) return;
       verifyIsLogin();
@@ -179,32 +170,11 @@ export default {
 
 <style scoped lang="scss">
 .calendar-com {
-  .calendar-header {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 36rpx;
-    position: relative;
+  .page-title {
+  }
 
-    .time {
-      width: 180rpx;
-      text-align: center;
-      font-weight: 500;
-      font-size: 25rpx;
-      color: #000000;
-    }
-
-    .toggle {
-      display: flex;
-      align-items: center;
-    }
-
-    .toggle-calendar {
-      position: absolute;
-      top: 0;
-      right: 40rpx;
-      width: 35rpx;
-    }
+  .banner {
+    padding: calc(var(--page-title-height) + 44rpx) 0 0;
   }
 
   .calendar-wrapper {
@@ -214,13 +184,17 @@ export default {
       display: flex;
       justify-content: space-between;
       text-align: center;
-      margin-bottom: 26rpx;
+      margin-bottom: 16rpx;
 
       .weekday {
-        font-size: 24rpx;
-        color: #000000;
+        font-size: 28rpx;
+        color: #bfbfbf;
         flex-grow: 1;
         text-align: center;
+
+        &.active {
+          color: #333333;
+        }
       }
     }
 
@@ -232,7 +206,7 @@ export default {
         width: calc(100% / 7);
         padding: 2rpx 0;
         cursor: pointer;
-        font-size: 24rpx;
+        font-size: 28rpx;
         color: #333333;
         display: flex;
         align-items: center;
@@ -245,7 +219,7 @@ export default {
           color: #ffffff;
 
           view {
-            background: #35d16e;
+            background: #65d285;
           }
         }
 
@@ -256,24 +230,14 @@ export default {
         }
 
         view {
-          width: 68rpx;
-          height: 68rpx;
-          border-radius: 50%;
+          width: 58rpx;
+          height: 58rpx;
+          border-radius: 15rpx;
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
           gap: 4rpx;
-
-          text {
-            &:nth-child(1) {
-              font-size: 24rpx;
-            }
-
-            &:nth-child(2) {
-              font-size: 19rpx;
-            }
-          }
         }
       }
     }

@@ -143,15 +143,11 @@
                 <view class="current-food-item-wrap">
                   <view class="current-food-item" v-for="(item1, index) of item.foodList" :key="index">
                     <text>{{ item1.name }}</text>
-                    <!-- TODO 单位是重量还是千卡？ -->
                     <text>{{ item1.calorie }}千卡</text>
                   </view>
                 </view>
 
-                <view
-                  class="current-food-item1"
-                  @click="$toRouter('/pages/foodAnalysis/foodAnalysis', `type=${item.type}`)"
-                >
+                <view class="current-food-item1" @click="jumpFoodRecode">
                   <text>...</text>
                 </view>
               </view>
@@ -510,7 +506,6 @@ export default {
     },
 
     openFoodRecodeDialog(type) {
-      console.log('type', type);
       if (!this.isLogin) {
         this.$toRouter('/packageLogin/pages/login/login');
         return;

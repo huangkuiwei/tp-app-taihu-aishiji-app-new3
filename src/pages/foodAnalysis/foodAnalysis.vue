@@ -108,7 +108,7 @@
       </view>
     </view>
 
-    <view class="know-btn" v-if="analysisData" @click="$toSwitch('/pages/index/index')">我知道了</view>
+    <view class="know-btn" v-if="analysisData" @click="back">我知道了</view>
   </view>
 </template>
 
@@ -316,6 +316,12 @@ export default {
         .then((res) => {
           this.dailyCalorie = res.data;
         });
+    },
+
+    back() {
+      uni.navigateBack({
+        delta: 2,
+      });
     },
   },
 };
