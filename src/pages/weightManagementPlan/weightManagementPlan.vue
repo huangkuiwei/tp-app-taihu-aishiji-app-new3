@@ -12,39 +12,45 @@
 
     <view class="plan-box">
       <view class="plan-title">
-        <view class="left">
-          <image
-            class="word-icon"
-            mode="widthFix"
-            src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/weightManagementPlan/word.png"
-          />
+        <image
+          class="word-icon1"
+          mode="widthFix"
+          src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/weightManagementPlan/word1.png"
+        />
 
-          <view class="des">
-            <view class="des-item">
-              <image
-                mode="widthFix"
-                src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/weightManagementPlan/icon1.png"
-              />
+        <image
+          class="word-icon2"
+          mode="widthFix"
+          src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/weightManagementPlan/word2.png"
+        />
 
-              <text>智能定制</text>
-            </view>
+        <view class="des">
+          <view class="des-item">
+            <image
+              mode="widthFix"
+              src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/weightManagementPlan/icon1.png"
+            />
 
-            <view class="des-item">
-              <image
-                mode="widthFix"
-                src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/weightManagementPlan/icon1.png"
-              />
-
-              <text>真实有效</text>
-            </view>
+            <text>智能定制</text>
           </view>
-        </view>
 
-        <view class="right">
-          <image
-            mode="widthFix"
-            src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/weightManagementPlan/icon2.png"
-          />
+          <view class="des-item">
+            <image
+              mode="widthFix"
+              src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/weightManagementPlan/icon1.png"
+            />
+
+            <text>高效达成</text>
+          </view>
+
+          <view class="des-item">
+            <image
+              mode="widthFix"
+              src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/weightManagementPlan/icon1.png"
+            />
+
+            <text>真实蜕变</text>
+          </view>
         </view>
       </view>
 
@@ -52,7 +58,7 @@
         <view class="card-item1">
           <view class="card-title">
             <text>您的身体评测报告</text>
-            <text @click="$toRouter('/pages/historyPlan/historyPlan')">历史记录</text>
+            <!--<text @click="$toRouter('/pages/historyPlan/historyPlan')">历史记录</text>-->
           </view>
 
           <view class="card-title2">
@@ -129,7 +135,7 @@
                 <image
                   class="icon"
                   mode="widthFix"
-                  src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/weightManagementPlan/icon4.png"
+                  src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/weightManagementPlan/body.png"
                 />
               </view>
 
@@ -158,139 +164,46 @@
           </view>
         </view>
 
-        <view class="chart-item2">
-          <view class="card-title">
-            <text>瘦身目标</text>
-          </view>
-
-          <view class="card-title2">
-            预计在
-            <text>{{ lastPlanData.end_date && lastPlanData.end_date.slice(0, 10) }}</text>
-            达到
-            <text>{{ lastPlanData.plan_target_weight }}KG</text>
-          </view>
-
-          <view class="chart">
-            <l-echart ref="chartRef" @finished="init" />
-          </view>
-        </view>
-      </view>
-
-      <view class="cookbook-box">
-        <view class="cookbook-title">每日食谱</view>
-
-        <view class="time-nav">
-          <view class="time-item" v-for="(item, key) of dateList" :key="key" @click="selectDateKey = key">
-            <text class="date">{{ key.slice(5, 10) }}</text>
-            <text class="line" :style="{ background: selectDateKey === key ? '#5664E5' : 'translate' }"></text>
-          </view>
-        </view>
-
-        <view class="cookbook-list">
-          <view
-            class="cookbook-item"
-            :style="{ background: foodBgColorList[key] }"
-            v-for="(item, key) of dateList[selectDateKey]"
-            :key="key"
-          >
-            <view class="cookbook-title">
-              <text>{{ currentFoodData(item, key).typeName }}</text>
-              <text>{{ currentFoodData(item).currentCalorie }}千卡（{{ currentFoodData(item).ratio }}%）</text>
+        <view class="chart-item2-box">
+          <view class="chart-item2">
+            <view class="card-title">
+              <text>瘦身目标</text>
             </view>
 
-            <view class="food-list">
-              <view class="food-item" v-for="(item1, key1) of item" :key="key1">
-                <text>{{ item1.name }}</text>
-                <text>{{ item1.calorie }}千卡/{{ item1.weight }}克</text>
-              </view>
+            <view class="card-title2">
+              预计在
+              <text>{{ lastPlanData.end_date && lastPlanData.end_date.slice(0, 10) }}</text>
+              达到
+              <text>{{ lastPlanData.plan_target_weight }}KG</text>
             </view>
-          </view>
-        </view>
-      </view>
 
-      <view class="plan-item motion-plan" :class="{ vip: isVip }">
-        <view class="plan-name">定制化运动方案</view>
-
-        <view class="plan-detail1" v-if="isVip">
-          <view class="progress">
-            <text :style="{ width: exercisesProgress.progress + '%' }"></text>
-          </view>
-
-          <view class="progress-tip">
-            <text>减重计划</text>
-            <text>第{{ exercisesProgress.finishDay }}/{{ exercisesProgress.totalDay }}天</text>
-          </view>
-
-          <view class="time-nav">
-            <view class="time-item" v-for="(item, key) of dateList" :key="key" @click="selectDateKey1 = key">
-              <text class="date">{{ isToday(key) ? '今日训练' : key.slice(5, 10) }}</text>
-              <text class="line" :style="{ background: selectDateKey1 === key ? '#5664E5' : 'translate' }"></text>
-            </view>
-          </view>
-
-          <view class="exercises-list">
-            <view class="exercises-item" v-for="item of exercisesPlanData" :key="item.id">
-              <image mode="widthFix" :src="item.image_url" />
-
-              <view class="info">
-                <view class="name">{{ item.name }}</view>
-
-                <view class="content">
-                  <text>{{ item.content }}</text>
-                  <text>{{ item.calorie }}千卡</text>
-                </view>
-              </view>
-
-              <template v-if="isNotStart">
-                <view class="no-start">未完成</view>
-              </template>
-
-              <view @click.capture.stop="onCheckboxClick(item)" v-else>
-                <checkbox-group>
-                  <checkbox value="1" :checked="item.is_completed.includes('1')" />
-                </checkbox-group>
-              </view>
+            <view class="chart">
+              <l-echart ref="chartRef" @finished="init" />
             </view>
           </view>
         </view>
 
-        <view class="no-permission" v-else>
-          <image
-            mode="widthFix"
-            src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/weightManagementPlan/lock.png"
-          />
+        <view class="food-plan-box">
+          <view class="food-plan" v-if="isVip">
+            <view class="plan-name">专属饮食方案</view>
 
-          <text>会员专享</text>
-        </view>
-      </view>
-
-      <view class="plan-item life-plan" :class="{ vip: isVip }">
-        <view class="plan-name">定制化生活方案</view>
-
-        <view class="plan-detail2" v-if="isVip">
-          <view class="replace" @click="refreshLife">换一换</view>
-
-          <view class="left-title">今日生活计划</view>
-
-          <view class="life-list">
-            <view class="life-item" v-for="item of lifestylePlanData" :key="item.category">
-              <image mode="widthFix" :src="item.image_url" />
-
-              <view class="info">
-                <view class="name">{{ item.content }}</view>
-                <view class="content">{{ item.benefit }}</view>
-              </view>
+            <view class="plan-detail2">
+              <!-- TODO 饮食方案 -->
             </view>
           </view>
-        </view>
 
-        <view class="no-permission" v-else>
-          <image
-            mode="widthFix"
-            src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/weightManagementPlan/lock.png"
-          />
+          <view class="no-permission" v-else>
+            <view class="plan-name">专属饮食方案</view>
 
-          <text>会员专享</text>
+            <view class="permission-tip">
+              <image
+                mode="widthFix"
+                src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/weightManagementPlan/lock.png"
+              />
+
+              <text>会员专享</text>
+            </view>
+          </view>
         </view>
       </view>
 
@@ -660,7 +573,7 @@ export default {
 
           for (let i = 0; i < 100; i++) {
             if (i <= res.data.body_score) {
-              color.push([i / 100, '#5664E5']);
+              color.push([i / 100, '#65D285']);
             } else {
               color.push([i / 100, '#F2F5FF']);
             }
@@ -892,91 +805,83 @@ export default {
 <style lang="scss">
 page {
   height: 100%;
-  background: #f6f7fb url('https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/weightManagementPlan/bg.png')
-    left top/100% auto no-repeat;
+  background: #f6f7fb linear-gradient(180deg, #b3f5e7 0%, #f1fcf8 100%) left top/100% 850rpx no-repeat;
 }
 </style>
 
 <style scoped lang="scss">
 .weight-management-plan-page {
   .page-title {
-    background: #ffffff;
   }
 
   .banner {
-    padding: calc(var(--page-title-height) + 9rpx) 0 0;
-    background: #ffffff;
+    padding: calc(var(--page-title-height) + 57rpx) 0 0;
   }
 
   .plan-box {
-    padding: 43rpx 30rpx 100rpx;
+    padding: 0 0 100rpx;
 
     .plan-title {
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 54rpx;
-      margin-bottom: 29rpx;
+      margin-bottom: 41rpx;
 
-      .left {
+      .word-icon1 {
+        width: 545rpx;
+        margin-bottom: 28rpx;
+      }
+
+      .word-icon2 {
+        width: 461rpx;
+        margin-bottom: 31rpx;
+      }
+
+      .des {
         display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 28rpx;
+        align-items: center;
+        justify-content: center;
+        gap: 15rpx;
 
-        .word-icon {
-          width: 436rpx;
-        }
-
-        .des {
+        .des-item {
           height: 48rpx;
           padding: 0 16rpx;
-          background: linear-gradient(90deg, #fbf6ff 0%, #f1f3ff 100%);
+          background: #ffffff;
           border-radius: 24rpx;
           border: 1px solid #ffffff;
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 21rpx;
 
-          .des-item {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            image {
-              width: 26rpx;
-              margin-right: 9rpx;
-            }
-
-            text {
-              font-size: 26rpx;
-              color: #1a1a1a;
-            }
+          image {
+            width: 22rpx;
+            margin-right: 12rpx;
           }
-        }
-      }
 
-      .right {
-        image {
-          width: 197rpx;
+          text {
+            font-size: 24rpx;
+            color: #1a1a1a;
+          }
         }
       }
     }
 
     .card-box {
+      margin-bottom: 62rpx;
+
       .card-item1 {
         background: #ffffff;
-        padding: 36rpx 19rpx;
-        border-radius: 20rpx;
-        margin-bottom: 22rpx;
+        padding: 36rpx 49rpx;
+        border-radius: 30rpx;
+        margin-bottom: 29rpx;
 
         .card-title {
           position: relative;
           z-index: 9;
           display: flex;
           align-items: center;
-          justify-content: space-between;
+          justify-content: center;
           margin-bottom: 20rpx;
 
           text {
@@ -986,14 +891,15 @@ page {
               color: #1a1a1a;
             }
 
-            &:nth-child(2) {
-              font-size: 26rpx;
-              color: #5168e6;
-            }
+            // &:nth-child(2) {
+            //   font-size: 26rpx;
+            //   color: #5168e6;
+            // }
           }
         }
 
         .card-title2 {
+          text-align: center;
           font-size: 22rpx;
           color: #999999;
           margin-bottom: 55rpx;
@@ -1024,7 +930,7 @@ page {
               &:nth-child(1) {
                 font-weight: 500;
                 font-size: 76rpx;
-                color: #5664e5;
+                color: #65d285;
               }
 
               &:nth-child(2) {
@@ -1039,7 +945,7 @@ page {
           width: 580rpx;
           height: 60rpx;
           margin: 0 auto 18rpx;
-          background: #f2f5ff;
+          background: #ecfdf2;
           border-radius: 30rpx;
           display: flex;
           align-items: center;
@@ -1048,7 +954,7 @@ page {
           color: #333333;
 
           text {
-            color: #5664e5;
+            color: #65d285;
           }
         }
 
@@ -1060,7 +966,7 @@ page {
 
           .detail-info1 {
             padding: 17rpx 12rpx;
-            margin-bottom: 48rpx;
+            margin-bottom: 20rpx;
 
             .title {
               font-weight: 500;
@@ -1098,7 +1004,7 @@ page {
             .left {
               display: flex;
               flex-direction: column;
-              gap: 55rpx;
+              gap: 75rpx;
             }
 
             .left-item,
@@ -1122,13 +1028,13 @@ page {
 
                 text {
                   &:nth-child(1) {
-                    color: #5664e5;
+                    color: #65d285;
                     font-size: 30rpx;
                   }
 
                   &:nth-child(2) {
                     height: 32rpx;
-                    background: #5664e5;
+                    background: #65d285;
                     border-radius: 5rpx;
                     font-size: 22rpx;
                     color: #ffffff;
@@ -1145,7 +1051,7 @@ page {
               flex-grow: 1;
 
               .icon {
-                width: 178rpx;
+                width: 201rpx;
               }
             }
 
@@ -1241,327 +1147,88 @@ page {
         }
       }
 
-      .chart-item2 {
-        background: #ffffff;
-        padding: 29rpx 19rpx;
-        border-radius: 20rpx;
-        margin-bottom: 20rpx;
+      .chart-item2-box {
+        padding: 0 30rpx;
 
-        .card-title {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-bottom: 50rpx;
-
-          text {
-            &:nth-child(1) {
-              font-weight: 500;
-              font-size: 30rpx;
-              color: #1a1a1a;
-            }
-
-            &:nth-child(2) {
-              font-size: 26rpx;
-              color: #5168e6;
-            }
-          }
-        }
-
-        .card-title2 {
-          color: #1a1a1a;
-          font-size: 26rpx;
-
-          text {
-            color: #5664e5;
-            font-size: 30rpx;
-          }
-        }
-      }
-    }
-
-    .cookbook-box {
-      padding: 38rpx 19rpx;
-      align-self: stretch;
-      background: #ffffff;
-      border-radius: 20rpx;
-      margin-bottom: 20rpx;
-
-      .cookbook-title {
-        font-weight: 500;
-        font-size: 30rpx;
-        color: #1a1a1a;
-        margin-bottom: 33rpx;
-      }
-
-      .time-nav {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 18rpx;
-
-        .time-item {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-
-          .date {
-            font-size: 24rpx;
-            color: #1a1a1a;
-            padding-bottom: 14rpx;
-          }
-
-          .line {
-            width: 60rpx;
-            height: 5rpx;
-          }
-        }
-      }
-
-      .cookbook-list {
-        display: flex;
-        flex-direction: column;
-        gap: 20rpx;
-
-        .cookbook-item {
+        .chart-item2 {
+          background: #ffffff;
+          padding: 29rpx 19rpx;
           border-radius: 20rpx;
-          padding: 24rpx;
+          margin-bottom: 20rpx;
 
-          .cookbook-title {
+          .card-title {
             display: flex;
             align-items: center;
-            margin-bottom: 26rpx;
+            justify-content: space-between;
+            margin-bottom: 50rpx;
 
             text {
               &:nth-child(1) {
-                font-size: 28rpx;
+                font-weight: 500;
+                font-size: 30rpx;
                 color: #1a1a1a;
-                margin-right: 14rpx;
               }
 
               &:nth-child(2) {
-                font-size: 22rpx;
-                color: #5664e5;
+                font-size: 26rpx;
+                color: #5168e6;
               }
             }
           }
 
-          .food-list {
-            display: flex;
-            flex-direction: column;
-            gap: 20rpx;
-
-            .food-item {
-              display: flex;
-              align-items: center;
-              justify-content: space-between;
-
-              text {
-                font-size: 22rpx;
-                color: #1a1a1a;
-              }
-            }
-          }
-        }
-      }
-    }
-
-    .plan-item {
-      align-self: stretch;
-      background: #ffffff;
-      border-radius: 20rpx;
-      padding: 38rpx 19rpx;
-      margin-bottom: 20rpx;
-      position: relative;
-
-      &.life-plan {
-        margin-bottom: 30rpx;
-      }
-
-      &.vip {
-        background: linear-gradient(180deg, rgba(204, 255, 238, 0.9) 0%, rgba(255, 255, 255, 0.93) 25%, #ffffff 100%);
-      }
-
-      .plan-name {
-        font-weight: 500;
-        font-size: 30rpx;
-        color: #1a1a1a;
-      }
-
-      .plan-detail1 {
-        .progress {
-          margin: 44rpx 0 25rpx;
-          height: 18rpx;
-          background: #f6f7fb;
-          border-radius: 9rpx;
-          position: relative;
-
-          text {
-            position: absolute;
-            height: 18rpx;
-            background: #5664e5;
-            border-radius: 9rpx;
-          }
-        }
-
-        .progress-tip {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-bottom: 50rpx;
-
-          text {
+          .card-title2 {
+            font-weight: bold;
             font-size: 26rpx;
+            color: #1a1a1a;
 
-            &:nth-child(1) {
-              color: #333333;
-            }
-
-            &:nth-child(2) {
-              color: #555555;
+            text {
+              color: #65d285;
+              font-size: 30rpx;
             }
           }
         }
+      }
 
-        .time-nav {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-bottom: 18rpx;
+      .food-plan-box {
+        padding: 0 30rpx;
 
-          .time-item {
+        .plan-name {
+          font-weight: 500;
+          font-size: 30rpx;
+          color: #1a1a1a;
+        }
+
+        .food-plan {
+          .plan-detail2 {
+            margin-top: 31rpx;
+            background: #ffffff;
+            padding: 29rpx 19rpx;
+            border-radius: 20rpx;
+          }
+        }
+
+        .no-permission {
+          background: #ffffff;
+          border-radius: 20rpx;
+          padding: 38rpx 20rpx 107rpx;
+
+          .permission-tip {
+            margin-top: 46rpx;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
 
-            .date {
-              font-size: 24rpx;
-              color: #1a1a1a;
-              padding-bottom: 14rpx;
-            }
-
-            .line {
+            image {
               width: 60rpx;
-              height: 5rpx;
+              margin-bottom: 20rpx;
+            }
+
+            text {
+              font-size: 26rpx;
+              color: #333333;
             }
           }
-        }
-
-        .exercises-list {
-          display: flex;
-          flex-direction: column;
-          gap: 20rpx;
-
-          .exercises-item {
-            background: #f6f7fb;
-            padding: 16rpx;
-            display: flex;
-            border-radius: 20rpx;
-            align-items: center;
-
-            image {
-              width: 80rpx;
-              border-radius: 20rpx;
-              margin-right: 26rpx;
-            }
-
-            .info {
-              flex-grow: 1;
-              display: flex;
-              flex-direction: column;
-              gap: 15rpx;
-
-              .name {
-                font-size: 26rpx;
-                color: #333333;
-              }
-
-              .content {
-                text {
-                  color: #fd6a97;
-                  font-size: 22rpx;
-                }
-              }
-            }
-
-            .no-start {
-              font-size: 24rpx;
-              color: #999999;
-            }
-
-            checkbox {
-              transform: scale(0.6);
-            }
-          }
-        }
-      }
-
-      .plan-detail2 {
-        .replace {
-          position: absolute;
-          right: 20rpx;
-          top: 42rpx;
-          font-size: 24rpx;
-          color: #5765e5;
-        }
-
-        .left-title {
-          padding: 48rpx 0 30rpx;
-          font-size: 26rpx;
-          color: #333333;
-        }
-
-        .life-list {
-          display: flex;
-          flex-direction: column;
-          gap: 20rpx;
-
-          .life-item {
-            display: flex;
-            align-items: center;
-
-            image {
-              width: 80rpx;
-              border-radius: 20rpx;
-              margin-right: 26rpx;
-            }
-
-            .info {
-              flex-grow: 1;
-              display: flex;
-              flex-direction: column;
-              gap: 15rpx;
-
-              .name {
-                font-size: 26rpx;
-                color: #333333;
-              }
-
-              .content {
-                font-size: 22rpx;
-                color: #999999;
-              }
-            }
-          }
-        }
-      }
-
-      .no-permission {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 50rpx 0;
-
-        image {
-          width: 60rpx;
-          margin-bottom: 20rpx;
-        }
-
-        text {
-          font-size: 26rpx;
-          color: #333333;
         }
       }
     }
@@ -1574,10 +1241,10 @@ page {
       text {
         width: 590rpx;
         height: 100rpx;
-        background: linear-gradient(90deg, #4f69e6 0%, #6b56e3 100%);
+        background: #65d285;
         border-radius: 50rpx;
         font-size: 32rpx;
-        color: #ffffff;
+        color: #f6f7fb;
         display: flex;
         align-items: center;
         justify-content: center;
