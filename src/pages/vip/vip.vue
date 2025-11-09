@@ -1,150 +1,116 @@
 <template>
-  <view class="vip-page">
+  <view class="vip-page" :class="{ isVip: isVip }">
     <view class="page-title">
       <text>会员中心</text>
 
       <view class="back" @click="$toBack">
-        <uni-icons class="back" color="#1A1A1A" type="arrow-left" size="22"></uni-icons>
+        <uni-icons class="back" color="#1A1A1A" type="left" size="22"></uni-icons>
       </view>
     </view>
 
     <view class="banner"></view>
 
-    <view class="user-container">
-      <view class="userinfo">
-        <view class="top">
-          <image
-            mode="aspectFill"
-            :src="
-              userInfo.avatar_url || 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app/my/default_head.png'
-            "
-          />
-
-          <text v-if="isLogin">{{ userInfo.uname }}</text>
-          <text v-else>登录/注册</text>
-        </view>
-
-        <view class="bottom" v-if="isLogin">
-          <text v-if="!isVip">暂未开通会员，无法享受会员权益</text>
-          <text v-else>会员到期日期：{{ userInfo.vip_info.vip_end_time.slice(0, 10) }}</text>
-        </view>
-
-        <view class="vip-icon" v-if="!isVip">
-          <image mode="widthFix" src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/vip/icon3.png" />
-          <text>未开通</text>
-        </view>
-
-        <!--<view class="renewal" v-else @click="$toRouter('/pages/renewalManage/renewalManage')">关闭自动续费</view>-->
+    <view class="userinfo">
+      <view class="left">
+        <image
+          mode="aspectFill"
+          :src="
+            userInfo.avatar_url || 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app/my/default_head.png'
+          "
+        />
       </view>
+
+      <view class="right" v-if="isLogin">
+        <view class="top">
+          <text>{{ userInfo.uname }}</text>
+        </view>
+
+        <view v-if="isVip">会员到期：{{ userInfo.vip_info.vip_end_time.slice(0, 10) }}</view>
+        <view v-else>会员权益尚未开通</view>
+      </view>
+
+      <view class="right" v-else @click="$toRouter('/packageLogin/pages/login/login')">
+        <view>还未登录</view>
+        <view>点击登录/注册</view>
+      </view>
+
+      <image
+        v-if="isVip"
+        class="vip-icon"
+        mode="widthFix"
+        src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/vip/icon2.png"
+      />
+
+      <image
+        v-else
+        class="vip-icon"
+        mode="widthFix"
+        src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/vip/icon1.png"
+      />
     </view>
 
-    <view class="vip-info">
-      <view class="vip-title">
-        <text>黄金会员</text>
-        <image mode="widthFix" src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/vip/icon1.png" />
-      </view>
+    <view class="container-box">
+      <view class="title">喵互娱会员</view>
 
-      <view class="vip-shop-list">
-        <view
-          class="item"
-          @click="selectedVip = item"
-          :class="{ active: selectedVip.id === item.id }"
-          v-for="item of vipList"
-          :key="item.id"
-        >
-          <view class="top">
-            <view class="name">{{ item.product_name }}</view>
-
+      <view class="vip-shop-box">
+        <view class="vip-shop-list">
+          <view
+            class="item"
+            @click="selectedVip = item"
+            :class="{ active: selectedVip.id === item.id }"
+            v-for="item of vipList"
+            :key="item.id"
+          >
+            <view class="name">{{ item.product_des }}</view>
             <view class="price">
               <text>￥</text>
               <text>{{ item.price }}</text>
             </view>
-          </view>
+            <view class="tip">
+              <text v-if="item.id === 10000">每日低至{{ Number((item.price / 30).toFixed(2)) }}元</text>
+              <text v-if="item.id === 10001">每月低至{{ Number((item.price / 3).toFixed(2)) }}元</text>
+              <text v-if="item.id === 10002">超值特惠</text>
+            </view>
 
-          <view class="bottom">每日低至{{ item.unitPrice }}元</view>
-
-          <view class="recommend" v-if="item.is_recommend">
-            <image
-              mode="widthFix"
-              src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/vip/recommend.png"
-            />
-          </view>
-        </view>
-      </view>
-
-      <!--<view class="rule">-->
-      <!--  <view>购买说明：</view>-->
-      <!--  <view>1、会员商品包含自动续费和单次购买项目，自动续费商品包括“连续包月”、“年会员”，开通时请按需购买；</view>-->
-      <!--  <view>2、如需取消自动续费可在个人中心页面管理自动续费；</view>-->
-      <!--  <view>2、会员到期前1小时可取消自动续费，超时系统将自动续订；</view>-->
-      <!-- TODO 客服电话 -->
-      <!--  <view>3、如有疑问可咨询在线客服或拨打客服电话：4009989618。</view>-->
-      <!--</view>-->
-
-      <view class="introduce">
-        <view class="title">会员权益</view>
-
-        <view class="introduce-list">
-          <view class="introduce-item">
-            <image mode="widthFix" src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/vip/icon2.png" />
-            <text>专属定制方案</text>
-          </view>
-
-          <view class="introduce-item">
-            <image mode="widthFix" src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/vip/icon2.png" />
-            <text>实时饮食建议</text>
-          </view>
-
-          <view class="introduce-item">
-            <image mode="widthFix" src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/vip/icon2.png" />
-            <text>定制化健康食谱</text>
-          </view>
-
-          <view class="introduce-item">
-            <image mode="widthFix" src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/vip/icon2.png" />
-            <text>每餐食物分析</text>
+            <!-- TODO 背景切图 -->
+            <view class="vip-icon" v-if="item.id === 10000">
+              <text>限时优惠</text>
+            </view>
           </view>
         </view>
+
+        <!--<view class="rule">-->
+        <!--  <view class="rule-title">购买说明：</view>-->
+        <!--  <view>1、会员商品包含自动续费和单次购买项目，自动续费商品包括“连续包月”、“年会员”，开通时请按需购买；</view>-->
+        <!--  <view>2、如需取消自动续费可在个人中心页面管理自动续费；</view>-->
+        <!--  <view>2、会员到期前1小时可取消自动续费，超时系统将自动续订；</view>-->
+        <!--  &lt;!&ndash; TODO 客服电话 &ndash;&gt;-->
+        <!--  <view>3、如有疑问可咨询在线客服或拨打客服电话：400-0000-0000。</view>-->
+        <!--</view>-->
       </view>
+    </view>
 
-      <view class="pay-type">
-        <radio-group @change="payType = $event.detail.value">
-          <label>
-            <image mode="widthFix" src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/vip/wx.png" />
-            <text class="name">微信</text>
-            <radio class="type" value="wx" :checked="payType === 'wx'"></radio>
-          </label>
+    <view class="buy-box">
+      <template v-if="showShopInfo">
+        <view class="btn" style="margin-bottom: 36rpx" @click="submit(selectedVip, openid, userInfo.phone)">
+          {{ isVip ? '点我续费' : '点我开通' }}
+        </view>
+        <view class="agreement">
+          <checkbox-group @change="agree = $event.detail.value">
+            <label>
+              <checkbox value="1" :checked="agree.includes('1')" />
+            </label>
 
-          <!--<label>-->
-          <!--  <image mode="widthFix" src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/vip/zfb.png" />-->
-          <!--  <text class="name">支付宝</text>-->
-          <!--  <radio class="type" value="zfb" :checked="payType === 'zfb'"></radio>-->
-          <!--</label>-->
-        </radio-group>
-      </view>
+            <text>我已阅读并同意</text>
+            <text @click="$toRouter('/packageLogin/pages/protocol/protocol')">《会员服务协议》</text>
+          </checkbox-group>
+        </view>
+      </template>
 
-      <view class="buy-box">
-        <template v-if="showShopInfo">
-          <view class="btn" style="margin-bottom: 24rpx" @click="submit(selectedVip, openid, userInfo.phone)">
-            {{ isVip ? '立即续费' : '立即购买' }}
-          </view>
-          <view class="agreement">
-            <checkbox-group @change="agree = $event.detail.value">
-              <label>
-                <checkbox value="1" :checked="agree.includes('1')" />
-              </label>
-
-              <text class="part1">支付即视为阅读并同意</text>
-              <text class="part2" @click="$toRouter('/packageProtocol/pages/protocol/protocol')">《会员服务协议》</text>
-            </checkbox-group>
-          </view>
-        </template>
-
-        <template v-else>
-          <view class="buy-tip">由于相关规定，iOS版小程序暂不支持购买</view>
-          <button class="btn" @click="openContact">联系客服</button>
-        </template>
-      </view>
+      <template v-else>
+        <view class="buy-tip">由于相关规定，iOS版小程序暂不支持购买</view>
+        <button class="btn" @click="openContact">联系客服</button>
+      </template>
     </view>
   </view>
 </template>
@@ -168,7 +134,6 @@ export default {
       // showShopInfo: false, // 测试
       showShopInfo:
         (process.env.UNI_PLATFORM === 'mp-weixin' && platform !== 'ios') || process.env.UNI_PLATFORM !== 'mp-weixin',
-      payType: 'wx',
     };
   },
 
@@ -197,7 +162,7 @@ export default {
   onShareAppMessage() {
     return {
       title: 'AI饮食记录小程序',
-      imageUrl: 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/share-img.jpg',
+      imageUrl: 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app3/share-img.png',
       path: '/pages/index/index',
     };
   },
@@ -213,16 +178,14 @@ export default {
         return;
       }
 
-      if (this.payType) {
-        onPay(price, openid, mobile, this.payType);
-      }
+      onPay(price, openid, mobile);
     },
 
     openContact() {
       uni.openCustomerServiceChat({
-        corpId: 'wwfee5c045f8987186',
+        corpId: 'wwa09afa94a53c191b',
         extInfo: {
-          url: 'https://work.weixin.qq.com/kfid/kfcb64201122e83af30',
+          url: 'https://work.weixin.qq.com/kfid/kfc4d6f5ec87ef53883',
         },
       });
     },
@@ -236,30 +199,9 @@ export default {
       $http.get('api/global/product/get').then((res) => {
         uni.hideLoading();
 
-        // TODO 连续包月
-        // res.data.splice(1, 0, {
-        //   id: 10003,
-        //   is_recommend: true,
-        //   original_price: 4200,
-        //   price: 2990,
-        //   product_des: '月会员',
-        //   product_name: '连续包月',
-        //   select_percentage: 0.1,
-        // });
-
         res.data.forEach((item) => {
           item.price = Number((item.price / 100).toFixed(2));
           item.original_price = Number((item.original_price / 100).toFixed(2));
-
-          if (item.id === 10000) {
-            item.unitPrice = Number((item.price / 31).toFixed(2));
-          } else if (item.id === 10001) {
-            item.unitPrice = Number((item.price / 90).toFixed(2));
-          } else if (item.id === 10002) {
-            item.unitPrice = Number((item.price / 365).toFixed(2));
-          } else if (item.id === 10003) {
-            item.unitPrice = Number((item.price / 31).toFixed(2));
-          }
         });
 
         this.vipList = res.data;
@@ -270,341 +212,227 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 page {
-  background: #f6f7fb;
+  height: 100%;
 }
 </style>
 
 <style scoped lang="scss">
 .vip-page {
+  height: 100%;
+  background: #f6f7fb;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  &.isVip {
+    background: linear-gradient(90deg, #ffd274 0%, #f9e7bb 100%);
+  }
+
   .page-title {
-    background: #ffffff;
+    flex-shrink: 0;
   }
 
   .banner {
-    padding: calc(var(--page-title-height)) 0 0;
-    background: #ffffff;
+    flex-shrink: 0;
+    padding: calc(var(--page-title-height) + 61rpx) 0 0;
   }
 
-  .user-container {
-    padding: 20rpx 50rpx 0;
-
-    .userinfo {
-      padding: 19rpx 20rpx 86rpx;
-      background: url('https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/vip/bg1.png') left top/100% 100%
-        no-repeat;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-
-      .top {
-        flex-shrink: 0;
-        display: flex;
-        align-items: center;
-        margin-bottom: 21rpx;
-
-        image {
-          width: 60rpx;
-          height: 60rpx;
-          border-radius: 50%;
-          margin-right: 15rpx;
-        }
-
-        text {
-          font-weight: bold;
-          font-size: 30rpx;
-          color: #ffffff;
-        }
-      }
-
-      .bottom {
-        display: flex;
-
-        text {
-          &:nth-child(1) {
-            font-size: 22rpx;
-            color: #ffffff;
-          }
-        }
-      }
-
-      .vip-icon {
-        position: absolute;
-        top: 0;
-        right: 0;
-
-        image {
-          width: 100rpx;
-        }
-
-        text {
-          position: absolute;
-          left: 0;
-          right: 0;
-          top: 0;
-          bottom: 0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-weight: 500;
-          font-size: 22rpx;
-          color: #ffffff;
-        }
-      }
-
-      .renewal {
-        position: absolute;
-        top: 45rpx;
-        right: 28rpx;
-        width: 179rpx;
-        height: 60rpx;
-        background: #5664e5;
-        border-radius: 30rpx;
-        font-weight: bold;
-        font-size: 22rpx;
-        color: #ffffff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-    }
-  }
-
-  .vip-info {
-    padding: 32rpx 32rpx 100rpx;
-    background: url('https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/vip/bg2.png') left top/100% auto
-      no-repeat;
+  .userinfo {
+    flex-shrink: 0;
+    padding: 0 28rpx;
+    display: flex;
+    align-items: center;
     position: relative;
-    top: -60rpx;
+    margin-bottom: 79rpx;
 
-    .vip-title {
-      font-weight: bold;
-      font-size: 30rpx;
-      color: #111111;
-      position: relative;
-
-      text {
-        position: relative;
-        z-index: 9;
-      }
+    .left {
+      flex-shrink: 0;
+      margin-right: 25rpx;
 
       image {
-        position: absolute;
-        top: 10rpx;
-        left: 100rpx;
-        width: 49rpx;
+        width: 120rpx;
+        height: 120rpx;
+        border-radius: 50%;
       }
     }
 
-    .vip-shop-list {
+    .right {
+      flex-grow: 1;
       display: flex;
-      align-items: center;
-      gap: 20rpx;
-      padding: 56rpx 0 0 0;
-      overflow: auto;
-      margin-bottom: 30rpx;
+      flex-direction: column;
+      gap: 18rpx;
 
-      .item {
-        flex-shrink: 0;
-        width: 230rpx;
-        border-radius: 20rpx;
-        border: 1px solid #baff56;
-        position: relative;
-
-        &.active {
-          .top {
-            background: #f3ffcd;
-          }
+      view {
+        &:nth-child(1) {
+          font-weight: bold;
+          font-size: 26rpx;
+          color: #222222;
+          display: flex;
+          align-items: center;
+          gap: 21rpx;
         }
 
-        .top {
-          background: #ffffff;
-          border-top-left-radius: 20rpx;
-          border-top-right-radius: 20rpx;
-          padding: 32rpx 0 24rpx;
+        &:nth-child(2) {
+          font-weight: 500;
+          font-size: 22rpx;
+          color: #333333;
+        }
+      }
+    }
+
+    .vip-icon {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      right: 23rpx;
+      width: 278rpx;
+    }
+  }
+
+  .container-box {
+    flex-grow: 1;
+    overflow: auto;
+    border-radius: 30rpx 30rpx 0 0;
+    padding: 44rpx 36rpx;
+    background: #ffffff;
+
+    .title {
+      font-weight: bold;
+      font-size: 28rpx;
+      color: #222222;
+      margin-bottom: 58rpx;
+    }
+
+    .vip-shop-box {
+      .vip-shop-list {
+        display: flex;
+        align-items: center;
+        gap: 36rpx;
+        overflow: auto;
+        padding-top: 20rpx;
+        margin-bottom: 52rpx;
+
+        .item {
+          flex-shrink: 0;
+          width: 225rpx;
+          height: 244rpx;
+          background: #fbf9f5;
+          border-radius: 30rpx;
+          border: 4rpx solid #f4edd6;
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
+          position: relative;
+
+          &.active {
+            border: 4rpx solid #ccb188;
+          }
 
           .name {
-            font-size: 30rpx;
-            color: #111111;
-            margin-bottom: 35rpx;
+            padding-top: 20rpx;
+            font-size: 24rpx;
+            color: #2c2314;
+            margin-bottom: 31rpx;
           }
 
           .price {
+            margin-bottom: 36rpx;
+
             text {
-              color: #111111;
+              font-weight: bold;
+              color: #2c2314;
 
               &:nth-child(1) {
-                font-size: 30rpx;
+                font-size: 24rpx;
               }
 
               &:nth-child(2) {
-                font-weight: bold;
-                font-size: 65rpx;
+                font-size: 56rpx;
               }
             }
           }
-        }
 
-        .bottom {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          padding: 15rpx 0;
-          font-size: 21rpx;
-          color: #111111;
-          border-bottom-left-radius: 20rpx;
-          border-bottom-right-radius: 20rpx;
-          background: #c8ff80;
-        }
+          .tip {
+            font-size: 24rpx;
+            color: #ccb188;
+          }
 
-        .recommend {
-          position: absolute;
-          top: -22rpx;
-          left: -6rpx;
+          .vip-icon {
+            position: absolute;
+            top: -22rpx;
+            left: -6rpx;
 
-          image {
-            width: 100rpx;
+            text {
+              width: 147rpx;
+              height: 41rpx;
+              background: linear-gradient(92deg, #f28e26 0%, #fd644f 100%);
+              border-radius: 20rpx 17rpx 20rpx 0;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-size: 25rpx;
+              color: #ffffff;
+            }
           }
         }
       }
-    }
 
-    .rule {
-      padding: 0 20rpx;
-      font-size: 20rpx;
-      color: #666666;
-      margin-bottom: 16rpx;
+      .rule {
+        padding: 0 18rpx;
+        font-size: 20rpx;
+        color: #666666;
 
-      view {
-        line-height: 35rpx;
-      }
-    }
-
-    .introduce {
-      background: #ffffff;
-      border-radius: 20rpx;
-      padding: 30rpx 19rpx;
-      margin-bottom: 30rpx;
-
-      .title {
-        font-weight: bold;
-        font-size: 30rpx;
-        color: #111111;
-        margin-bottom: 36rpx;
-      }
-
-      .introduce-list {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: space-around;
-        padding-left: 79rpx;
-        gap: 26rpx;
-
-        .introduce-item {
-          width: calc(50% - 14rpx);
-          display: flex;
-          align-items: center;
-
-          image {
-            width: 28rpx;
-            margin-right: 10rpx;
-          }
-
-          text {
-            font-weight: 500;
-            font-size: 26rpx;
-            color: #111111;
-          }
+        view {
+          line-height: 35rpx;
         }
       }
     }
+  }
 
-    .pay-type {
-      background: #ffffff;
-      border-radius: 20rpx;
-      padding: 23rpx 0;
-      margin-bottom: 98rpx;
+  .buy-box {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 30rpx 85rpx 40rpx;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 
-      radio-group {
-        label {
-          padding: 0 25rpx;
-          display: flex;
-          align-items: center;
-
-          &:not(:last-child) {
-            padding-bottom: 22rpx;
-            margin-bottom: 22rpx;
-            border-bottom: 2rpx solid #e6e6e6;
-          }
-
-          image {
-            width: 55rpx;
-            margin-right: 25rpx;
-          }
-
-          .name {
-            flex-grow: 1;
-            font-weight: 500;
-            font-size: 26rpx;
-            color: #111111;
-          }
-
-          radio {
-            transform: scale(0.75);
-          }
-        }
-      }
-    }
-
-    .buy-box {
+    .btn {
+      width: 100%;
+      height: 100rpx;
+      background: linear-gradient(90deg, #ff3121 0%, #ff9102 100%);
+      border-radius: 50rpx;
+      font-weight: bold;
+      font-size: 30rpx;
+      color: #ffffff;
       display: flex;
-      flex-direction: column;
       align-items: center;
+      justify-content: center;
+    }
 
-      .btn {
-        width: 100%;
-        height: 100rpx;
-        background: #111111;
-        border-radius: 20rpx;
-        font-weight: bold;
-        font-size: 30rpx;
-        color: #ffffff;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
+    .agreement {
+      font-size: 24rpx;
+      color: #1a1a1a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-      .agreement {
-        font-size: 22rpx;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        checkbox-group {
-          checkbox {
-            transform: scale(0.7);
-          }
-        }
-
-        .part1 {
-          color: #999999;
-        }
-
-        .part2 {
-          color: #111111;
+      checkbox-group {
+        checkbox {
+          transform: scale(0.7);
         }
       }
+    }
 
-      .buy-tip {
-        font-size: 28rpx;
-        margin-bottom: 24rpx;
-      }
+    .buy-tip {
+      font-size: 28rpx;
+      margin-bottom: 24rpx;
     }
   }
 }
