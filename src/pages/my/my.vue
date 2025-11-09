@@ -18,8 +18,7 @@
         <view class="right">
           <view class="username" v-if="isLogin">
             <text class="name">{{ userInfo.uname }}</text>
-            <!-- TODO ID -->
-            <text class="tip">ID: 123456</text>
+            <text class="tip">ID: {{ userInfo.uid }}</text>
           </view>
 
           <view class="no-login" v-else @click="$toRouter('/packageLogin/pages/login/login')">

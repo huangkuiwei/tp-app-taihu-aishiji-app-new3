@@ -10,6 +10,12 @@
 
     <view class="banner"></view>
 
+    <view class="welcome">
+      <view class="progress">
+        <text :style="{ left: (stepIndex / 2) * 100 + '%', width: 100 / 2 + '%' }"></text>
+      </view>
+    </view>
+
     <view class="evaluation-container">
       <view class="evaluation-box">
         <view class="evaluation-title">
@@ -25,9 +31,14 @@
             @change="targetWeight = $event.detail.value"
           >
             <picker-view-column>
-              <view class="column-item" v-for="(item, index) in rulerLineList3" :key="index">
+              <view
+                class="column-item"
+                :class="{ active: targetWeight[0] === index }"
+                v-for="(item, index) in rulerLineList3"
+                :key="index"
+              >
                 <text>{{ item }}</text>
-                <text>KG</text>
+                <text v-if="targetWeight[0] === index">KG</text>
               </view>
             </picker-view-column>
           </picker-view>
@@ -42,25 +53,40 @@
           >
             <!-- 年 -->
             <picker-view-column>
-              <view class="column-item" v-for="year in years1" :key="year">
+              <view
+                class="column-item"
+                :class="{ active: end_date[0] === index }"
+                v-for="(year, index) in years1"
+                :key="year"
+              >
                 <text>{{ year }}</text>
-                <text>年</text>
+                <text v-if="end_date[0] === index">年</text>
               </view>
             </picker-view-column>
 
             <!-- 月 -->
             <picker-view-column>
-              <view class="column-item" v-for="month in months1" :key="month">
+              <view
+                class="column-item"
+                :class="{ active: end_date[1] === index }"
+                v-for="(month, index) in months1"
+                :key="month"
+              >
                 <text>{{ month }}</text>
-                <text>月</text>
+                <text v-if="end_date[1] === index">月</text>
               </view>
             </picker-view-column>
 
             <!-- 日 -->
             <picker-view-column>
-              <view class="column-item" v-for="day in days1" :key="day">
+              <view
+                class="column-item"
+                :class="{ active: end_date[2] === index }"
+                v-for="(day, index) in days1"
+                :key="day"
+              >
                 <text>{{ day }}</text>
-                <text>日</text>
+                <text v-if="end_date[2] === index">日</text>
               </view>
             </picker-view-column>
           </picker-view>
@@ -70,12 +96,7 @@
           <text>{{ evaluationList[stepIndex].subTitle2 }}</text>
         </view>
 
-        <view class="dot">
-          <text :class="{ active: stepIndex === 0 }"></text>
-          <text :class="{ active: stepIndex === 1 }"></text>
-        </view>
-
-        <view class="next" @click="next">{{ stepIndex > 0 ? '获取专属方案' : '下一步' }}</view>
+        <view class="next" @click="next">{{ stepIndex > 0 ? '生成方案' : '下一步' }}</view>
       </view>
     </view>
   </view>
@@ -430,6 +451,7 @@ page {
 <style scoped lang="scss">
 .add-plan-page {
   height: 100%;
+  background: #f6f7fb linear-gradient(180deg, #e9f4ee 0%, #f2f6f7 73%) left top/100% 500rpx no-repeat;
   padding-bottom: 80rpx;
   display: flex;
   flex-direction: column;
@@ -439,18 +461,44 @@ page {
   }
 
   .banner {
-    padding: calc(var(--page-title-height)) 0 0;
+    padding: calc(var(--page-title-height) + 54rpx) 0 0;
     flex-shrink: 0;
   }
 
+  .welcome {
+    padding: 0 85rpx;
+    margin-bottom: 53rpx;
+
+    .progress {
+      flex-shrink: 0;
+      width: 100%;
+      height: 11rpx;
+      background: #ffffff;
+      border-radius: 6rpx;
+      position: relative;
+      margin-bottom: 51rpx;
+
+      text {
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        background: #65d285;
+        border-radius: 6rpx;
+      }
+    }
+  }
+
   .evaluation-container {
-    padding: 130rpx 100rpx 0;
+    padding: 0 30rpx;
     flex-grow: 1;
     overflow: hidden;
 
     .evaluation-box {
       height: 100%;
+      padding: 104rpx 64rpx 50rpx;
       background: #ffffff;
+      border-radius: 30rpx;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -562,6 +610,13 @@ page {
             align-items: center;
             justify-content: center;
 
+            &.active {
+              text {
+                font-weight: bold;
+                color: #65d285 !important;
+              }
+            }
+
             text {
               &:nth-child(1) {
                 font-size: 40rpx;
@@ -582,33 +637,14 @@ page {
       .evaluation-title2 {
         font-size: 24rpx;
         color: #999999;
-        margin-bottom: 100rpx;
-      }
-
-      .dot {
-        margin-bottom: 38rpx;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 41rpx;
-
-        text {
-          width: 15rpx;
-          height: 15rpx;
-          background: #d9d9d9;
-          border-radius: 50%;
-
-          &.active {
-            background: #5664e5;
-          }
-        }
+        margin-bottom: 42rpx;
       }
 
       .next {
         flex-shrink: 0;
         width: 550rpx;
         height: 100rpx;
-        background: linear-gradient(90deg, #4f69e6 0%, #6b56e3 100%);
+        background: #65d285;
         border-radius: 50rpx;
         font-weight: bold;
         font-size: 30rpx;

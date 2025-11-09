@@ -639,7 +639,7 @@ page {
 
     .evaluation-box {
       height: 100%;
-      padding: 104rpx 64rpx 0;
+      padding: 104rpx 64rpx 50rpx;
       background: #ffffff;
       border-radius: 30rpx;
       display: flex;
