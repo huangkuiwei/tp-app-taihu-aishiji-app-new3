@@ -187,8 +187,141 @@
           <view class="food-plan" v-if="isVip">
             <view class="plan-name">专属饮食方案</view>
 
-            <view class="plan-detail2">
-              <!-- TODO 饮食方案 -->
+            <!-- TODO vip 方案数据 -->
+            <view class="plan-detail">
+              <view class="detail1">
+                <view class="detail-title">方案要点</view>
+
+                <view class="content">
+                  <view class="content-item">
+                    <text>01</text>
+                    <text>注意菜肴的成熟度，蔬菜断生即可，可生食的蔬菜宜生食。</text>
+                  </view>
+
+                  <view class="content-item">
+                    <text>02</text>
+                    <text>注意进餐顺序，优先吃蛋白质(类似吃2-3口菜肴，再吃1口主食)</text>
+                  </view>
+
+                  <view class="content-item">
+                    <text>03</text>
+                    <text>注意进餐顺序，优先吃蛋白质(类似吃2-3口菜肴，再吃1口主食)</text>
+                  </view>
+                </view>
+              </view>
+
+              <view class="detail2">
+                <view class="detail-title">热量预算与营养配比</view>
+
+                <view class="content">
+                  <view class="calorie">
+                    <text>热量预算：</text>
+                    <text>1000千卡</text>
+                  </view>
+
+                  <view class="ratio">
+                    <view class="ratio-title">三大营养比例</view>
+
+                    <view class="calorie-type">
+                      <view class="calorie-item">
+                        <view class="name">脂肪</view>
+                        <view class="progress" style="background: #e6e6e6"> </view>
+                        <view class="value">
+                          <text>{{ 0 }}/</text>
+                          <text>{{ 50 }}克</text>
+                        </view>
+                      </view>
+
+                      <view class="calorie-item">
+                        <view class="name">碳水</view>
+                        <view class="progress" style="background: #e6e6e6"> </view>
+                        <view class="value">
+                          <text>{{ 0 }}/</text>
+                          <text>{{ 50 }}克</text>
+                        </view>
+                      </view>
+
+                      <view class="calorie-item">
+                        <view class="name">蛋白质</view>
+                        <view class="progress" style="background: #e6e6e6"> </view>
+                        <view class="value">
+                          <text>{{ 0 }}/</text>
+                          <text>{{ 50 }}克</text>
+                        </view>
+                      </view>
+                    </view>
+                  </view>
+                </view>
+              </view>
+
+              <view class="detail3">
+                <view class="detail-title">热量预算与营养配比</view>
+
+                <view class="content">
+                  <view class="content-item">
+                    <view></view>
+                    <view class="content-title">食物类别</view>
+                    <view>水果</view>
+                    <view>蔬菜</view>
+                    <view>奶类</view>
+                    <view>蛋类</view>
+                    <view>肉类</view>
+                    <view>精制谷类</view>
+                    <view>杂粮</view>
+                    <view>薯类食材</view>
+                    <view></view>
+                  </view>
+
+                  <view class="content-item">
+                    <view></view>
+                    <view class="content-title">每日重量</view>
+                    <view>300g</view>
+                    <view>300g</view>
+                    <view>300g</view>
+                    <view>300g</view>
+                    <view>300g</view>
+                    <view>300g</view>
+                    <view>300g</view>
+                    <view>300g</view>
+                    <view></view>
+                  </view>
+
+                  <view class="content-item">
+                    <view></view>
+                    <view class="content-title">每日热量</view>
+                    <view>140kcal</view>
+                    <view>140kcal</view>
+                    <view>140kcal</view>
+                    <view>140kcal</view>
+                    <view>140kcal</view>
+                    <view>140kcal</view>
+                    <view>140kcal</view>
+                    <view>140kcal</view>
+                    <view></view>
+                  </view>
+                </view>
+              </view>
+
+              <view class="detail4">
+                <view class="detail-title">注意事项</view>
+
+                <view class="content">
+                  <view class="content-item">
+                    <text>01</text>
+                    <text>避免油煎、快餐、炸、爆炒、烧烤食品(糕点、地 瓜大枣、甜菜肉饼、汉堡、披萨、膨化食品)。</text>
+                  </view>
+
+                  <view class="content-item">
+                    <text>02</text>
+                    <text>避免油煎、快餐、炸、爆炒、烧烤食品(糕点、地 瓜大枣、甜菜肉饼、汉堡、披萨、膨化食品)。</text>
+                  </view>
+
+                  <view class="content-item">
+                    <text>03</text>
+                    <text>避免油煎、快餐、炸、爆炒、烧烤食品(糕点、地 瓜大枣、甜菜肉饼、汉堡、披萨、膨化食品)。</text>
+                  </view>
+                </view>
+              </view>
             </view>
           </view>
 
@@ -212,7 +345,7 @@
       </view>
 
       <view class="unlock" v-else>
-        <text @click="recode">去记录</text>
+        <text @click="previewFoodPlan">查看食谱计划</text>
       </view>
     </view>
 
@@ -575,7 +708,7 @@ export default {
             if (i <= res.data.body_score) {
               color.push([i / 100, '#65D285']);
             } else {
-              color.push([i / 100, '#F2F5FF']);
+              color.push([i / 100, '#ECFDF2']);
             }
           }
 
@@ -735,8 +868,9 @@ export default {
         });
     },
 
-    recode() {
-      this.$refs.addMotionRecodeDialog.open();
+    // TODO 食谱计划
+    previewFoodPlan() {
+      this.$toRouter('/pages/recipePlan/recipePlan');
     },
 
     addMotionRecode(event) {
@@ -1199,11 +1333,199 @@ page {
         }
 
         .food-plan {
-          .plan-detail2 {
+          .plan-detail {
             margin-top: 31rpx;
-            background: #ffffff;
-            padding: 29rpx 19rpx;
-            border-radius: 20rpx;
+
+            .detail-title {
+              background: linear-gradient(-90deg, #65d285 0%, #79e69f 100%);
+              border-radius: 0 30rpx 30rpx 0;
+              height: 60rpx;
+              padding: 0 27rpx;
+              font-weight: 500;
+              font-size: 30rpx;
+              color: #ffffff;
+              display: inline-flex;
+              align-items: center;
+              justify-content: center;
+            }
+
+            .detail1,
+            .detail4 {
+              background: #ffffff;
+              border-radius: 20rpx;
+              padding: 0 0 32rpx;
+              margin-bottom: 30rpx;
+
+              .content {
+                margin-top: 38rpx;
+                padding: 0 41rpx;
+                display: flex;
+                flex-direction: column;
+                gap: 37rpx;
+
+                .content-item {
+                  display: flex;
+
+                  text {
+                    &:nth-child(1) {
+                      flex-shrink: 0;
+                      width: 42rpx;
+                      height: 42rpx;
+                      background: linear-gradient(0deg, #65d285 0%, #ecfdf2 100%);
+                      border-radius: 21rpx;
+                      font-weight: 500;
+                      font-size: 26rpx;
+                      color: #ffffff;
+                      display: flex;
+                      align-items: center;
+                      justify-content: center;
+                      margin-right: 19rpx;
+                    }
+
+                    &:nth-child(2) {
+                      font-size: 26rpx;
+                      color: #555555;
+                      line-height: 35rpx;
+                    }
+                  }
+                }
+              }
+            }
+
+            .detail2 {
+              background: #ffffff;
+              border-radius: 20rpx;
+              padding: 0 0 32rpx;
+              margin-bottom: 30rpx;
+
+              .content {
+                margin-top: 38rpx;
+                padding: 0 41rpx;
+
+                .calorie {
+                  display: flex;
+                  align-items: center;
+                  gap: 40rpx;
+                  padding-bottom: 22rpx;
+                  border-bottom: 1px solid #f6f7fb;
+                  margin-bottom: 42rpx;
+
+                  text {
+                    color: #333333;
+
+                    &:nth-child(1) {
+                      font-size: 26rpx;
+                    }
+
+                    &:nth-child(2) {
+                      font-size: 34rpx;
+                    }
+                  }
+                }
+
+                .ratio {
+                  .ratio-title {
+                    padding: 0 12rpx;
+                    margin-bottom: 44rpx;
+                    font-size: 26rpx;
+                    color: #333333;
+                  }
+
+                  .calorie-type {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+
+                    .calorie-item {
+                      display: flex;
+                      flex-direction: column;
+                      gap: 20rpx;
+
+                      .name {
+                        font-weight: 500;
+                        font-size: 24rpx;
+                        color: #111111;
+                      }
+
+                      .progress {
+                        width: 180rpx;
+                        height: 6rpx;
+                        border-radius: 3rpx;
+                        position: relative;
+                      }
+
+                      .value {
+                        font-size: 24rpx;
+                        color: #999999;
+
+                        text {
+                          &:nth-child(1) {
+                            color: #111111;
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+
+            .detail3 {
+              background: #ffffff;
+              border-radius: 20rpx;
+              padding: 0 0 32rpx;
+              margin-bottom: 30rpx;
+
+              .content {
+                margin-top: 20rpx;
+                display: flex;
+                align-items: center;
+
+                .content-item {
+                  width: 33.3%;
+                  display: flex;
+                  flex-direction: column;
+
+                  &:nth-child(1) {
+                    view:nth-child(2) {
+                      border-top-left-radius: 20rpx;
+                    }
+                  }
+
+                  &:nth-child(2) {
+                    border-radius: 20rpx;
+
+                    view {
+                      background: linear-gradient(180deg, #effffb 0%, #eafff1 100%) !important;
+                    }
+                  }
+
+                  &:nth-child(3) {
+                    view:nth-child(2) {
+                      border-top-right-radius: 2rpx;
+                    }
+                  }
+
+                  view {
+                    height: 77rpx;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    font-size: 26rpx;
+                    color: #111111;
+
+                    &:first-child,
+                    &:last-child {
+                      height: 40rpx;
+                    }
+
+                    &:nth-child(2n) {
+                      background: #f6f7fb;
+                    }
+                  }
+                }
+              }
+            }
           }
         }
 
