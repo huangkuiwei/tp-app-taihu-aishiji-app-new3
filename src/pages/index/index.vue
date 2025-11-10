@@ -44,7 +44,7 @@
           v-if="homeWeightPlanData && homeWeightPlanData.state === 1"
           mode="widthFix"
           src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/vip/icon3.png"
-          @click="goWeightManagementPlan"
+          @click="goCurrentPlan"
         />
 
         <!-- TODO 新建计划图标修改 -->
@@ -484,6 +484,25 @@ export default {
       }
 
       this.$refs.updateWeightDataDialog.open();
+    },
+
+    goCurrentPlan() {
+      if (!this.isLogin) {
+        this.$toRouter('/packageLogin/pages/login/login');
+        return;
+      }
+
+      if (!this.userDetailInfo) {
+        this.$toRouter('/pages/evaluation/evaluation');
+        return;
+      }
+
+      if (!this.homeWeightPlanData) {
+        this.$toRouter('/pages/addPlan/addPlan');
+        return;
+      }
+
+      this.$toRouter('/pages/currentPlan/currentPlan');
     },
 
     goWeightManagementPlan() {

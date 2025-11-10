@@ -106,21 +106,6 @@
       }
     },
     {
-      "path": "pages/dataReport/dataReport",
-      "style": {
-        "navigationStyle": "custom",
-        // #ifndef H5
-        "navigationBarTitleText": "数据报告",
-        // #endif
-        "h5": {
-          "titleNView": false
-        },
-        "app-plus": {
-          "softinputMode": "adjustResize"
-        }
-      }
-    },
-    {
       "path": "pages/weightManagementPlan/weightManagementPlan",
       "style": {
         "navigationStyle": "custom",
@@ -186,21 +171,6 @@
         "navigationStyle": "custom",
         // #ifndef H5
         "navigationBarTitleText": "创建计划",
-        // #endif
-        "h5": {
-          "titleNView": false
-        },
-        "app-plus": {
-          "softinputMode": "adjustResize"
-        }
-      }
-    },
-    {
-      "path": "pages/resetPlan/resetPlan",
-      "style": {
-        "navigationStyle": "custom",
-        // #ifndef H5
-        "navigationBarTitleText": "重置方案",
         // #endif
         "h5": {
           "titleNView": false
@@ -394,6 +364,21 @@
         "navigationStyle": "custom",
         // #ifndef H5
         "navigationBarTitleText": "食谱计划",
+        // #endif
+        "h5": {
+          "titleNView": false
+        },
+        "app-plus": {
+          "softinputMode": "adjustResize"
+        }
+      }
+    },
+    {
+      "path": "pages/currentPlan/currentPlan",
+      "style": {
+        "navigationStyle": "custom",
+        // #ifndef H5
+        "navigationBarTitleText": "计划详情",
         // #endif
         "h5": {
           "titleNView": false
