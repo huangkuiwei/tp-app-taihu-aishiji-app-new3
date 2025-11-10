@@ -185,7 +185,7 @@ export default {
 
     previewPlan(item) {
       uni.setStorageSync('lastPlanData', item);
-      this.$toRouter('/pages/historyWeightManagementPlan/historyWeightManagementPlan', `plan_id=${item.plan_id}`);
+      this.$toRouter('/pages/weightManagementPlan/weightManagementPlan');
     },
 
     close() {
