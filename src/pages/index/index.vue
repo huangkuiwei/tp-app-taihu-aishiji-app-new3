@@ -338,7 +338,12 @@ export default {
     getHomeWeightPlan() {
       return $http.get('api/diet-info/weight-plan/home').then((res) => {
         // 对比数据，是否完成目标
-        if (this.homeWeightPlanData && this.homeWeightPlanData.state === 1 && res.data.state !== 1) {
+        if (
+          this.homeWeightPlanData &&
+          this.homeWeightPlanData.state === 1 &&
+          res.data.state !== 1 &&
+          this.homeWeightPlanData.plan_id === res.data.plan_id
+        ) {
           this.$refs.completePlanDialog.open();
         }
 

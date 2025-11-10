@@ -1,12 +1,17 @@
 <template>
-  <uni-popup ref="updateEndDateDialog">
+  <uni-popup ref="updateEndDateDialog" type="bottom" :safe-area="false">
     <view class="update-end-date-dialog">
-      <view class="title">选择你的目标日期</view>
+      <view class="title" style="text-align: center" v-if="editPlan">
+        <text class="pre-step" @click="$emit('preStep')">上一步</text>
+        <text>选择新的目标体重</text>
+      </view>
+
+      <view class="title" v-else>选择你的目标日期</view>
 
       <view class="list">
         <picker-view
           indicator-style="height: 40px;"
-          style="width: 100%; height: 120px"
+          style="width: 100%; height: 200px"
           :value="value"
           @change="onPickerChange"
         >
@@ -21,6 +26,7 @@
               :key="year"
             >
               <text class="value">{{ year }}</text>
+              <text class="unit" v-if="value[0] === index1">年</text>
             </view>
           </picker-view-column>
 
@@ -35,6 +41,7 @@
               :key="month"
             >
               <text class="value">{{ month }}</text>
+              <text class="unit" v-if="value[1] === index2">月</text>
             </view>
           </picker-view-column>
 
@@ -49,14 +56,15 @@
               :key="day"
             >
               <text class="value">{{ day }}</text>
+              <text class="unit" v-if="value[2] === index3">日</text>
             </view>
           </picker-view-column>
         </picker-view>
       </view>
 
       <view class="options">
-        <text @click="close">取消</text>
-        <text @click="submit">确定</text>
+        <text @click="submit" v-if="editPlan">调整</text>
+        <text @click="submit" v-else>确定</text>
       </view>
     </view>
   </uni-popup>
@@ -86,6 +94,11 @@ export default {
     userDetailInfo: {
       type: Object,
       default: () => ({}),
+    },
+
+    editPlan: {
+      type: Boolean,
+      default: false,
     },
   },
 
@@ -129,7 +142,8 @@ export default {
   methods: {
     open() {
       this.localUserDetailInfo = JSON.parse(JSON.stringify(this.userDetailInfo));
-      this.initialWeight = this.localUserDetailInfo.initial_weight / 2;
+      // 以最新体重和当前时间作为目标的初始体重和日期进行计算
+      this.initialWeight = this.localUserDetailInfo.current_weight / 2;
       this.targetWeight = this.localUserDetailInfo.target_weight / 2;
       this.beginDate = new Date(this.localUserDetailInfo.begin_date.replace(/-/g, '/'));
       this.endDate = new Date(this.localUserDetailInfo.end_date.replace(/-/g, '/'));
@@ -137,8 +151,10 @@ export default {
       setTimeout(() => {
         let weight = Math.abs(this.initialWeight - this.targetWeight);
         // 默认显示用户设置的结束时间
-        let time = this.endDate.getTime();
-        let time1 = this.beginDate.getTime() + 7 * 24 * 60 * 60 * 1000 * Math.ceil(weight / 1);
+        // let time = this.endDate.getTime();
+        // let time1 = this.beginDate.getTime() + 7 * 24 * 60 * 60 * 1000 * Math.ceil(weight / 1);
+        let time = Date.now() + 7 * 24 * 60 * 60 * 1000 * Math.ceil(weight / 0.5);
+        let time1 = Date.now() + 7 * 24 * 60 * 60 * 1000 * Math.ceil(weight / 1);
 
         let currentDate = new Date(time);
         let currentDate1 = new Date(time1);
@@ -261,12 +277,6 @@ export default {
     },
 
     async submit() {
-      uni.showLoading({
-        title: '更新中...',
-      });
-
-      await this.sleep(2000);
-
       Object.assign(this.localUserDetailInfo, {
         end_date: this.selectedDate,
       });
@@ -280,19 +290,31 @@ export default {
 
 <style scoped lang="scss">
 .update-end-date-dialog {
-  width: 690rpx;
+  width: 100%;
   background: #ffffff;
-  border-radius: 30rpx;
+  border-radius: 30rpx 30rpx 0 0;
+  padding: 30rpx 30rpx 50rpx;
 
   .title {
-    padding: 39rpx 0 53rpx;
-    text-align: center;
     font-weight: 500;
-    font-size: 30rpx;
-    color: #000000;
+    font-size: 28rpx;
+    color: #111111;
+    position: relative;
+    margin-bottom: 63rpx;
+
+    .pre-step {
+      position: absolute;
+      left: 20rpx;
+      top: 0;
+      font-weight: 500;
+      font-size: 26rpx;
+      color: #65d285;
+    }
   }
 
   .list {
+    margin-bottom: 44rpx;
+
     picker-view {
       margin-bottom: 52rpx;
 
@@ -306,7 +328,13 @@ export default {
 
           &.active {
             .value {
-              color: #111111;
+              font-weight: bold;
+              font-size: 38rpx;
+              color: #65d285;
+            }
+
+            .unit {
+              color: #65d285;
             }
           }
 
@@ -314,6 +342,15 @@ export default {
             font-weight: 500;
             font-size: 28rpx;
             color: #999999;
+          }
+
+          .unit {
+            font-weight: 500;
+            font-size: 24rpx;
+            color: #999999;
+            margin-left: 15rpx;
+            position: relative;
+            top: 4rpx;
           }
         }
       }
@@ -323,25 +360,19 @@ export default {
   .options {
     display: flex;
     align-items: center;
-    border-top: 2rpx solid #e6e6e6;
+    justify-content: center;
 
     text {
-      width: 50%;
+      width: 550rpx;
+      height: 100rpx;
+      background: #65d285;
+      border-radius: 50rpx;
+      font-weight: bold;
+      font-size: 30rpx;
+      color: #ffffff;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 36rpx;
-      font-weight: 500;
-      font-size: 28rpx;
-
-      &:nth-child(1) {
-        border-right: 2rpx solid #e6e6e6;
-        color: #999999;
-      }
-
-      &:nth-child(2) {
-        color: #111111;
-      }
     }
   }
 }

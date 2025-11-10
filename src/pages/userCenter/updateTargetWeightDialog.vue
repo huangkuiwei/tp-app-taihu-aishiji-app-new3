@@ -1,7 +1,11 @@
 <template>
   <uni-popup ref="updateTargetWeightDialog" type="bottom" :safe-area="false">
     <view class="update-target-height-dialog">
-      <view class="title">选择目标体重</view>
+      <view class="title" style="text-align: center" v-if="editPlan">
+        <text>选择新的目标体重</text>
+      </view>
+
+      <view class="title" v-else>选择目标体重</view>
 
       <view class="list">
         <picker-view
@@ -27,7 +31,8 @@
       </view>
 
       <view class="options">
-        <text @click="submit">确定</text>
+        <text @click="submit" v-if="editPlan">下一步</text>
+        <text @click="submit" v-else>确定</text>
       </view>
     </view>
   </uni-popup>
@@ -53,6 +58,11 @@ export default {
     userDetailInfo: {
       type: Object,
       default: () => ({}),
+    },
+
+    editPlan: {
+      type: Boolean,
+      default: false,
     },
   },
 
