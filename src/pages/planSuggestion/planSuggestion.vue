@@ -84,7 +84,7 @@
               <view class="content1">
                 <view class="content-item">
                   <text>日均消耗目标</text>
-                  <text>500千卡</text>
+                  <text>{{ Math.abs(planSuggestion.daily_caloric_diff) }}千卡</text>
                 </view>
 
                 <view class="content-item">
