@@ -25,14 +25,6 @@
             />
           </view>
 
-          <view class="progress-wrapper">
-            <text class="progress-box">
-              <text class="progress" :style="{ left: 'calc(' + item.progress + '%)' }">
-                <text class="word">{{ item.current_weight }}公斤</text>
-              </text>
-            </text>
-          </view>
-
           <view class="value">
             <view class="value-item">
               <view>{{ item.plan_initial_weight }} <text>公斤</text></view>
@@ -41,8 +33,9 @@
             </view>
 
             <view class="value-item">
-              <view>{{ item.plan_target_weight }} <text>公斤</text></view>
-              <view>目标体重</view>
+              <view>{{ item.current_weight }} <text>公斤</text></view>
+              <view>结束体重</view>
+              <!-- TODO 完成计划时间字段 -->
               <view>{{ item.end_date.slice(0, 10) }}</view>
             </view>
           </view>
@@ -259,46 +252,6 @@ page {
 
           image {
             width: 28rpx;
-          }
-        }
-
-        .progress-wrapper {
-          width: 100%;
-          height: 10rpx;
-          background: #65d285;
-          border-radius: 5rpx;
-          position: relative;
-          margin-bottom: 41rpx;
-
-          .progress-box {
-            position: absolute;
-            left: 0;
-            right: 130rpx;
-
-            .progress {
-              position: absolute;
-              top: -16rpx;
-              width: 130rpx;
-              height: 40rpx;
-              background: #65d285;
-              border-radius: 20rpx;
-              border: 2px solid #ffffff;
-
-              .word {
-                position: absolute;
-                left: 0;
-                right: 0;
-                top: 0;
-                bottom: 0;
-                width: 100%;
-                height: 100%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                font-size: 24rpx;
-                color: #ffffff;
-              }
-            }
           }
         }
 
