@@ -48,7 +48,7 @@
 
           <view class="plan-detail">
             <view class="plan-item">
-              <view class="title" style="background: linear-gradient(90deg, #5664e5 0%, #ffffff 100%)">饮食策略</view>
+              <view class="title" style="background: linear-gradient(90deg, #65d285 0%, #ffffff 100%)">饮食策略</view>
 
               <view class="content">
                 <view class="content-item">
@@ -200,9 +200,9 @@ export default {
 
     for (let i = 0; i < 100; i++) {
       if (i <= this.planSuggestion.body_score) {
-        color.push([i / 100, '#5664E5']);
+        color.push([i / 100, '#65D285']);
       } else {
-        color.push([i / 100, '#F2F5FF']);
+        color.push([i / 100, '#ECFDF2']);
       }
     }
 
@@ -241,8 +241,7 @@ export default {
 <style lang="scss">
 page {
   height: 100%;
-  background: #f6f7fb url('https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/weightManagementPlan/bg.png')
-    left top/100% auto no-repeat;
+  background: #f6f7fb linear-gradient(180deg, #b3f5e7 0%, #f1fcf8 100%) left top/100% 850rpx no-repeat;
 }
 </style>
 
@@ -271,7 +270,7 @@ page {
       margin-bottom: 31rpx;
 
       text {
-        color: #5664e5;
+        color: #65d285;
         font-size: 40rpx;
         font-weight: bold;
         padding: 0 8rpx;
@@ -342,7 +341,7 @@ page {
               &:nth-child(1) {
                 font-weight: 500;
                 font-size: 76rpx;
-                color: #5664e5;
+                color: #65d285;
               }
 
               &:nth-child(2) {
@@ -367,7 +366,7 @@ page {
           color: #333333;
 
           text {
-            color: #5664e5;
+            color: #65d285;
           }
         }
 
@@ -461,7 +460,7 @@ page {
       width: 550rpx;
       height: 100rpx;
       margin: 0 auto;
-      background: linear-gradient(90deg, #4f69e6 0%, #6b56e3 100%);
+      background: #65d285;
       border-radius: 50rpx;
       font-weight: bold;
       font-size: 30rpx;
