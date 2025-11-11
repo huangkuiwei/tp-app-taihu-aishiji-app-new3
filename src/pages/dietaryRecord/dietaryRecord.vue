@@ -8,7 +8,7 @@
       </view>
     </view>
 
-    <view class="banner"> </view>
+    <view class="banner"></view>
 
     <view class="container">
       <view class="dialogue">

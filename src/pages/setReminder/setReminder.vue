@@ -8,7 +8,7 @@
       </view>
     </view>
 
-    <view class="banner"> </view>
+    <view class="banner"></view>
 
     <view class="container">
       <view class="reminder-item" v-if="!reminderData.is_wx_subscribed" @click="goWebview">

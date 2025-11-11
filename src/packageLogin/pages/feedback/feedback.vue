@@ -8,7 +8,7 @@
       </view>
     </view>
 
-    <view class="banner"> </view>
+    <view class="banner"></view>
 
     <view class="feedback-container">
       <view class="feedback-box">

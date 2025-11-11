@@ -8,7 +8,7 @@
       </view>
     </view>
 
-    <view class="banner"> </view>
+    <view class="banner"></view>
 
     <view class="container" v-if="analysisData">
       <view class="res1">

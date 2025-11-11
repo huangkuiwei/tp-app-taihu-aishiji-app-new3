@@ -1,5 +1,5 @@
 <template>
-  <view class="history-plan-page">
+  <view class="current-plan-page">
     <view class="page-title">
       <text>计划详情</text>
 
@@ -8,17 +8,19 @@
       </view>
     </view>
 
-    <view class="banner"> </view>
+    <view class="banner"></view>
 
     <view class="current-plan">
       <view class="plan-title">
-        <text>{{ isWeightLoss ? '减重' : '增重' }}计划</text>
-        <text>历史记录</text>
+        <text>{{ isWeightLoss(lastPlanData) ? '减重' : '增重' }}计划</text>
+        <text @click="$toRouter('/pages/historyPlan/historyPlan')">历史记录</text>
       </view>
 
       <view class="plan-time">
         <view>2025年10月23日</view>
-        <view>开始 / 已坚持 <text>3</text> 天 / 还有 <text>45</text> 天</view>
+        <view>
+          开始 / 已坚持 <text>{{ planDays.useDay }}</text> 天 / 还有 <text>{{ planDays.unUseDay }}</text> 天
+        </view>
       </view>
 
       <view class="plan-box-wrap">
@@ -28,7 +30,7 @@
           :key="item.plan_id"
           @click="previewPlan(item)"
         >
-          <view class="title">{{ isWeightLoss ? '减肥' : '增肥' }}计划</view>
+          <view class="title">{{ isWeightLoss(item) ? '减肥' : '增肥' }}计划</view>
 
           <view class="progress-wrapper">
             <text class="progress-box">
@@ -85,7 +87,7 @@ import UpdateTargetWeightDialog from '@/pages/userCenter/updateTargetWeightDialo
 import UpdateEndDateDialog from '@/pages/userCenter/updateEndDateDialog.vue';
 
 export default {
-  name: 'historyPlan',
+  name: 'currentPlan',
 
   components: {
     UpdateEndDateDialog,
@@ -112,6 +114,38 @@ export default {
     isWeightLoss() {
       return (plan) => {
         return plan.plan_initial_weight - plan.plan_target_weight > 0;
+      };
+    },
+
+    planDays() {
+      let end_date = this.lastPlanData.end_date && this.lastPlanData.end_date.replace(/-/g, '/');
+      let start_date = this.lastPlanData.start_date && this.lastPlanData.start_date.replace(/-/g, '/');
+      let now = new Date();
+
+      let diff = new Date(end_date).getTime() - new Date(start_date).getTime();
+      const minutes = Math.floor(diff / 1000 / 60);
+      const hours = Math.floor(minutes / 60);
+
+      let diff1 = new Date(end_date).getTime() - now.getTime();
+      const minutes1 = Math.floor(diff1 / 1000 / 60);
+      const hours1 = Math.floor(minutes1 / 60);
+
+      let totalDay = Math.ceil(hours / 24);
+      let unUseDay = Math.ceil(hours1 / 24);
+      let useDay = Math.ceil(totalDay - unUseDay);
+
+      if (unUseDay < 0) {
+        unUseDay = 0;
+      }
+
+      if (useDay > totalDay) {
+        useDay = totalDay;
+      }
+
+      return {
+        totalDay,
+        unUseDay,
+        useDay,
       };
     },
   },
@@ -276,7 +310,7 @@ page {
 </style>
 
 <style scoped lang="scss">
-.history-plan-page {
+.current-plan-page {
   .page-title {
   }
 
