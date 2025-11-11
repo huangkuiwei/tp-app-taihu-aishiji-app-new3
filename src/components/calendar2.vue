@@ -1,7 +1,7 @@
 <template>
   <view class="calendar-com">
     <view class="page-title">
-      <text>{{ formatSelectedDate }}</text>
+      <text>{{ title || formatSelectedDate }}</text>
 
       <view class="back" @click="$toBack">
         <uni-icons class="back" color="#1A1A1A" type="arrow-left" size="22"></uni-icons>
@@ -53,6 +53,10 @@ export default {
 
     targetWeight: {
       type: Number,
+    },
+
+    title: {
+      type: String,
     },
   },
 

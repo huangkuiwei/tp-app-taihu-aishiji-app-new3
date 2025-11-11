@@ -387,6 +387,21 @@
           "softinputMode": "adjustResize"
         }
       }
+    },
+    {
+      "path": "pages/replaceFood/replaceFood",
+      "style": {
+        "navigationStyle": "custom",
+        // #ifndef H5
+        "navigationBarTitleText": "更换食物",
+        // #endif
+        "h5": {
+          "titleNView": false
+        },
+        "app-plus": {
+          "softinputMode": "adjustResize"
+        }
+      }
     }
   ],
   "subPackages": [
