@@ -72,7 +72,6 @@
               <text v-if="item.id === 10002">超值特惠</text>
             </view>
 
-            <!-- TODO 背景切图 -->
             <view class="vip-icon" v-if="item.id === 10000">
               <text>限时优惠</text>
             </view>
@@ -295,10 +294,11 @@ page {
     flex-grow: 1;
     overflow: auto;
     border-radius: 30rpx 30rpx 0 0;
-    padding: 44rpx 36rpx;
+    padding: 44rpx 0;
     background: #ffffff;
 
     .title {
+      padding: 0 36rpx;
       font-weight: bold;
       font-size: 28rpx;
       color: #222222;
@@ -311,7 +311,7 @@ page {
         align-items: center;
         gap: 36rpx;
         overflow: auto;
-        padding-top: 20rpx;
+        padding: 20rpx 36rpx 0;
         margin-bottom: 52rpx;
 
         .item {
@@ -362,18 +362,18 @@ page {
 
           .vip-icon {
             position: absolute;
-            top: -22rpx;
-            left: -6rpx;
+            top: -4rpx;
+            left: -10rpx;
 
             text {
-              width: 147rpx;
-              height: 41rpx;
-              background: linear-gradient(92deg, #f28e26 0%, #fd644f 100%);
-              border-radius: 20rpx 17rpx 20rpx 0;
+              width: 116rpx;
+              height: 47rpx;
+              background: url('https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/vip/bg.png') left top/100%
+                100% no-repeat;
               display: flex;
-              align-items: center;
               justify-content: center;
-              font-size: 25rpx;
+              padding-top: 8rpx;
+              font-size: 24rpx;
               color: #ffffff;
             }
           }
