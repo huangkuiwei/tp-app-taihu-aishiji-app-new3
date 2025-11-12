@@ -39,19 +39,17 @@
       </view>
 
       <view class="btn">
-        <!-- TODO 查看计划图标修改 -->
         <image
           v-if="homeWeightPlanData && homeWeightPlanData.state === 1"
           mode="widthFix"
-          src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/vip/icon3.png"
+          src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/index/icon2.png"
           @click="goCurrentPlan"
         />
 
-        <!-- TODO 新建计划图标修改 -->
         <image
           v-else
           mode="widthFix"
-          src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/vip/icon3.png"
+          src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/index/icon1.png"
           @click="addPlan"
         />
       </view>
@@ -109,17 +107,15 @@
       </view>
 
       <view class="banners">
-        <!-- TODO banner图片切图有问题 -->
         <image
           mode="widthFix"
-          src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/index/banner1.png"
+          src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/index/banner1.png?t=123"
           @click="openSelectFoodTypeDialog"
         />
 
-        <!-- TODO banner图片切图有问题 -->
         <image
           mode="widthFix"
-          src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/index/banner2.png"
+          src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/index/banner2.png?t=123"
           @click="openMotionRecodeDialog"
         />
       </view>

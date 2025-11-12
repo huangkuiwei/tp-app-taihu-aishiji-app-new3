@@ -81,8 +81,10 @@
 
         <view class="recode-detail">
           <view class="empty-recode" v-if="showEmptyRecode">
-            <!-- TODO 缺少图片切图 -->
-            <image mode="widthFix" src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/my/setting.png" />
+            <image
+              mode="widthFix"
+              src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/foodRecode/empty-icon.png"
+            />
             <view class="tip1">您还没有{{ recodeType === 1 ? '饮食' : '运动' }}记录</view>
             <view class="tip2">点击下方<text>按钮</text>开始添加吧</view>
           </view>
@@ -707,7 +709,7 @@ page {
 
   .date {
     padding: 0 25rpx;
-    margin-bottom: 40rpx;
+    margin-bottom: 15rpx;
     position: relative;
   }
 
