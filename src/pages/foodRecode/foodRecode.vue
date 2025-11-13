@@ -108,8 +108,13 @@
 
                 <view class="food-recode-list">
                   <view class="food-recode-item" v-for="item1 of item.foodList" :key="item1.id">
-                    <!-- TODO 默认图片 -->
-                    <image mode="widthFix" :src="item1.img_path" />
+                    <image
+                      mode="widthFix"
+                      :src="
+                        item1.img_path ||
+                        'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app3/todayRecode/food-icon1.png'
+                      "
+                    />
 
                     <view class="info1">
                       <text>{{ item1.name }}</text>
@@ -125,8 +130,13 @@
 
             <view class="motion-list" v-if="recodeType === 2">
               <view class="motion-item" v-for="item1 of motionRecodeList" :key="item1.id">
-                <!-- TODO 默认图片 -->
-                <image mode="widthFix" :src="item1.img_path" />
+                <image
+                  mode="widthFix"
+                  :src="
+                    item1.img_path ||
+                    'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app3/todayRecode/food-icon7.png'
+                  "
+                />
 
                 <view class="info1">
                   <text>{{ item1.name }}</text>

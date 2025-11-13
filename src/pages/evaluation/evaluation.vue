@@ -347,6 +347,17 @@ export default {
     ...mapState('app', ['appInfo']),
   },
 
+  // onLoad(params) {
+  //   if (!params.hideTip) {
+  //     setTimeout(() => {
+  //       uni.showToast({
+  //         title: '请先完善个人信息',
+  //         icon: 'none',
+  //       });
+  //     }, 500);
+  //   }
+  // },
+
   onShareAppMessage() {
     return {
       title: 'AI饮食记录小程序',

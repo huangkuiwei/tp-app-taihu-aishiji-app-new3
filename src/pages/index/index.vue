@@ -134,31 +134,42 @@
               >千卡
             </view>
 
-            <view class="food-item-detail" v-show="item.active">
-              <view class="current-food" v-if="item.foodList.length">
-                <view class="current-food-item-wrap">
-                  <view class="current-food-item" v-for="(item1, index) of item.foodList" :key="index">
-                    <text>{{ item1.name }}</text>
+            <template v-if="userDetailInfo">
+              <view class="motion-item-detail" v-if="item.type === 7" v-show="item.active">
+                <view class="tip">推荐运动量：{{ dailyCalorie.exercise_calorie_requirement }}千卡</view>
+
+                <view class="motion-item-wrap">
+                  <view class="motion-item" v-for="item1 of motionRecodeList" :key="item1.id">
+                    <text>{{ item1.name }}/{{ item1.quantity }}分钟</text>
                     <text>{{ item1.calorie }}千卡</text>
                   </view>
                 </view>
-
-                <view class="current-food-item1" @click="jumpFoodRecode">
-                  <text>...</text>
-                </view>
               </view>
 
-              <view class="progress" @click="jumpFoodRecode">
-                <text class="tip">还可以吃</text>
-                <!-- TODO 进度 -->
-                <view class="progress-line">
-                  <text></text>
+              <view v-else class="food-item-detail" v-show="item.active">
+                <view class="current-food" v-if="item.foodList.length">
+                  <view class="current-food-item-wrap">
+                    <view class="current-food-item" v-for="(item1, index) of item.foodList" :key="index">
+                      <text>{{ item1.name }}</text>
+                      <text>{{ item1.calorie }}千卡</text>
+                    </view>
+                  </view>
+
+                  <view class="current-food-item1" @click="jumpFoodRecode">
+                    <text>...</text>
+                  </view>
                 </view>
-                <!-- TODO 每餐建议热量 -->
-                <text class="number">1200千卡</text>
-                <text class="icon">▶</text>
+
+                <view class="progress" @click="jumpFoodRecode">
+                  <text class="tip">还可以吃</text>
+                  <view class="progress-line">
+                    <text :style="{ width: calorieProgress(item) + '%' }"></text>
+                  </view>
+                  <text class="number">{{ calorieProgress(item).remaining }}千卡</text>
+                  <text class="icon"></text>
+                </view>
               </view>
-            </view>
+            </template>
           </view>
         </view>
       </view>
@@ -217,23 +228,16 @@ export default {
           active: false,
         },
         {
-          type: 3,
-          icon: 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/home/food-type2.png',
-          text: '午餐',
-          foodList: [],
-          active: false,
-        },
-        {
-          type: 5,
-          icon: 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/home/food-type3.png',
-          text: '晚餐',
-          foodList: [],
-          active: false,
-        },
-        {
           type: 2,
           icon: 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app/recode/food-type1.png',
           text: '早加餐',
+          foodList: [],
+          active: false,
+        },
+        {
+          type: 3,
+          icon: 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/home/food-type2.png',
+          text: '午餐',
           foodList: [],
           active: false,
         },
@@ -245,9 +249,23 @@ export default {
           active: false,
         },
         {
+          type: 5,
+          icon: 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/home/food-type3.png',
+          text: '晚餐',
+          foodList: [],
+          active: false,
+        },
+        {
           type: 6,
           icon: 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app/recode/food-type3.png',
           text: '晚加餐',
+          foodList: [],
+          active: false,
+        },
+        {
+          type: 7,
+          icon: 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app/recode/food-type3.png',
+          text: '运动',
           foodList: [],
           active: false,
         },
@@ -296,6 +314,53 @@ export default {
         (this.isWeightLoss && this.homeWeightPlanData.weight_loss < 0) ||
         (!this.isWeightLoss && this.homeWeightPlanData.weight_loss > 0)
       );
+    },
+
+    suggestCalorie() {
+      return (type) => {
+        let ratio = 0;
+        let total = this.dailyCalorie.calorie_requirement;
+
+        if (type === 1) {
+          ratio = 0.25;
+        } else if (type === 2) {
+          ratio = 0.05;
+        } else if (type === 3) {
+          ratio = 0.35;
+        } else if (type === 4) {
+          ratio = 0.05;
+        } else if (type === 5) {
+          ratio = 0.25;
+        } else if (type === 6) {
+          ratio = 0.05;
+        }
+
+        return Math.round(total * ratio);
+      };
+    },
+
+    calorieProgress() {
+      return (item) => {
+        let remaining = Math.ceil(this.suggestCalorie(item.type) - this.currentCalorie(item.foodList));
+        let ratio = (remaining / this.suggestCalorie(item.type)) * 100;
+
+        if (ratio < 0) {
+          ratio = 0;
+        }
+
+        if (ratio > 100) {
+          ratio = 100;
+        }
+
+        if (remaining < 0) {
+          remaining = 0;
+        }
+
+        return {
+          ratio: Math.round(ratio),
+          remaining,
+        };
+      };
     },
   },
 
@@ -658,6 +723,11 @@ export default {
         return;
       }
 
+      if (!this.userDetailInfo) {
+        this.$toRouter('/pages/evaluation/evaluation');
+        return;
+      }
+
       item.active = !item.active;
     },
 
@@ -955,6 +1025,30 @@ page {
             }
           }
 
+          .motion-item-detail {
+            margin-top: 43rpx;
+
+            .tip {
+              font-weight: 500;
+              font-size: 26rpx;
+              color: #111111;
+              margin-bottom: 20rpx;
+            }
+
+            .motion-item-wrap {
+              .motion-item {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+
+                text {
+                  font-size: 24rpx;
+                  color: #666666;
+                }
+              }
+            }
+          }
+
           .food-item-detail {
             margin-top: 43rpx;
 
@@ -1042,7 +1136,6 @@ page {
                   left: -6rpx;
                   top: -6rpx;
                   bottom: 0;
-                  min-width: 20rpx;
                   height: 20rpx;
                   background: #65d285;
                   border-radius: 10rpx;
@@ -1057,8 +1150,10 @@ page {
               }
 
               .icon {
-                color: #696b75;
-                font-size: 24rpx;
+                border-left: 12rpx solid #696b75;
+                border-right: 12rpx solid transparent;
+                border-top: 12rpx solid transparent;
+                border-bottom: 12rpx solid transparent;
               }
             }
           }

@@ -33,7 +33,7 @@
 
           <view class="draw-item">
             <image mode="widthFix" src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/box/icon2.png" />
-            <text>50金币</text>
+            <text>5金币</text>
           </view>
 
           <view class="draw-item">
@@ -43,7 +43,7 @@
 
           <view class="draw-item">
             <image mode="widthFix" src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/box/icon1.png" />
-            <text>月会员</text>
+            <text>3天会员</text>
           </view>
 
           <view class="draw-item">
@@ -78,8 +78,7 @@
               src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/box/btn2.png"
             />
 
-            <!-- TODO 抽奖次数 -->
-            <text class="times">3</text>
+            <text class="times">{{ accountInfo.lucky_draw_count }}</text>
           </view>
         </view>
 
@@ -99,18 +98,21 @@
                   >
 
                   <view class="tip">
-                    <!-- TODO 抽奖次数字段 -->
-                    <text>奖励{{ item.base_points }}金币，抽奖次数+1</text>
+                    <text>奖励{{ item.base_points }}金币</text
+                    ><text v-if="item.base_draw_count">，抽奖次数+{{ item.base_draw_count }}</text>
                   </view>
                 </view>
 
-                <view
+                <button
+                  :open-type="
+                    item.completed_count !== item.max_daily_times && item.task_id === 10015 ? 'share' : undefined
+                  "
                   class="get-btn"
                   :class="{ finish: item.completed_count === item.max_daily_times }"
                   @click="completeTask(item)"
                 >
                   {{ item.completed_count === item.max_daily_times ? '已完成' : '去完成' }}
-                </view>
+                </button>
               </view>
             </view>
           </template>
@@ -261,6 +263,10 @@ export default {
       else if (item.task_id === 10014) {
         this.$toSwitch('/pages/index/index');
       }
+      // 分享
+      else if (item.task_id === 10015) {
+        $http.post('api/lucky-bag/share');
+      }
     },
 
     openRuleDialog() {
@@ -281,6 +287,15 @@ export default {
       verifyIsLogin();
 
       if (this.disabled) {
+        return;
+      }
+
+      if (!this.accountInfo.lucky_draw_count) {
+        uni.showToast({
+          title: '抽奖次数为0',
+          icon: 'none',
+        });
+
         return;
       }
 
@@ -334,14 +349,13 @@ export default {
 page {
   height: 100%;
   overflow: auto;
-  background: url('https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/box/bg.png') left top/100% auto
+  background: #839af5 url('https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/box/bg.png') left top/100% auto
     no-repeat;
 }
 </style>
 
 <style scoped lang="scss">
 .box-page {
-  height: 100%;
   background: url('https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/box/bg2.png') left top/100% auto
       no-repeat,
     url('https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/box/bg4.png') left 162rpx top 480rpx/426rpx auto
@@ -633,6 +647,10 @@ page {
                 font-weight: 500;
                 color: #e2e2e2;
                 border: 1px solid #e2e2e2;
+              }
+
+              &:after {
+                border: none;
               }
             }
           }

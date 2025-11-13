@@ -4,7 +4,7 @@ module.exports = {
   devServer: {
     proxy: {
       '/api': {
-        target: 'https://fandaapi.cshuz.cn',
+        target: 'https://mhy.colmiao.com',
         changeOrigin: true,
       },
     },
