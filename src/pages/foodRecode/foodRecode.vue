@@ -118,8 +118,7 @@
 
                     <view class="info1">
                       <text>{{ item1.name }}</text>
-                      <!-- TODO 重量？ -->
-                      <text>{{ item1.weight }}</text>
+                      <text>{{ item1.weight }}g</text>
                     </view>
 
                     <view class="info2">{{ item1.calorie }}千卡 ></view>

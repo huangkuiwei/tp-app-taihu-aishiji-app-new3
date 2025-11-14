@@ -45,11 +45,11 @@ export default {
         mask: true,
       });
 
-      // TODO 中奖记录接口修改
       $http
         .post('api/lucky-bag/points-record', {
           pageIndex: 1,
           pageSize: 9999,
+          isReward: true,
         })
         .then((res) => {
           uni.hideLoading();

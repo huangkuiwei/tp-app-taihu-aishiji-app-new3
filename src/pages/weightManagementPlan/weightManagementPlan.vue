@@ -58,7 +58,6 @@
         <view class="card-item1">
           <view class="card-title">
             <text>您的身体评测报告</text>
-            <!--<text @click="$toRouter('/pages/historyPlan/historyPlan')">历史记录</text>-->
           </view>
 
           <view class="card-title2">
@@ -187,25 +186,14 @@
           <view class="food-plan" v-if="isVip">
             <view class="plan-name">专属饮食方案</view>
 
-            <!-- TODO vip 方案数据 -->
             <view class="plan-detail">
               <view class="detail1">
                 <view class="detail-title">方案要点</view>
 
                 <view class="content">
-                  <view class="content-item">
-                    <text>01</text>
-                    <text>注意菜肴的成熟度，蔬菜断生即可，可生食的蔬菜宜生食。</text>
-                  </view>
-
-                  <view class="content-item">
-                    <text>02</text>
-                    <text>注意进餐顺序，优先吃蛋白质(类似吃2-3口菜肴，再吃1口主食)</text>
-                  </view>
-
-                  <view class="content-item">
-                    <text>03</text>
-                    <text>注意进餐顺序，优先吃蛋白质(类似吃2-3口菜肴，再吃1口主食)</text>
+                  <view class="content-item" v-for="(item, index) of todayRecipesAdvices.focus" :key="index">
+                    <text>{{ (index + 1).toString().padStart(2, '0') }}</text>
+                    <text>{{ item }}</text>
                   </view>
                 </view>
               </view>
@@ -216,7 +204,7 @@
                 <view class="content">
                   <view class="calorie">
                     <text>热量预算：</text>
-                    <text>1000千卡</text>
+                    <text>{{ dailyCalorie.calorie_requirement }}千卡</text>
                   </view>
 
                   <view class="ratio">
@@ -225,29 +213,47 @@
                     <view class="calorie-type">
                       <view class="calorie-item">
                         <view class="name">脂肪</view>
-                        <view class="progress" style="background: #e6e6e6"> </view>
-                        <view class="value">
-                          <text>{{ 0 }}/</text>
-                          <text>{{ 50 }}克</text>
+                        <view class="progress" style="background: #e6e6e6">
+                          <text
+                            style="background: #fdcd00"
+                            :style="{ width: dailyCalorie.remainingCRatio + '%' }"
+                          ></text>
                         </view>
+                        <view class="value" v-if="dailyCalorie.fat_requirement">
+                          <text>{{ dailyCalorie.fat_intake }}/</text>
+                          <text>{{ dailyCalorie.fat_requirement }}克</text>
+                        </view>
+                        <view class="value" v-else>暂无</view>
                       </view>
 
                       <view class="calorie-item">
                         <view class="name">碳水</view>
-                        <view class="progress" style="background: #e6e6e6"> </view>
-                        <view class="value">
-                          <text>{{ 0 }}/</text>
-                          <text>{{ 50 }}克</text>
+                        <view class="progress" style="background: #e6e6e6">
+                          <text
+                            style="background: #5664e5"
+                            :style="{ width: dailyCalorie.remainingARatio + '%' }"
+                          ></text>
                         </view>
+                        <view class="value" v-if="dailyCalorie.carbohydrate_requirement">
+                          <text>{{ dailyCalorie.carbohydrate_intake }}/</text>
+                          <text>{{ dailyCalorie.carbohydrate_requirement }}克</text>
+                        </view>
+                        <view class="value" v-else>暂无</view>
                       </view>
 
                       <view class="calorie-item">
                         <view class="name">蛋白质</view>
-                        <view class="progress" style="background: #e6e6e6"> </view>
-                        <view class="value">
-                          <text>{{ 0 }}/</text>
-                          <text>{{ 50 }}克</text>
+                        <view class="progress" style="background: #e6e6e6">
+                          <text
+                            style="background: #fd6896"
+                            :style="{ width: dailyCalorie.remainingBRatio + '%' }"
+                          ></text>
                         </view>
+                        <view class="value" v-if="dailyCalorie.protein_requirement">
+                          <text>{{ dailyCalorie.protein_intake }}/</text>
+                          <text>{{ dailyCalorie.protein_requirement }}克</text>
+                        </view>
+                        <view class="value" v-else>暂无</view>
                       </view>
                     </view>
                   </view>
@@ -258,45 +264,34 @@
                 <view class="detail-title">热量预算与营养配比</view>
 
                 <view class="content">
-                  <view class="content-item">
+                  <view class="content-item" v-if="todayRecipesAdvices.recipes_categorys">
                     <view></view>
                     <view class="content-title">食物类别</view>
-                    <view>水果</view>
-                    <view>蔬菜</view>
-                    <view>奶类</view>
-                    <view>蛋类</view>
-                    <view>肉类</view>
-                    <view>精制谷类</view>
-                    <view>杂粮</view>
-                    <view>薯类食材</view>
+                    <view v-for="item of todayRecipesAdvices.recipes_categorys.map((x) => x.food_category)" :key="item">
+                      <text v-if="item === 1">主食</text>
+                      <text v-else-if="item === 2">蛋白质</text>
+                      <text v-else-if="item === 3">蔬菜</text>
+                      <text v-else-if="item === 4">水果</text>
+                      <text v-else>其他</text>
+                    </view>
                     <view></view>
                   </view>
 
-                  <view class="content-item">
+                  <view class="content-item" v-if="todayRecipesAdvices.recipes_categorys">
                     <view></view>
                     <view class="content-title">每日重量</view>
-                    <view>300g</view>
-                    <view>300g</view>
-                    <view>300g</view>
-                    <view>300g</view>
-                    <view>300g</view>
-                    <view>300g</view>
-                    <view>300g</view>
-                    <view>300g</view>
+                    <view v-for="item of todayRecipesAdvices.recipes_categorys.map((x) => x.weight)" :key="item">
+                      {{ item }}g
+                    </view>
                     <view></view>
                   </view>
 
-                  <view class="content-item">
+                  <view class="content-item" v-if="todayRecipesAdvices.recipes_categorys">
                     <view></view>
                     <view class="content-title">每日热量</view>
-                    <view>140kcal</view>
-                    <view>140kcal</view>
-                    <view>140kcal</view>
-                    <view>140kcal</view>
-                    <view>140kcal</view>
-                    <view>140kcal</view>
-                    <view>140kcal</view>
-                    <view>140kcal</view>
+                    <view v-for="item of todayRecipesAdvices.recipes_categorys.map((x) => x.calorie)" :key="item">
+                      {{ item }}kcal
+                    </view>
                     <view></view>
                   </view>
                 </view>
@@ -306,19 +301,9 @@
                 <view class="detail-title">注意事项</view>
 
                 <view class="content">
-                  <view class="content-item">
-                    <text>01</text>
-                    <text>避免油煎、快餐、炸、爆炒、烧烤食品(糕点、地 瓜大枣、甜菜肉饼、汉堡、披萨、膨化食品)。</text>
-                  </view>
-
-                  <view class="content-item">
-                    <text>02</text>
-                    <text>避免油煎、快餐、炸、爆炒、烧烤食品(糕点、地 瓜大枣、甜菜肉饼、汉堡、披萨、膨化食品)。</text>
-                  </view>
-
-                  <view class="content-item">
-                    <text>03</text>
-                    <text>避免油煎、快餐、炸、爆炒、烧烤食品(糕点、地 瓜大枣、甜菜肉饼、汉堡、披萨、膨化食品)。</text>
+                  <view class="content-item" v-for="(item, index) of todayRecipesAdvices.notes" :key="index">
+                    <text>{{ (index + 1).toString().padStart(2, '0') }}</text>
+                    <text>{{ item }}</text>
                   </view>
                 </view>
               </view>
@@ -373,9 +358,6 @@ export default {
     return {
       lastPlanData: {},
       weighData: {},
-      dateList: [],
-      selectDateKey: null,
-      selectDateKey1: null,
       option: {
         title: {
           show: false,
@@ -420,7 +402,7 @@ export default {
           },
         ],
       },
-      exercisesPlanData: [],
+      todayRecipesAdvices: {},
       scoreList: ['偏瘦', '正常', '偏胖', '超胖'],
       foodBgColorList: ['#F2F5FF', '#FEFBEC', '#EEF6E6', '#F2F5FF', '#FEFBEC', '#EEF6E6'],
       option1: {
@@ -466,107 +448,20 @@ export default {
           },
         ],
       },
+      dailyCalorie: {},
     };
   },
 
   onShow() {
     this.getLastPlanData();
+    this.getDailyCalorie();
     this._getUserInfo();
-    this._getLifestyle();
+    this.getTodayRecipesAdvices();
   },
 
   computed: {
     ...mapState('app', ['userInfo', 'lifestylePlanData', 'userDetailInfo']),
     ...mapGetters('app', ['isVip']),
-
-    currentFoodData() {
-      return (foodList, type) => {
-        let allCalorie = 0;
-
-        Object.keys(this.dateList[this.selectDateKey]).forEach((key) => {
-          this.dateList[this.selectDateKey][key].forEach((item) => {
-            allCalorie += item.calorie;
-          });
-        });
-
-        let typeName = '';
-        let currentCalorie = 0;
-
-        if (type === '1') {
-          typeName = '早餐';
-        } else if (type === '2') {
-          typeName = '早加餐';
-        } else if (type === '3') {
-          typeName = '午餐';
-        } else if (type === '4') {
-          typeName = '午加餐';
-        } else if (type === '5') {
-          typeName = '晚餐';
-        }
-
-        foodList.forEach((item) => {
-          currentCalorie += item.calorie;
-        });
-
-        return {
-          typeName,
-          currentCalorie,
-          ratio: Number(((currentCalorie / allCalorie) * 100).toFixed(2)),
-        };
-      };
-    },
-
-    isWeightLoss() {
-      return this.lastPlanData.plan_initial_weight - this.lastPlanData.plan_target_weight > 0;
-    },
-
-    exercisesProgress() {
-      if (!this.lastPlanData.end_date) {
-        return {};
-      }
-
-      let total =
-        new Date(this.lastPlanData.end_date.replace(/-/g, '/')) -
-        new Date(this.lastPlanData.start_date.replace(/-/g, '/'));
-      let totalDay = Math.ceil(total / (24 * 60 * 60 * 1000));
-
-      let finish = new Date() - new Date(this.lastPlanData.start_date.replace(/-/g, '/'));
-      let finishDay = Math.ceil(finish / (24 * 60 * 60 * 1000));
-
-      let progress = (finishDay / totalDay) * 100;
-
-      if (progress < 0) {
-        progress = 0;
-      } else if (progress > 100) {
-        progress = 100;
-      }
-
-      return {
-        totalDay,
-        finishDay,
-        progress: progress,
-      };
-    },
-
-    isNotStart() {
-      if (!this.selectDateKey1) {
-        return undefined;
-      }
-
-      let time = new Date(this.selectDateKey1.replace(/-/g, '/')).getDate();
-      let now = new Date().getDate();
-
-      return time !== now;
-    },
-
-    isToday() {
-      return (time) => {
-        let time1 = new Date(time.replace(/-/g, '/')).getDate();
-        let now = new Date().getDate();
-
-        return time1 === now;
-      };
-    },
 
     realBMI() {
       if (this.userDetailInfo) {
@@ -627,12 +522,6 @@ export default {
     },
   },
 
-  watch: {
-    selectDateKey1(value) {
-      this.getExercises(value);
-    },
-  },
-
   onShareAppMessage() {
     return {
       title: 'AI饮食记录小程序',
@@ -643,7 +532,7 @@ export default {
 
   methods: {
     ...mapMutations('app', ['_setLifestyle']),
-    ...mapActions('app', ['_getUserInfo', '_getLifestyle']),
+    ...mapActions('app', ['_getUserInfo']),
 
     async init() {
       chart = await this.$refs.chartRef.init(echarts);
@@ -653,6 +542,82 @@ export default {
     async init1() {
       chart1 = await this.$refs.chartRef1.init(echarts);
       chart1.setOption(this.option1);
+    },
+
+    getDailyCalorie() {
+      return $http
+        .post(
+          'api/diet-info/daily-calorie',
+          {
+            date: new Date().format(),
+          },
+          {
+            hiddenErrorMessage: true,
+          },
+        )
+        .then((res) => {
+          // 卡路里总量、剩余量和比例计算
+          let total = res.data.calorie_requirement + res.data.calorie_burn;
+          let remaining = total - res.data.calorie_intake;
+          let ratio = Number(((remaining / total) * 100).toFixed(2));
+
+          if (ratio > 100) {
+            ratio = 100;
+          } else if (ratio < 0) {
+            ratio = 0;
+          }
+
+          res.data.ratio = ratio;
+          res.data.remaining = remaining < 0 ? 0 : Number(remaining.toFixed(2));
+
+          // 碳水、蛋白质、脂肪剩余量和比例计算
+          res.data.remainingA = Number((res.data.carbohydrate_requirement - res.data.carbohydrate_intake).toFixed(2));
+          res.data.remainingB = Number((res.data.protein_requirement - res.data.protein_intake).toFixed(2));
+          res.data.remainingC = Number((res.data.fat_requirement - res.data.fat_intake).toFixed(2));
+
+          if (res.data.remainingA < 0) {
+            res.data.remainingA = 0;
+          }
+
+          if (res.data.remainingB < 0) {
+            res.data.remainingB = 0;
+          }
+
+          if (res.data.remainingC < 0) {
+            res.data.remainingC = 0;
+          }
+
+          res.data.remainingARatio = (res.data.carbohydrate_intake / res.data.carbohydrate_requirement) * 100;
+          res.data.remainingBRatio = (res.data.protein_intake / res.data.protein_requirement) * 100;
+          res.data.remainingCRatio = (res.data.fat_intake / res.data.fat_requirement) * 100;
+
+          if (res.data.remainingARatio > 100) {
+            res.data.remainingARatio = 100;
+          }
+
+          if (res.data.remainingBRatio > 100) {
+            res.data.remainingBRatio = 100;
+          }
+
+          if (res.data.remainingCRatio > 100) {
+            res.data.remainingCRatio = 100;
+          }
+
+          this.dailyCalorie = res.data;
+        })
+        .catch((err) => {
+          if (err.Msg === '未找到健康档案，请先完成健康评估') {
+            this.dailyCalorie = {};
+          } else {
+            if (err.Code !== -100) {
+              uni.showToast({
+                title: err.Msg,
+                icon: 'none',
+                mask: true,
+              });
+            }
+          }
+        });
     },
 
     /**
@@ -667,60 +632,25 @@ export default {
       $http.get('api/diet-info/weight-plan/last').then((res) => {
         this.getRecodeWeightData(res.data.plan_id);
 
-        let dateList = {};
+        this.option1.series[0].data[0].value = res.data.body_score;
 
-        res.data.recipes_list.forEach((item) => {
-          let date = item.date;
+        let color = [];
 
-          if (dateList[date]) {
-            dateList[date].push(item);
+        for (let i = 0; i < 100; i++) {
+          if (i <= res.data.body_score) {
+            color.push([i / 100, '#65D285']);
           } else {
-            dateList[date] = [item];
+            color.push([i / 100, '#ECFDF2']);
           }
-        });
+        }
 
-        Object.keys(dateList).forEach((dateListKey, index) => {
-          let foodList = {};
-          let item = dateList[dateListKey];
+        this.option1.series[0].axisLine.lineStyle.color = color;
 
-          item.forEach((item) => {
-            let type = item.type;
-
-            if (foodList[type]) {
-              foodList[type].push(item);
-            } else {
-              foodList[type] = [item];
-            }
-          });
-
-          if (index === 0) {
-            this.selectDateKey = dateListKey;
-            this.selectDateKey1 = dateListKey;
-          }
-
-          dateList[dateListKey] = foodList;
-
-          this.option1.series[0].data[0].value = res.data.body_score;
-
-          let color = [];
-
-          for (let i = 0; i < 100; i++) {
-            if (i <= res.data.body_score) {
-              color.push([i / 100, '#65D285']);
-            } else {
-              color.push([i / 100, '#ECFDF2']);
-            }
-          }
-
-          this.option1.series[0].axisLine.lineStyle.color = color;
-
-          setTimeout(() => {
-            chart1.setOption(this.option1);
-          }, 500);
-        });
+        setTimeout(() => {
+          chart1.setOption(this.option1);
+        }, 500);
 
         this.lastPlanData = res.data;
-        this.dateList = dateList;
       });
     },
 
@@ -759,116 +689,12 @@ export default {
         });
     },
 
-    /**
-     * 删除计划
-     */
-    deletePlan() {
-      uni.showModal({
-        title: '温馨提示',
-        content: '确定要删除计划吗？',
-        success: (res) => {
-          if (res.confirm) {
-            uni.showLoading({
-              title: '加载中...',
-              mask: true,
-            });
-
-            $http
-              .post('api/diet-info/weight-plan/delete', {
-                plan_id: this.lastPlanData.plan_id,
-              })
-              .then(() => {
-                uni.hideLoading();
-
-                uni.showToast({
-                  title: '删除成功',
-                  icon: 'none',
-                  mask: true,
-                });
-
-                setTimeout(() => {
-                  this.$toBack();
-                }, 1000);
-              });
-          }
-        },
+    getTodayRecipesAdvices() {
+      $http.get('api/diet-info/today-recipes-advices', {}).then((res) => {
+        this.todayRecipesAdvices = res.data;
       });
     },
 
-    getExercises(time) {
-      $http
-        .post('api/diet-info/daily-exercises', {
-          date: new Date(time.replace(/-/g, '/')).format(),
-        })
-        .then((res) => {
-          res.data.forEach((item) => {
-            if (item.is_completed) {
-              item.is_completed = ['1'];
-            } else {
-              item.is_completed = [];
-            }
-          });
-
-          this.exercisesPlanData = res.data;
-        });
-    },
-
-    onCheckboxClick(item) {
-      if (!item.is_completed.includes('1')) {
-        uni.showModal({
-          title: '温馨提示',
-          content: '您确定完成了此项训练吗？',
-          confirmText: '完成',
-          success: (res) => {
-            if (res.confirm) {
-              item.is_completed = ['1'];
-
-              uni.showLoading({
-                title: '加载中...',
-                mask: true,
-              });
-
-              $http
-                .post('api/diet-info/complete-exercise', {
-                  exercise_item_id: item.id,
-                })
-                .then(() => {
-                  uni.hideLoading();
-
-                  uni.showToast({
-                    title: '操作成功',
-                    icon: 'none',
-                  });
-
-                  this.getExercises();
-                });
-            }
-          },
-        });
-      }
-    },
-
-    refreshLife() {
-      uni.showLoading({
-        title: '加载中...',
-        mask: true,
-      });
-
-      $http
-        .post(
-          'api/diet-info/regenerate-lifestyle-advices',
-          {},
-          {
-            timeout: 90000,
-          },
-        )
-        .then((res) => {
-          uni.hideLoading();
-          this._setLifestyle(res.data);
-        });
-    },
-
-    // TODO 食谱计划
     previewFoodPlan() {
       this.$toRouter('/pages/recipePlan/recipePlan');
     },

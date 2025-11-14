@@ -582,7 +582,7 @@ export default {
         return;
       }
 
-      if (!this.homeWeightPlanData) {
+      if (!this.homeWeightPlanData || this.homeWeightPlanData.state !== 1) {
         this.$toRouter('/pages/addPlan/addPlan');
         return;
       }

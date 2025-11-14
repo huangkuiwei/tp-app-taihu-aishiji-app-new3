@@ -118,20 +118,19 @@
       <view class="week-data">
         <view class="title">本周数据</view>
 
-        <!-- TODO 本周数据 -->
         <view class="week-data-container" v-if="isLogin && userDetailInfo">
           <view class="week-data-detail">
             <view class="item">
               <text class="unit">目标体重/kg</text>
-              <text class="number">48</text>
+              <text class="number">{{ dataReport.target_weight }}</text>
             </view>
 
             <view class="item">
               <text class="unit">平均脂肪率/%</text>
 
               <view class="number">
-                <text>32.2</text>
-                <text class="state">偏高</text>
+                <text>{{ dataReport.body_fat_percentage }}</text>
+                <text class="state">{{ bodyFatStatus }}</text>
               </view>
             </view>
           </view>
@@ -140,7 +139,7 @@
             <view class="data-tip-title">体重分析</view>
 
             <view class="data-tip-content">
-              BMI计算器的结果是体重不足，可能会受到与之相关的风险，列举如下：营养不良、维生素缺乏、贫血（携带血管的能力降低）骨质疏松症，一种导致骨质疏松的疾病，增加骨折的风险免疫功能下降
+              {{ dataReport.weight_analyse }}
             </view>
           </view>
         </view>
@@ -333,6 +332,16 @@ export default {
             : -1,
       };
     },
+
+    bodyFatStatus() {
+      if (this.dataReport.body_fat_percentage > 25) {
+        return '偏高';
+      } else if (this.dataReport.body_fat_percentage < 15) {
+        return '偏低';
+      } else {
+        return '正常';
+      }
+    },
   },
 
   watch: {
@@ -387,6 +396,7 @@ export default {
         .then((res) => {
           uni.hideLoading();
 
+          this.dataReport = JSON.parse(JSON.stringify(res.data));
           res.data = res.data.weight_list;
 
           if (this.selectChartType.id === 1) {

@@ -15,7 +15,6 @@
         <view class="plan-box" v-for="item of historyPlanList.filter((x) => x.state !== 1)" :key="item.plan_id">
           <view class="title">
             <text>{{ isWeightLoss(item) ? '减肥' : '增肥' }}计划</text>
-            <!-- TODO 是否新增完成计划时间字段 -->
             <text>累计坚持{{ planDays(item).useDay }}天</text>
 
             <image
@@ -35,8 +34,7 @@
             <view class="value-item">
               <view>{{ item.current_weight }} <text>公斤</text></view>
               <view>结束体重</view>
-              <!-- TODO 完成计划时间字段 -->
-              <view>{{ item.end_date.slice(0, 10) }}</view>
+              <view>{{ item.finish_date.slice(0, 10) }}</view>
             </view>
           </view>
         </view>
@@ -79,15 +77,15 @@ export default {
 
     planDays() {
       return (planData) => {
-        let end_date = planData.end_date && planData.end_date.replace(/-/g, '/');
+        let finish_date = planData.finish_date && planData.finish_date.replace(/-/g, '/');
         let start_date = planData.start_date && planData.start_date.replace(/-/g, '/');
         let now = new Date();
 
-        let diff = new Date(end_date).getTime() - new Date(start_date).getTime();
+        let diff = new Date(finish_date).getTime() - new Date(start_date).getTime();
         const minutes = Math.floor(diff / 1000 / 60);
         const hours = Math.floor(minutes / 60);
 
-        let diff1 = new Date(end_date).getTime() - now.getTime();
+        let diff1 = new Date(finish_date).getTime() - now.getTime();
         const minutes1 = Math.floor(diff1 / 1000 / 60);
         const hours1 = Math.floor(minutes1 / 60);
 
