@@ -10,36 +10,20 @@
 
     <view class="banner"></view>
 
-    <!-- TODO 替换食物数据 -->
     <view class="food-list-wrap">
-      <view class="tip">以下是为你推荐可替换<text>拌黄瓜</text>的食物</view>
+      <view class="tip"
+        >以下是为你推荐可替换<text>{{ name }}</text
+        >的食物</view
+      >
 
       <view class="food-list">
-        <view class="food-item">
-          <image mode="widthFix" src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/logo3.jpg" />
+        <view class="food-item" v-for="item of recommendFoods" :key="item.id">
+          <image mode="widthFix" :src="item.img_path" />
           <view class="info">
-            <text>拌黄瓜</text>
-            <text>100克/16.00千卡</text>
+            <text>{{ item.name }}</text>
+            <text>{{ item.weight }}克/{{ item.calorie }}千卡</text>
           </view>
-          <view class="replace" @click="replaceFood">替换</view>
-        </view>
-
-        <view class="food-item">
-          <image mode="widthFix" src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/logo3.jpg" />
-          <view class="info">
-            <text>拌黄瓜</text>
-            <text>100克/16.00千卡</text>
-          </view>
-          <view class="replace">替换</view>
-        </view>
-
-        <view class="food-item">
-          <image mode="widthFix" src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/logo3.jpg" />
-          <view class="info">
-            <text>拌黄瓜</text>
-            <text>100克/16.00千卡</text>
-          </view>
-          <view class="replace">替换</view>
+          <view class="replace" @click="replaceFood(item)">替换</view>
         </view>
       </view>
     </view>
@@ -47,12 +31,78 @@
 </template>
 
 <script>
+import $http from '@/utils/http';
+
 export default {
   name: 'replaceFood',
 
+  data() {
+    return {
+      name: '',
+      id: undefined,
+      recommendFoods: [],
+    };
+  },
+
+  onLoad(options) {
+    this.name = decodeURIComponent(options.name);
+    this.id = options.id;
+
+    this.getRecommendFoods();
+  },
+
   methods: {
-    // TODO 替换
-    replaceFood() {},
+    getRecommendFoods() {
+      uni.showLoading({
+        title: '加载中...',
+        mask: true,
+      });
+
+      $http
+        .post('api/diet-info/recipes_template', {
+          pageIndex: 1,
+          pageSize: 9999,
+          id: this.id,
+        })
+        .then((res) => {
+          uni.hideLoading();
+          this.recommendFoods = res.data.Items;
+        });
+    },
+
+    replaceFood(item) {
+      uni.showModal({
+        title: '温馨提示',
+        content: '确认选择该食物进行替换吗？',
+        success: (res) => {
+          if (res.confirm) {
+            $http
+              .post('api/diet-info/update_plan_recipes', {
+                id: this.id,
+                template_id: item.id,
+                img_path: item.img_path,
+                name: item.name,
+                weight: item.weight,
+                calorie: item.calorie,
+                food_category: item.food_category,
+                protein: item.protein,
+                fat: item.fat,
+                carbs: item.carbs,
+              })
+              .then(() => {
+                uni.showToast({
+                  title: '替换成功',
+                  icon: 'none',
+                });
+
+                setTimeout(() => {
+                  this.$toBack();
+                }, 1500);
+              });
+          }
+        },
+      });
+    },
   },
 };
 </script>

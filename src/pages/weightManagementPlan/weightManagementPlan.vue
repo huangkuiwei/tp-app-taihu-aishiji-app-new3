@@ -696,7 +696,7 @@ export default {
     },
 
     previewFoodPlan() {
-      this.$toRouter('/pages/recipePlan/recipePlan');
+      this.$toRouter(`/pages/recipePlan/recipePlan?plan_id=${this.lastPlanData.plan_id}`);
     },
 
     addMotionRecode(event) {
