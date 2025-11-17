@@ -316,7 +316,7 @@
     <view
       >如果你认为{{
         appInfo.companyName
-      }}违反法律法规规定或与你的约定收集、使用你的个人信息，你也可以通过发送电子邮件到taihukj@163.com的方式与{{
+      }}违反法律法规规定或与你的约定收集、使用你的个人信息，你也可以通过发送电子邮件到kmiao2025@163.com的方式与{{
         appInfo.companyName
       }}取得联系，并要求删除你的相关个人信息。{{
         appInfo.companyName
@@ -451,7 +451,7 @@
       }}软件及相关服务为准。</view
     >
     <view
-      >如对本隐私政策内容有任何疑问、意见或建议，你可通过发送邮件至taihukj@163.com与{{
+      >如对本隐私政策内容有任何疑问、意见或建议，你可通过发送邮件至kmiao2025@163.com与{{
         appInfo.companyName
       }}联系。</view
     >
@@ -537,7 +537,7 @@ export default {
   onShareAppMessage() {
     return {
       title: 'AI饮食记录小程序',
-      imageUrl: 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/share-img.jpg',
+      imageUrl: 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/zhiyingsaoshi/share.jpg',
       path: '/pages/index/index',
     };
   },

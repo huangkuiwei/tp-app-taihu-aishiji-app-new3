@@ -13,16 +13,14 @@
     <view class="about-container">
       <view class="icon-box">
         <view class="icon1">
-          <!-- TODO 公司logo -->
           <view class="img">
-            <image mode="widthFix" src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/logo3.jpg" />
+            <image mode="widthFix" src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/zhiyingsaoshi/logo.jpg" />
           </view>
           <view class="version" v-if="version">当前版本{{ version }}</view>
         </view>
       </view>
 
-      <!-- TODO 公司名称 -->
-      <view class="company">长沙数织科技有限公司</view>
+      <view class="company">长沙酷喵互娱网络科技有限公司</view>
     </view>
   </view>
 </template>
@@ -47,7 +45,7 @@ export default {
   onShareAppMessage() {
     return {
       title: 'AI饮食记录小程序',
-      imageUrl: 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/share-img.jpg',
+      imageUrl: 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/zhiyingsaoshi/share.jpg',
       path: '/pages/index/index',
     };
   },

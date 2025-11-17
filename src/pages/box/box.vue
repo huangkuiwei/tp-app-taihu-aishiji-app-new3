@@ -201,7 +201,7 @@ export default {
   onShareAppMessage() {
     return {
       title: 'AI饮食记录小程序',
-      imageUrl: 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app2/share-img.jpg',
+      imageUrl: 'https://hnenjoy.oss-cn-shanghai.aliyuncs.com/zhiyingsaoshi/share.jpg',
       path: '/pages/index/index',
     };
   },
@@ -510,7 +510,6 @@ page {
             width: 112rpx;
             height: 112rpx;
 
-            // TODO 激活图片样式
             &.active {
               background: url('https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/box/bg7.png') left top/100%
                 100% no-repeat;
