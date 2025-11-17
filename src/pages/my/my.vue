@@ -80,7 +80,7 @@
 
           <view class="nav-item">
             <image mode="widthFix" src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/my/icon5.png" />
-            <button class="nav-title" @click="openContact">联系客服</button>
+            <button class="nav-title" open-type="contact">联系客服</button>
             <uni-icons color="#999999" type="right" size="14"></uni-icons>
           </view>
 

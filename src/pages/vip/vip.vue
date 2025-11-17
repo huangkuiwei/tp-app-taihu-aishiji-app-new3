@@ -108,7 +108,7 @@
 
       <template v-else>
         <view class="buy-tip">由于相关规定，iOS版小程序暂不支持购买</view>
-        <button class="btn" @click="openContact">联系客服</button>
+        <button class="btn" open-type="contact">联系客服</button>
       </template>
     </view>
   </view>
