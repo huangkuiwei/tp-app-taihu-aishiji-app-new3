@@ -22,10 +22,7 @@
         </view>
       </view>
 
-      <!-- TODO 客服电话 -->
-      <view class="tip">
-        您的反馈和意见我们会尽快解决，但无法保证每一条都能及时反馈，如有紧急咨询可直接拨打客服热线：400-0000-0000
-      </view>
+      <view class="tip">您的反馈和意见我们会尽快解决，但无法保证每一条都能及时反馈，如有紧急咨询可联系客服</view>
 
       <view class="submit" @click="submit">提交</view>
     </view>

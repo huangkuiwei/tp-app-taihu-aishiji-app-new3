@@ -6,9 +6,6 @@
         >·每次开启盲盒消耗需10金币，奖池包含期限会员和不等额金币，开通会员或续费会员均可额外获得3次抽奖机会；</view
       >
       <view class="item">·金币可兑换会员，最高可得永久会员，数量有限，先到先得！</view>
-      <view class="item">·如有疑问，可联系客服或拨打客服热线；</view>
-      <!-- TODO 客服电话 -->
-      <view class="item">·客服电话：400-0000-0000</view>
     </view>
 
     <template #footer>

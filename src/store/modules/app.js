@@ -8,7 +8,7 @@ const appStore = {
     userDetailInfo: null,
     lifestylePlanData: [],
     appInfo: {
-      appName: '小食视记',
+      appName: '喵互娱',
       companyName: '长沙酷喵互娱网络科技有限公司',
     },
   },

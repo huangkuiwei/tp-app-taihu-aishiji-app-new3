@@ -20,7 +20,7 @@ export const onPay = (price, openid, mobile) => {
   });
 
   // TODO 连续包月
-  // if (price.id === 10003) {
+  // if (price.id === 10009) {
   //   $http
   //     .post('https://api.xiaoohui.com/api/business/ali_sign/create_sign', {
   //       mobile: mobile,
