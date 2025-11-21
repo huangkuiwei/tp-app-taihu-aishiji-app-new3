@@ -77,6 +77,8 @@
               mode="widthFix"
               src="https://hnenjoy.oss-cn-shanghai.aliyuncs.com/food-diary-app4/box/btn2.png"
             />
+
+            <text class="times">{{ accountInfo.lucky_draw_count }}</text>
           </view>
         </view>
 
@@ -96,7 +98,8 @@
                   >
 
                   <view class="tip">
-                    <text>奖励{{ item.base_points }}金币</text>
+                    <text>奖励{{ item.base_points }}金币</text
+                    ><text v-if="item.base_draw_count">，抽奖次数+{{ item.base_draw_count }}</text>
                   </view>
                 </view>
 
