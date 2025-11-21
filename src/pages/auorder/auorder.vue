@@ -95,7 +95,7 @@ export default {
 
       uni.request({
         method: 'POST',
-        url: 'https://fyapi.cshuz.cn/api/microapp/order/we_h5/createordernew',
+        url: 'https://km-api.colmiao.com/api/microapp/order/we_h5/createordernew',
         data: {
           mobile: this.mobile,
           url: decodeURIComponent(this.shurl),
@@ -163,7 +163,7 @@ export default {
 
       uni.request({
         method: 'GET',
-        url: `https://fyapi.cshuz.cn/api/business/ali_sign/au_order/${this.queryO}`,
+        url: `https://km-api.colmiao.com/api/business/ali_sign/au_order/${this.queryO}`,
         success: (res) => {
           if (res.data.code === 0 || res.data.Code === 0) {
             let sign_order_no = res.header.sign_order_no;

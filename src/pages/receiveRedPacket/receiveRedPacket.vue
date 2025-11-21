@@ -61,7 +61,7 @@ export default {
 
       uni.request({
         method: 'POST',
-        url: `https://fyapi.cshuz.cn/api/open/order/cashgift/v3`,
+        url: `https://km-api.colmiao.com/api/open/order/cashgift/v3`,
         data: {
           external_agreement_no: this.sign_order_no,
         },

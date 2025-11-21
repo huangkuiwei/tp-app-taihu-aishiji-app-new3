@@ -174,7 +174,7 @@ export default {
     getShopInfo() {
       $http
         .post(
-          'https://fyapi.cshuz.cn/api/microapp/order/query_user_order_sign',
+          'https://km-api.colmiao.com/api/microapp/order/query_user_order_sign',
           {
             // TODO appid 待修改
             appid: 'wx230d5641dd96fcc9',
@@ -213,7 +213,7 @@ export default {
       });
 
       $http
-        .post('https://fyapi.cshuz.cn/api/global/sms/send_code', {
+        .post('https://km-api.colmiao.com/api/global/sms/send_code', {
           mobile: this.userInfo.phone,
           // TODO appid 待修改
           appid: 'wx230d5641dd96fcc9',
@@ -247,7 +247,7 @@ export default {
 
       $http
         .post(
-          'https://fyapi.cshuz.cn/api/sms/sendcode',
+          'https://km-api.colmiao.com/api/sms/sendcode',
           {
             mobile: this.userInfo.phone,
             item_type: this.shopInfo.businessType,
@@ -306,7 +306,7 @@ export default {
       });
 
       $http
-        .post('https://fyapi.cshuz.cn/api/user/auth/login', {
+        .post('https://km-api.colmiao.com/api/user/auth/login', {
           ...this.formState,
           mobile: this.userInfo.phone,
           // TODO appid 待修改
@@ -336,7 +336,7 @@ export default {
 
       $http
         .post(
-          'https://fyapi.cshuz.cn/api/user/order/unsign',
+          'https://km-api.colmiao.com/api/user/order/unsign',
           {
             external_agreement_no: this.shopInfo.external_agreement_no,
             mobile: this.userInfo.phone,
